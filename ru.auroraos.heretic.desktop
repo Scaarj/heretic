@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Icon=ru.auroraos.heretic
+Exec=/usr/bin/ru.auroraos.heretic
+Name=Heretic
+Name[ru]=Heretic
+
+[X-Application]
+Permissions=Documents
+OrganizationName=ru.auroraos
+ApplicationName=heretic
+ExecDBus=/usr/bin/ru.auroraos.heretic
