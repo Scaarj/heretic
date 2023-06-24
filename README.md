@@ -3,7 +3,7 @@
 Short description of my Aurora OS Application
 
 The source code of the project is provided under
-[the license](LICENSE.BSD-3-CLAUSE.md),
+[the license](LICENSE),
 that allows it to be used in third-party applications.
 
 ## Project Structure
