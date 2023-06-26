@@ -9,3 +9,11 @@ void Context::setPallete(byte* palette) {
 		colors[i].b = gammatable[usegamma][*palette++] >> 2;
 	}
 }
+
+void Context::addDrawData(const QVariant& drawData) {
+	this->drawData.push_back(drawData);
+}
+
+void Context::clearDrawData() {
+	drawData.clear();
+}

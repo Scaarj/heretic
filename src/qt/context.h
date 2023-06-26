@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QPainter>
+#include <QVariant>
+#include <QVector>
 
 #include "doomdef.h"
 
@@ -21,4 +23,10 @@ public:
 	virtual float ratio() const = 0;
 
 	static void setPallete(byte* palette);
+
+	void addDrawData(const QVariant& drawData);
+	void clearDrawData();
+
+protected:
+	QVector<QVariant> drawData;
 };

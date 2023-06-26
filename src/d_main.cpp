@@ -250,6 +250,10 @@ void D_DoomLoop(void) {
 
 	I_SetPalette(static_cast<byte*>(W_CacheLumpName("PLAYPAL", PU_CACHE)));
 
+	if (painter) {
+		painter->setContext(ScenePainter::GameType);
+	}
+
 	while (1) {
 		/* Frame syncronous IO operations */
 		I_StartFrame();
@@ -345,8 +349,7 @@ void D_DoAdvanceDemo(void) {
 	switch (demosequence) {
 		case 0:
 			// NOTE: demo waiting reduce
-			pagetic = 10;
-			//			pagetic = 210;
+			pagetic = 210;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "TITLE";
 			S_StartMusic(mus_titl);
@@ -354,8 +357,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 1:
 			// NOTE: demo waiting reduce
-			pagetic = 10;
-			//			pagetic = 140;
+			pagetic = 140;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "TITLE";
 			break;
@@ -366,8 +368,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 3:
 			// NOTE: demo waiting reduce
-			pagetic = 10;
-			//			pagetic = 200;
+			pagetic = 200;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "CREDIT";
 			break;
@@ -378,8 +379,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 5:
 			// NOTE: demo waiting reduce
-			pagetic = 10;
-			//			pagetic = 200;
+			pagetic = 200;
 			gamestate = GS_DEMOSCREEN;
 			if (shareware) {
 				pagename = "ORDER";
@@ -537,24 +537,28 @@ void D_DoomMain(void) {
 	/*   char *startup;   */
 	/*   char smsg[80];   */
 
-	printf("========================================================\n");
-	printf("==                                                    ==\n");
-	printf("==                 HERETIC v1.0.3                     ==\n");
-	printf("==                                                    ==\n");
-	printf("==         for GGI, X11, SDL and SVGAlib              ==\n");
-	printf("==                   works on                         ==\n");
-	printf("==      x86, m68k, Alpha and Netwinder-systems        ==\n");
-	printf("==      under Linux, FreeBSD, SCO-Unix (tested)       ==\n");
-	printf("==                                                    ==\n");
-	printf("==   Heretic was ported to LINUX by Andre Werthmann   ==\n");
-	printf("==    You can download the latest versions under:     ==\n");
-	printf("==      http://www.raven-games.com/linuxheretic       ==\n");
-	printf("==                                                    ==\n");
-	printf("==                                                    ==\n");
-	printf("==              Press Return to go on.                ==\n");
-	printf("==                                                    ==\n");
-	printf("========================================================\n");
-	//	getchar();
+	if (painter) {
+		painter->setContext(ScenePainter::IntroType);
+		painter->printTextLine("");
+		painter->printTextLine("");
+		painter->printTextLine("HERETIC v1.0.0");
+		painter->printTextLine("");
+		painter->printTextLine("Works on x86, armv7hl Aurora OS");
+		painter->printTextLine("");
+		painter->printTextLine("Heretic was ported to Aurora OS");
+		painter->printTextLine("by Steve Dubrov");
+		painter->printTextLine("You can download the latest versions under:");
+		painter->printTextLine("https://github.com/Scaarj/heretic");
+		painter->printTextLine("");
+		painter->printTextLine("");
+		painter->printTextLine("Tap on Screen to go on.");
+		painter->printTextLine("");
+		painter->printTextLine("");
+		painter->update();
+		while (1) {
+			QGuiApplication::processEvents();
+		}
+	}
 
 	/* calls SVGALib init and revokes root rights, dummy for other displays */
 	InitGraphLib();

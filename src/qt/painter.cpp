@@ -12,6 +12,14 @@ void ScenePainter::setPallete(byte* palette) {
 	Context::setPallete(palette);
 }
 
+void ScenePainter::setContext(ContextType context) {
+	currentContext = context;
+}
+
+void ScenePainter::printTextLine(const QString& line) {
+	contexts.at(currentContext)->addDrawData(line);
+}
+
 void ScenePainter::paint(QPainter* painter) {
 	return contexts.at(currentContext)->draw(painter);
 }
