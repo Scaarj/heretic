@@ -541,7 +541,8 @@ void D_DoomMain(void) {
 		painter->setContext(ScenePainter::IntroType);
 		painter->printTextLine("");
 		painter->printTextLine("");
-		painter->printTextLine("HERETIC v1.0.0");
+		// TODO: read version from pri/rpm
+		painter->printTextLine("HERETIC v1.0.1");
 		painter->printTextLine("");
 		painter->printTextLine("Works on x86, armv7hl Aurora OS");
 		painter->printTextLine("");
@@ -555,7 +556,9 @@ void D_DoomMain(void) {
 		painter->printTextLine("");
 		painter->printTextLine("");
 		painter->update();
-		while (1) {
+		// TODO: interrupt loop on tap
+		int count = 5000;
+		while (count--) {
 			QGuiApplication::processEvents();
 		}
 	}

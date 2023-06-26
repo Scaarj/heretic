@@ -24,10 +24,6 @@ void ScenePainter::paint(QPainter* painter) {
 	return contexts.at(currentContext)->draw(painter);
 }
 
-float ScenePainter::screenRatio() const {
-	return contexts.at(currentContext)->ratio();
-}
-
 void ScenePainter::orientationChanged(int orientation) {
 	auto size = contexts.at(currentContext)->resize(orientation);
 	setWidth(size.width());

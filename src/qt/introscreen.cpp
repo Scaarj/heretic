@@ -36,10 +36,6 @@ QSize IntroScreen::resize(int orientation) {
 	return screenSize;
 }
 
-float IntroScreen::ratio() const {
-	return 1;
-}
-
 void IntroScreen::drawText(QPainter* painter, int screenWidth, int screenHeight) {
 	auto stringHeight = painter->font().pointSize() * 2;
 	auto textHeight = stringHeight * drawData.size();
