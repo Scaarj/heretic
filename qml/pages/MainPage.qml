@@ -51,11 +51,14 @@ Page {
     Painter {
         id: painter
 
-        objectName: "painter"
+        objectName: "scenePainter"
         anchors.centerIn: parent
     }
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
+
+        onClicked: screenController.mousePressed()
     }
 }

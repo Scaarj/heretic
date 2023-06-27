@@ -12,7 +12,6 @@ public:
 
 	virtual void draw(QPainter* painter) override;
 	virtual QSize resize(int orientation) override;
-	virtual float ratio() const override;
 
 private:
 	unsigned int buffer[pixel_width][pixel_height];

@@ -9,8 +9,8 @@
 
 class ScenePainter : public QQuickPaintedItem {
 	Q_OBJECT
-	Q_PROPERTY(float screen_ratio READ screenRatio NOTIFY screenRatioChanged)
 
+public:
 	enum ContextType : int { IntroType = 0, GameType };
 
 public:
@@ -18,15 +18,13 @@ public:
 	virtual ~ScenePainter() = default;
 
 	void setPallete(byte* palette);
-	float screenRatio() const;
+	void setContext(ContextType context);
+	void printTextLine(const QString& line);
 
 	Q_INVOKABLE void orientationChanged(int orientation);
 
 protected:
 	void paint(QPainter* painter);
-
-signals:
-	void screenRatioChanged(float);
 
 private:
 	std::vector<std::unique_ptr<Context>> contexts;

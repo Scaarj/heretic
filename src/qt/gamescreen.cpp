@@ -1,7 +1,6 @@
 #include "gamescreen.h"
 
 #include <auroraapp.h>
-
 #include <QScreen>
 
 extern byte* screen;
@@ -51,19 +50,15 @@ QSize GameScreen::resize(int orientation) {
 
 	if (orientation == 1) {
 		image_width = QGuiApplication::primaryScreen()->size().width();
-		image_height = image_width / ratio();
+		image_height = image_width / screen_ratio;
 		screenSize = {
 			QGuiApplication::primaryScreen()->size().width(), QGuiApplication::primaryScreen()->size().height()};
 	} else {
 		image_height = QGuiApplication::primaryScreen()->size().width();
-		image_width = image_height * ratio();
+		image_width = image_height * screen_ratio;
 		screenSize = {
 			QGuiApplication::primaryScreen()->size().height(), QGuiApplication::primaryScreen()->size().width()};
 	}
 
 	return screenSize;
-}
-
-float GameScreen::ratio() const {
-	return screen_ratio;
 }

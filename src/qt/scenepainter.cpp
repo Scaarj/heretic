@@ -1,4 +1,4 @@
-#include "painter.h"
+#include "scenepainter.h"
 
 #include "gamescreen.h"
 #include "introscreen.h"
@@ -12,12 +12,17 @@ void ScenePainter::setPallete(byte* palette) {
 	Context::setPallete(palette);
 }
 
-void ScenePainter::paint(QPainter* painter) {
-	return contexts.at(currentContext)->draw(painter);
+void ScenePainter::setContext(ContextType context) {
+	currentContext = context;
+	update();
 }
 
-float ScenePainter::screenRatio() const {
-	return contexts.at(currentContext)->ratio();
+void ScenePainter::printTextLine(const QString& line) {
+	contexts.at(currentContext)->addDrawData(line);
+}
+
+void ScenePainter::paint(QPainter* painter) {
+	return contexts.at(currentContext)->draw(painter);
 }
 
 void ScenePainter::orientationChanged(int orientation) {

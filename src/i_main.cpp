@@ -4,13 +4,17 @@
 #include <auroraapp.h>
 #include <functional>
 
-#include "painter.h"
+#include "scenepainter.h"
+#include "screencontroller.h"
 
-ScenePainter* painter = nullptr;
+QGuiApplication* app;
+ScenePainter* scenePainter = nullptr;
+std::unique_ptr<ScreenController> screenController;
 
 int main(int argc, char* argv[]) {
 	QScopedPointer<QGuiApplication> application(Aurora::Application::application(argc, argv));
 	qmlRegisterType<ScenePainter>("Painter.Global", 1, 0, "Painter");
+	qmlRegisterType<ScenePainter>("Controller.Global", 1, 0, "ScreenController");
 
 	application->setOrganizationName(QStringLiteral("ru.auroraos"));
 	application->setApplicationName(QStringLiteral("heretic"));
@@ -19,7 +23,11 @@ int main(int argc, char* argv[]) {
 	view->setSource(Aurora::Application::pathTo(QStringLiteral("qml/heretic.qml")));
 	view->show();
 
-	painter = view->rootObject()->findChild<ScenePainter*>("painter");
+	scenePainter = view->rootObject()->findChild<ScenePainter*>("scenePainter");
+	Q_ASSERT(scenePainter);
+
+	screenController = std::make_unique<ScreenController>();
+	view->rootContext()->setContextProperty("screenController", screenController.get());
 
 	myargc = argc;
 	myargv = argv;

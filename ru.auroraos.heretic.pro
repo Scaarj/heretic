@@ -102,7 +102,8 @@ SOURCES += \
 	src/sound/sounds.cpp \
 	src/sound/soundst.cpp \
 	src/graphic/graphic_qml.cpp \
-	src/qt/painter.cpp \
+	src/qt/scenepainter.cpp \
+	src/qt/screencontroller.cpp \
 	src/qt/context.cpp \
 	src/qt/gamescreen.cpp \
 	src/qt/introscreen.cpp \
@@ -125,7 +126,8 @@ HEADERS += \
 	src/sound/i_sound.h \
 	src/sound/sounds.h \
 	src/sound/soundst.h \
-	src/qt/painter.h \
+	src/qt/scenepainter.h \
+	src/qt/screencontroller.h \
 	src/qt/context.h \
 	src/qt/gamescreen.h \
 	src/qt/introscreen.h \
