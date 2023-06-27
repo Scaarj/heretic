@@ -16,7 +16,7 @@
 
 #include "doomdef.h"
 
-#include "painter.h"
+#include "scenepainter.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,7 +63,7 @@ static int lastmousey = 0;
 static boolean mousemoved = false;
 static boolean shmFinished;
 
-extern ScenePainter* painter;
+extern ScenePainter* scenePainter;
 
 void I_GetEvent(void) {
 }
@@ -84,9 +84,7 @@ static int free_truec_pals(void) {
 }
 
 void I_SetPalette(byte* palette) {
-	if (painter) {
-		painter->setPallete(palette);
-	}
+	scenePainter->setPallete(palette);
 }
 
 void grabsharedmemory(size_t size) {

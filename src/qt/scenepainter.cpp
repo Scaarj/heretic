@@ -1,4 +1,4 @@
-#include "painter.h"
+#include "scenepainter.h"
 
 #include "gamescreen.h"
 #include "introscreen.h"
@@ -14,6 +14,7 @@ void ScenePainter::setPallete(byte* palette) {
 
 void ScenePainter::setContext(ContextType context) {
 	currentContext = context;
+	update();
 }
 
 void ScenePainter::printTextLine(const QString& line) {

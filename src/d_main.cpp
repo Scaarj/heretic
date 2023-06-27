@@ -9,7 +9,8 @@
 
 #include "doomdef.h"
 #include "p_local.h"
-#include "painter.h"
+#include "scenepainter.h"
+#include "screencontroller.h"
 
 #ifdef USE_GSI
 	#include "gsisound/soundst.h"
@@ -45,7 +46,8 @@ int bilifilter = 0;
 
 extern char* basedefault;
 extern char* homedir;
-extern ScenePainter* painter;
+extern ScenePainter* scenePainter;
+extern ScreenController* screenController;
 
 boolean advancedemo;
 
@@ -250,9 +252,7 @@ void D_DoomLoop(void) {
 
 	I_SetPalette(static_cast<byte*>(W_CacheLumpName("PLAYPAL", PU_CACHE)));
 
-	if (painter) {
-		painter->setContext(ScenePainter::GameType);
-	}
+	scenePainter->setContext(ScenePainter::GameType);
 
 	while (1) {
 		/* Frame syncronous IO operations */
@@ -537,31 +537,27 @@ void D_DoomMain(void) {
 	/*   char *startup;   */
 	/*   char smsg[80];   */
 
-	if (painter) {
-		painter->setContext(ScenePainter::IntroType);
-		painter->printTextLine("");
-		painter->printTextLine("");
-		// TODO: read version from pri/rpm
-		painter->printTextLine("HERETIC v1.0.1");
-		painter->printTextLine("");
-		painter->printTextLine("Works on x86, armv7hl Aurora OS");
-		painter->printTextLine("");
-		painter->printTextLine("Heretic was ported to Aurora OS");
-		painter->printTextLine("by Steve Dubrov");
-		painter->printTextLine("You can download the latest versions under:");
-		painter->printTextLine("https://github.com/Scaarj/heretic");
-		painter->printTextLine("");
-		painter->printTextLine("");
-		painter->printTextLine("Tap on Screen to go on.");
-		painter->printTextLine("");
-		painter->printTextLine("");
-		painter->update();
-		// TODO: interrupt loop on tap
-		int count = 5000;
-		while (count--) {
-			QGuiApplication::processEvents();
-		}
-	}
+	scenePainter->setContext(ScenePainter::IntroType);
+	scenePainter->printTextLine("");
+	scenePainter->printTextLine("");
+	// TODO: read version from pri/rpm
+	scenePainter->printTextLine("HERETIC v1.0.1");
+	scenePainter->printTextLine("");
+	scenePainter->printTextLine("Works on x86, armv7hl Aurora OS");
+	scenePainter->printTextLine("");
+	scenePainter->printTextLine("Heretic was ported to Aurora OS");
+	scenePainter->printTextLine("by Steve Dubrov");
+	scenePainter->printTextLine("You can download the latest versions under:");
+	scenePainter->printTextLine("https://github.com/Scaarj/heretic");
+	scenePainter->printTextLine("");
+	scenePainter->printTextLine("");
+	scenePainter->printTextLine("Tap on Screen to go on.");
+	scenePainter->printTextLine("");
+	scenePainter->printTextLine("");
+	scenePainter->update();
+	// TODO: interrupt loop on tap
+
+	screenController->waitUntilTap();
 
 	/* calls SVGALib init and revokes root rights, dummy for other displays */
 	InitGraphLib();

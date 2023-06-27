@@ -5,7 +5,7 @@
 #include <math.h>
 
 #include "r_local.h"
-#include "painter.h"
+#include "scenepainter.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,7 +14,7 @@ extern "C" {
   
 */
 
-extern ScenePainter* painter;
+extern ScenePainter* scenePainter;
 
 int viewangleoffset;
 
@@ -796,9 +796,7 @@ void R_RenderPlayerView(player_t* player) {
 	NetUpdate(); /* check for new console commands */
 	R_DrawMasked();
 	NetUpdate(); /* check for new console commands */
-	if (painter) {
-		painter->update();
-	}
+	scenePainter->update();
 }
 
 #ifdef __cplusplus
