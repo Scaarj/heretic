@@ -2,10 +2,10 @@
 /* D_main.c */
 
 #include <assert.h>
+#include <auroraapp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <auroraapp.h>
 
 #include "doomdef.h"
 #include "p_local.h"
@@ -108,11 +108,6 @@ event_t events[MAXEVENTS];
 int eventhead;
 int eventtail;
 
-void D_IncrementEvent() {
-	eventhead++;
-	eventhead = eventhead & (MAXEVENTS - 1);
-}
-
 /*
   //---------------------------------------------------------------------------
   //
@@ -122,10 +117,9 @@ void D_IncrementEvent() {
   //
   //---------------------------------------------------------------------------
 */
-void D_PostEvent(event_t* ev) {
-	events[eventhead] = *ev;
-	// NOTE: resolve warning [-Wsequence-point]
-	D_IncrementEvent();
+void D_PostEvent(event_t ev) {
+	events[eventhead] = ev;
+	eventhead = (++eventhead) & (MAXEVENTS - 1);
 }
 
 /*
@@ -140,9 +134,7 @@ void D_PostEvent(event_t* ev) {
 void D_ProcessEvents(void) {
 	event_t* ev;
 
-	// NOTE: resolve warning [-Wsequence-point]
-	//	for (; eventtail != eventhead; eventtail = (++eventtail) & (MAXEVENTS - 1)) {
-	while (eventtail != eventhead) {
+	for (; eventtail != eventhead; eventtail = (++eventtail) & (MAXEVENTS - 1)) {
 		ev = &events[eventtail];
 		if (F_Responder(ev)) {
 			continue;
@@ -151,8 +143,6 @@ void D_ProcessEvents(void) {
 			continue;
 		}
 		G_Responder(ev);
-
-		D_IncrementEvent();
 	}
 }
 
@@ -232,6 +222,7 @@ void D_Display(void) {
 
 	/* Flush buffered stuff to screen */
 	I_FinishUpdate();
+	scenePainter->update();
 }
 
 /*
@@ -349,7 +340,7 @@ void D_DoAdvanceDemo(void) {
 	switch (demosequence) {
 		case 0:
 			// NOTE: demo waiting reduce
-			pagetic = 210;
+			pagetic = 2100000;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "TITLE";
 			S_StartMusic(mus_titl);
@@ -357,7 +348,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 1:
 			// NOTE: demo waiting reduce
-			pagetic = 140;
+			pagetic = 2100000;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "TITLE";
 			break;
@@ -368,7 +359,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 3:
 			// NOTE: demo waiting reduce
-			pagetic = 200;
+			pagetic = 2100000;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "CREDIT";
 			break;
@@ -379,7 +370,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 5:
 			// NOTE: demo waiting reduce
-			pagetic = 200;
+			pagetic = 2100000;
 			gamestate = GS_DEMOSCREEN;
 			if (shareware) {
 				pagename = "ORDER";
@@ -541,7 +532,7 @@ void D_DoomMain(void) {
 	scenePainter->printTextLine("");
 	scenePainter->printTextLine("");
 	// TODO: read version from pri/rpm
-	scenePainter->printTextLine("HERETIC v1.0.1");
+	scenePainter->printTextLine("HERETIC v0.0.1");
 	scenePainter->printTextLine("");
 	scenePainter->printTextLine("Works on x86, armv7hl Aurora OS");
 	scenePainter->printTextLine("");

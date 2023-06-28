@@ -880,10 +880,7 @@ void D_DoomLoop(void);
 * calls I_GetTime, I_StartFrame, and I_StartTic
 */
 
-// NOTE: resolve [-Wsequence-point]
-void D_IncrementEvent();
-
-void D_PostEvent(event_t* ev);
+void D_PostEvent(event_t ev);
 /* called by IO functions when input is detected */
 
 void NetUpdate(void);

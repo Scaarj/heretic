@@ -39,6 +39,8 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Painter.Global 1.0
 
+import "controller" as Controller
+
 Page {
     id: root
 
@@ -60,5 +62,20 @@ Page {
         anchors.fill: parent
 
         onClicked: screenController.mousePressed()
+    }
+
+
+    Controller.MenuLeft {
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        anchors.leftMargin: Theme.paddingMedium
+    }
+
+    Controller.MenuRight {
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
+        anchors.rightMargin: Theme.paddingMedium
+        width: 100
+        height: 100
     }
 }

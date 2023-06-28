@@ -1,10 +1,10 @@
 
 /* AM_map.c */
 
-#include "doomdef.h"
-#include "p_local.h"
 #include "am_map.h"
 #include "am_data.h"
+#include "doomdef.h"
+#include "p_local.h"
 #include <stdio.h>
 
 #ifdef __cplusplus
