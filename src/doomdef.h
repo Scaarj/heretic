@@ -161,8 +161,8 @@ typedef struct {
 } __PACKED__ event_t;
 
 typedef struct {
-	char forwardmove; /* *2048 for move */
-	char sidemove __PACKED__; /* *2048 for move */
+	signed char forwardmove; /* *2048 for move */
+	signed char sidemove __PACKED__; /* *2048 for move */
 	short angleturn __PACKED__; /* <<16 for angle delta */
 	short consistancy __PACKED__; /* checks for net game */
 	byte chatchar __PACKED__;
