@@ -41,7 +41,7 @@ Item {
             Layout.row: 2
             Layout.column: 1
             onPressed: screenController.downPressed()
-            onReleased: screenController.leftReleased()
+            onReleased: screenController.downReleased()
         }
     }
 }
