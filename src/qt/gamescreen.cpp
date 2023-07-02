@@ -1,7 +1,7 @@
 #include "gamescreen.h"
 
-#include <auroraapp.h>
 #include <QScreen>
+#include <auroraapp.h>
 
 extern byte* screen;
 

@@ -378,7 +378,6 @@ default_t defaults[] = {{"mouse_sensitivity", &mouseXSensitivity, 5, 0, 0},
 	{"sfx_volume", reinterpret_cast<long*>(&snd_SfxVolume), 10, 0, 0},
 	{"music_volume", reinterpret_cast<long*>(&snd_MusicVolume), 10, 0, 0},
 
-#ifdef UNIX
 	{"key_right", &key_right, KEY_RIGHTARROW}, {"key_left", &key_left, KEY_LEFTARROW}, {"key_up", &key_up, KEY_UPARROW},
 	{"key_down", &key_down, KEY_DOWNARROW}, {"key_strafeleft", &key_strafeleft, ','},
 	{"key_straferight", &key_straferight, '.'},
@@ -390,24 +389,23 @@ default_t defaults[] = {{"mouse_sensitivity", &mouseXSensitivity, 5, 0, 0},
 	{"key_flycenter", &key_flycenter, KEY_HOME}, {"key_lookup", &key_lookup, KEY_PAGEDOWN},
 	{"key_lookdown", &key_lookdown, KEY_DELETE}, {"key_lookcenter", &key_lookcenter, KEY_END},
 
-	#ifdef ORIG_INVKEYS
+#ifdef ORIG_INVKEYS
 	{"key_invleft", &key_invleft, '['}, {"key_invright", &key_invright, ']'},
-	#else
+#else
 	{"key_invleft", &key_invleft, 'k'}, {"key_invright", &key_invright, 'l'},
-	#endif
+#endif
 
 	{"key_useartifact", &key_useartifact, KEY_ENTER},
 
-	#ifdef SNDSERV
+#ifdef SNDSERV
 	{"sndserver", (long*) &sndserver_filename, (long) "sndserver"},
 	{"sndopts", (long*) &sndserver_options, (long) "-quiet"},
-	#endif
-	#ifdef __DOSOUND__
+#endif
+#ifdef __DOSOUND__
 	{"mb_used", &mb_used, 2},
-	#endif
-	#ifdef MUSSERV
+#endif
+#ifdef MUSSERV
 	{"musserver", (long*) &musserver_filename, (long) "musserver"}, {"musopts", (long*) &musserver_options, (long) ""},
-	#endif
 #endif
 
 #ifdef LINUX_MOUSE
