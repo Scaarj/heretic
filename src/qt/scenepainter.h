@@ -21,7 +21,15 @@ public:
 	void setContext(ContextType context);
 	void printTextLine(const QString& line);
 
-	Q_INVOKABLE void orientationChanged(int orientation);
+	QRect activeScreen() const;
+
+	QRect fromGameCoord(const QRect& rect, const QRect& base);
+
+public slots:
+	void orientationChanged(int orientation);
+
+signals:
+	void activeScreenRectChanged(const QRect&);
 
 protected:
 	void paint(QPainter* painter);

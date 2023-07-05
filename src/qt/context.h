@@ -20,6 +20,7 @@ public:
 
 	virtual void draw(QPainter* painter) = 0;
 	virtual QSize resize(int orientation) = 0;
+	virtual QRect activeScreen() const = 0;
 
 	static void setPallete(byte* palette);
 

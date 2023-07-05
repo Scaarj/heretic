@@ -16,32 +16,68 @@ Item {
             id: upArrow
             Layout.row: 0
             Layout.column: 1
-            onPressed: screenController.upPressed()
-            onReleased: screenController.upReleased()
+            onPressedChanged: {
+                if (pressed) {
+                    screenController.upPressed()
+                } else {
+                    screenController.upReleased()
+                }
+            }
+
+            onHoveredChanged:  {
+                console.log("onHoveredChanged upArrow")
+            }
         }
 
         Keys.LeftArrow {
             id: leftArrow
             Layout.row: 1
             Layout.column: 0
-            onPressed: screenController.leftPressed()
-            onReleased: screenController.leftReleased()
+            onPressedChanged: {
+                if (pressed) {
+                    screenController.leftPressed()
+                } else {
+                    screenController.leftReleased()
+                }
+            }
+
+            onHoveredChanged:  {
+                console.log("onHoveredChanged leftArrow")
+            }
         }
 
         Keys.RightArrow {
             id: rightArrow
             Layout.row: 1
             Layout.column: 3
-            onPressed: screenController.rightPressed()
-            onReleased: screenController.rightReleased()
+            onPressedChanged: {
+                if (pressed) {
+                    screenController.rightPressed()
+                } else {
+                    screenController.rightReleased()
+                }
+            }
+
+            onHoveredChanged:  {
+                console.log("onHoveredChanged rightArrow")
+            }
         }
 
         Keys.DownArrow {
             id: downArrow
             Layout.row: 2
             Layout.column: 1
-            onPressed: screenController.downPressed()
-            onReleased: screenController.downReleased()
+            onPressedChanged: {
+                if (pressed) {
+                    screenController.downPressed()
+                } else {
+                    screenController.downReleased()
+                }
+            }
+
+            onHoveredChanged:  {
+                console.log("onHoveredChanged downArrow")
+            }
         }
     }
 }

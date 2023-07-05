@@ -52,30 +52,16 @@ Page {
 
     Painter {
         id: painter
-
         objectName: "scenePainter"
-        anchors.centerIn: parent
     }
 
     MouseArea {
         id: mouseArea
         anchors.fill: parent
-
         onClicked: screenController.mousePressed()
     }
 
-
-    Controller.MenuLeft {
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.left: parent.left
-        anchors.leftMargin: Theme.paddingMedium
-    }
-
-    Controller.MenuRight {
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.right: parent.right
-        anchors.rightMargin: Theme.paddingMedium
-        width: 100
-        height: 100
+    Controller.GestureArea {
+        anchors.fill: parent
     }
 }

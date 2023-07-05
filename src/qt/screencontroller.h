@@ -3,7 +3,9 @@
 #include <QQuickItem>
 #include <auroraapp.h>
 
-#include "doomdef.h"
+#include "mn_menu.h"
+
+class ScenePainter;
 
 class ScreenController : public QQuickItem {
 	Q_OBJECT
@@ -15,30 +17,36 @@ class ScreenController : public QQuickItem {
 	event_t enterKeyPressed{ev_keydown, KEY_ENTER, 0, 0};
 	event_t escapeKeyPressed{ev_keydown, KEY_ESCAPE, 0, 0};
 
+	struct MenuItems {
+		int pos;
+		QRect rect;
+	};
+
 public:
-	ScreenController(QQuickItem* parent = nullptr);
+	ScreenController(ScenePainter* painter, QQuickItem* parent = nullptr);
 
 	void waitUntilTap();
-	void onMousePressed();
+
+private slots:
+	void onMousePressed(int x, int y);
+	void onDoubleClick(int x, int y);
+	void onActiveScreenRectChanged(const QRect& screen);
+	void onLeftSwipe();
+	void onRightSwipe();
 
 signals:
-	void mousePressed();
-
-	void leftPressed();
-	void upPressed();
-	void rightPressed();
-	void downPressed();
-	void enterPressed();
-	void escapePressed();
-
-	void leftReleased();
-	void upReleased();
-	void rightReleased();
-	void downReleased();
-	void enterReleased();
-	void escapeReleased();
+	void mousePressed(int x, int y);
+	void doubleClick(int x, int y);
+	void leftSwipe();
+	void rightSwipe();
 
 private:
-	QThread loopThread;
+	QVector<MenuItems> menuItems() const;
+	int itemWidth(int x, int y, const char* text) const;
+	int clickOnMenuPosition(int x, int y);
+
+private:
 	std::atomic_bool tapLock;
+	ScenePainter* scenePainter;
+	QRect activeRect;
 };

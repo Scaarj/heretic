@@ -50,6 +50,7 @@ extern ScenePainter* scenePainter;
 extern ScreenController* screenController;
 
 boolean advancedemo;
+extern boolean MenuActive;
 
 FILE* debugfile;
 
