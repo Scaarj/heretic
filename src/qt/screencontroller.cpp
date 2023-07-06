@@ -8,6 +8,7 @@ extern Menu_t* CurrentMenu;
 extern boolean MenuActive;
 extern int FontBBaseLump;
 extern int CurrentItPos;
+extern boolean askforquit;
 
 ScreenController::ScreenController(ScenePainter* painter, QQuickItem* parent)
 	: QQuickItem{parent}
@@ -67,11 +68,19 @@ void ScreenController::onActiveScreenRectChanged(const QRect& screen) {
 }
 
 void ScreenController::onLeftSwipe() {
-	D_PostEvent(event_t{ev_keydown, KEY_LEFTARROW, 0, 0});
+	if (askforquit) {
+		D_PostEvent(event_t{ev_keydown, 'n', 0, 0});
+	} else if (MenuActive) {
+		D_PostEvent(event_t{ev_keydown, KEY_LEFTARROW, 0, 0});
+	}
 }
 
 void ScreenController::onRightSwipe() {
-	D_PostEvent(event_t{ev_keydown, KEY_RIGHTARROW, 0, 0});
+	if (askforquit) {
+		D_PostEvent(event_t{ev_keydown, 'y', 0, 0});
+	} else if (MenuActive) {
+		D_PostEvent(event_t{ev_keydown, KEY_RIGHTARROW, 0, 0});
+	}
 }
 
 QVector<ScreenController::MenuItems> ScreenController::menuItems() const {

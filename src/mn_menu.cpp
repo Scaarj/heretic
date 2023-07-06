@@ -71,9 +71,10 @@ extern char* homedir;
 boolean MenuActive;
 int InfoType;
 boolean messageson;
-Menu_t* CurrentMenu;
 int FontBBaseLump;
 int CurrentItPos;
+Menu_t* CurrentMenu;
+boolean askforquit;
 
 /* Private Data */
 
@@ -83,7 +84,6 @@ static int MenuEpisode;
 static int MenuTime;
 static boolean soundchanged;
 
-boolean askforquit;
 int typeofask;
 static boolean FileMenuKeySteal;
 static boolean slottextloaded;

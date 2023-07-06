@@ -39,6 +39,11 @@ void ScenePainter::paint(QPainter* painter) {
 }
 
 void ScenePainter::orientationChanged(int orientation) {
+	if (currentContext == IntroType) {
+		contexts.at(GameType)->resize(orientation);
+	} else if (currentContext == IntroType) {
+		contexts.at(IntroType)->resize(orientation);
+	}
 	auto size = contexts.at(currentContext)->resize(orientation);
 	setWidth(size.width());
 	setHeight(size.height());

@@ -42,6 +42,7 @@ typedef struct {
 } Menu_t;
 
 extern Menu_t* CurrentMenu;
+extern boolean askforquit;
 
 #ifdef __cplusplus
 }
