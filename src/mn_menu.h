@@ -44,6 +44,11 @@ typedef struct {
 extern Menu_t* CurrentMenu;
 extern boolean askforquit;
 
+extern int YesButtonX;
+extern int NoButtonX;
+extern int ConfirmationButtonY;
+extern const char* QuitEndMsgAnswer[];
+
 #ifdef __cplusplus
 }
 #endif

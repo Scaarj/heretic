@@ -2,6 +2,7 @@
 
 #include "doomdef.h"
 #include "gamescreen.h"
+#include "mn_menu.h"
 #include "scenepainter.h"
 
 extern Menu_t* CurrentMenu;
@@ -29,6 +30,15 @@ void ScreenController::waitUntilTap() {
 	}
 }
 
+void ScreenController::init() {
+	YesButtonX = 100 - MN_TextAWidth(QuitEndMsgAnswer[0]) / 2;
+	NoButtonX = 200 - MN_TextAWidth(QuitEndMsgAnswer[1]) / 2;
+	ConfirmationButtonY = Y_DISP + 100;
+
+	yesButton = QRect(YesButtonX, ConfirmationButtonY, itemWidth(YesButtonX, QuitEndMsgAnswer[0]), ITEM_HEIGHT);
+	noButton = QRect(NoButtonX, ConfirmationButtonY, itemWidth(NoButtonX, QuitEndMsgAnswer[1]), ITEM_HEIGHT);
+}
+
 void ScreenController::onMousePressed(int x, int y) {
 	if (!activeRect.contains(QPoint(x, y))) {
 		return;
@@ -52,14 +62,22 @@ void ScreenController::onDoubleClick(int x, int y) {
 		return;
 	}
 
-	auto pos = clickOnMenuPosition(x, y);
+	if (askforquit) {
+		if (yesButtonPressed(x, y)) {
+			D_PostEvent(event_t{ev_keydown, 'y', 0, 0});
+		}
+		if (noButtonPressed(x, y)) {
+			D_PostEvent(event_t{ev_keydown, 'n', 0, 0});
+		}
+	} else {
 
-	if (MenuActive && pos != -1) {
-		D_PostEvent(event_t{ev_keydown, KEY_ENTER, 0, 0});
-	} else if (!MenuActive && pos == -1) {
-		D_PostEvent(event_t{ev_keydown, KEY_ESCAPE, 0, 0});
-	} else if (MenuActive && pos == -1) {
-		D_PostEvent(event_t{ev_keydown, KEY_BACKSPACE, 0, 0});
+        if (MenuActive) {
+            checkMenuInteraction(x, y);
+        }
+
+        if (!MenuActive && gamestate != GS_LEVEL) {
+            checkNoneGameMenuInteraction(x, y);
+        }
 	}
 }
 
@@ -68,17 +86,13 @@ void ScreenController::onActiveScreenRectChanged(const QRect& screen) {
 }
 
 void ScreenController::onLeftSwipe() {
-	if (askforquit) {
-		D_PostEvent(event_t{ev_keydown, 'n', 0, 0});
-	} else if (MenuActive) {
+	if (MenuActive) {
 		D_PostEvent(event_t{ev_keydown, KEY_LEFTARROW, 0, 0});
 	}
 }
 
 void ScreenController::onRightSwipe() {
-	if (askforquit) {
-		D_PostEvent(event_t{ev_keydown, 'y', 0, 0});
-	} else if (MenuActive) {
+	if (MenuActive) {
 		D_PostEvent(event_t{ev_keydown, KEY_RIGHTARROW, 0, 0});
 	}
 }
@@ -89,11 +103,11 @@ QVector<ScreenController::MenuItems> ScreenController::menuItems() const {
 	if (MenuActive && CurrentMenu) {
 		for (int i = 0; i < CurrentMenu->itemCount; ++i) {
 			if (CurrentMenu->items[i].text) {
-				auto width = itemWidth(CurrentMenu->x, CurrentMenu->y + i * ITEM_HEIGHT, CurrentMenu->items[i].text);
+				auto width = itemWidth(CurrentMenu->x, CurrentMenu->items[i].text);
 				auto coordX = CurrentMenu->x;
 				auto coordY = CurrentMenu->y + i * ITEM_HEIGHT;
 				auto rect = QRect(coordX, coordY, width, ITEM_HEIGHT);
-				menuItems.push_back({i, scenePainter->fromGameCoord(rect, QRect(0, 0, 320, 200))});
+				menuItems.push_back({i, scenePainter->fromGameCoord(rect, baseScreen)});
 			}
 		}
 	}
@@ -101,7 +115,7 @@ QVector<ScreenController::MenuItems> ScreenController::menuItems() const {
 	return menuItems;
 }
 
-int ScreenController::itemWidth(int x, [[maybe_unused]] int y, const char* text) const {
+int ScreenController::itemWidth(int x, const char* text) const {
 	char c;
 	patch_t* p = nullptr;
 	int startX = x;
@@ -128,4 +142,47 @@ int ScreenController::clickOnMenuPosition(int x, int y) {
 	}
 
 	return -1;
+}
+
+bool ScreenController::yesButtonPressed(int x, int y) {
+	return scenePainter->fromGameCoord(yesButton, baseScreen).contains(x, y);
+}
+
+bool ScreenController::noButtonPressed(int x, int y) {
+    return scenePainter->fromGameCoord(noButton, baseScreen).contains(x, y);
+}
+
+void ScreenController::menuMissClicked()
+{
+    D_PostEvent(event_t{ev_keydown, KEY_BACKSPACE, 0, 0});
+}
+
+void ScreenController::menuItemClicked()
+{
+    D_PostEvent(event_t{ev_keydown, KEY_ENTER, 0, 0});
+}
+
+void ScreenController::mainMenuEmptyScreenClicked()
+{
+    D_PostEvent(event_t{ev_keydown, KEY_ESCAPE, 0, 0});
+}
+
+void ScreenController::checkNoneGameMenuInteraction(int x, int y)
+{
+    auto pos = clickOnMenuPosition(x, y);
+
+    if (pos == -1) {
+        mainMenuEmptyScreenClicked();
+    }
+}
+
+void ScreenController::checkMenuInteraction(int x, int y)
+{
+    auto pos = clickOnMenuPosition(x, y);
+
+    if (pos == -1) {
+        menuMissClicked();
+    } else {
+        menuItemClicked();
+    }
 }

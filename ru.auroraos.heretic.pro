@@ -145,7 +145,7 @@ AURORAAPP_ICONS = 86x86 108x108 128x128 172x172
 
 CONFIG += auroraapp_i18n
 
-wad_file.files = $$PWD/../Heretic.wad
+wad_file.files = $$PWD/resource/Heretic.wad
 wad_file.path = /usr/share/$${TARGET}
 INSTALLS += wad_file
 

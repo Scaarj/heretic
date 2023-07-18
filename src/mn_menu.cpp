@@ -76,6 +76,10 @@ int CurrentItPos;
 Menu_t* CurrentMenu;
 boolean askforquit;
 
+int YesButtonX;
+int NoButtonX;
+int ConfirmationButtonY;
+
 /* Private Data */
 
 static int FontABaseLump;
@@ -316,6 +320,7 @@ void MN_Ticker(void) {
 */
 const char* QuitEndMsg[] = {"ARE YOU SURE YOU WANT TO QUIT?", "ARE YOU SURE YOU WANT TO END THE GAME?",
 	"DO YOU WANT TO QUICKSAVE THE GAME NAMED", "DO YOU WANT TO QUICKLOAD THE GAME NAMED"};
+const char* QuitEndMsgAnswer[] = {"YES", "NO"};
 
 void MN_Drawer(void) {
 	int i;
@@ -335,6 +340,8 @@ void MN_Drawer(void) {
 				MN_DrTextA(SlotText[quickload - 1], 160 - MN_TextAWidth(SlotText[quickload - 1]) / 2, Y_DISP + 90);
 				MN_DrTextA("?", 160 + MN_TextAWidth(SlotText[quickload - 1]) / 2, Y_DISP + 90);
 			}
+			MN_DrTextB(QuitEndMsgAnswer[0], YesButtonX, ConfirmationButtonY);
+			MN_DrTextB(QuitEndMsgAnswer[1], NoButtonX, ConfirmationButtonY);
 			/* UpdateState |= I_FULLSCRN; */
 		}
 		return;

@@ -22,10 +22,13 @@ class ScreenController : public QQuickItem {
 		QRect rect;
 	};
 
+	QRect baseScreen{0, 0, 320, 200};
+
 public:
 	ScreenController(ScenePainter* painter, QQuickItem* parent = nullptr);
 
 	void waitUntilTap();
+	void init();
 
 private slots:
 	void onMousePressed(int x, int y);
@@ -42,8 +45,17 @@ signals:
 
 private:
 	QVector<MenuItems> menuItems() const;
-	int itemWidth(int x, int y, const char* text) const;
+	QRect yesButton;
+	QRect noButton;
+	int itemWidth(int x, const char* text) const;
 	int clickOnMenuPosition(int x, int y);
+	bool yesButtonPressed(int x, int y);
+	bool noButtonPressed(int x, int y);
+    void menuMissClicked();
+    void menuItemClicked();
+    void mainMenuEmptyScreenClicked();
+    void checkNoneGameMenuInteraction(int x, int y);
+    void checkMenuInteraction(int x, int y);
 
 private:
 	std::atomic_bool tapLock;
