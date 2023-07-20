@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resource/image/menu-dots-circle.svg</file>
+    </qresource>
+</RCC>

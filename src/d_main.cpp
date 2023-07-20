@@ -188,6 +188,9 @@ void D_Display(void) {
 	/*
    * do buffered drawing
    */
+
+	screenController->checkGameState(gamestate);
+
 	switch (gamestate) {
 		case GS_LEVEL:
 			if (!gametic)

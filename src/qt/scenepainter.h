@@ -22,7 +22,6 @@ public:
 	void printTextLine(const QString& line);
 
 	QRect activeScreen() const;
-
 	QRect fromGameCoord(const QRect& rect, const QRect& base);
 
 public slots:

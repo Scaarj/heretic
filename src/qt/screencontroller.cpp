@@ -13,13 +13,9 @@ extern boolean askforquit;
 
 ScreenController::ScreenController(ScenePainter* painter, QQuickItem* parent)
 	: QQuickItem{parent}
-	, scenePainter{painter} {
+	, scenePainter{painter}
+	, m_isGameState{false} {
 	connect(scenePainter, &ScenePainter::activeScreenRectChanged, this, &ScreenController::onActiveScreenRectChanged);
-
-	connect(this, &ScreenController::mousePressed, this, &ScreenController::onMousePressed);
-	connect(this, &ScreenController::doubleClick, this, &ScreenController::onDoubleClick);
-	connect(this, &ScreenController::leftSwipe, this, &ScreenController::onLeftSwipe);
-	connect(this, &ScreenController::rightSwipe, this, &ScreenController::onRightSwipe);
 }
 
 void ScreenController::waitUntilTap() {
@@ -39,8 +35,23 @@ void ScreenController::init() {
 	noButton = QRect(NoButtonX, ConfirmationButtonY, itemWidth(NoButtonX, QuitEndMsgAnswer[1]), ITEM_HEIGHT);
 }
 
-void ScreenController::onMousePressed(int x, int y) {
-	if (!activeRect.contains(QPoint(x, y))) {
+void ScreenController::checkGameState(gamestate_t state) {
+	auto currentState = GS_LEVEL == state;
+
+	if (currentState != m_isGameState) {
+		m_isGameState = currentState;
+		emit isGameStateChanged();
+	}
+}
+
+bool ScreenController::isGameState() {
+	return m_isGameState;
+}
+
+void ScreenController::mousePressed(int mouseX, int mouseY) {
+	safeLastMousePosition(mouseX, mouseY);
+
+	if (!activeRect.contains(QPoint(mouseX, mouseY))) {
 		return;
 	}
 
@@ -50,14 +61,40 @@ void ScreenController::onMousePressed(int x, int y) {
 	}
 
 	if (MenuActive && CurrentMenu) {
-		auto pos = clickOnMenuPosition(x, y);
+		auto pos = clickOnMenuPosition(mouseX, mouseY);
 		if (pos != -1) {
 			CurrentItPos = pos;
 		}
 	}
 }
 
-void ScreenController::onDoubleClick(int x, int y) {
+void ScreenController::mousePositionChanged(int mouseX, int mouseY) {
+	if (MenuActive) {
+		if (mouseX - mouseLastPosition.x() > swipeWidth) {
+			auto offset = abs(trunc((mouseX - mouseLastPosition.x()) / swipeWidth));
+			while (offset--) {
+				rightSwipe();
+			}
+		} else if (mouseX - mouseLastPosition.x() < -swipeWidth) {
+			auto offset = abs(trunc((mouseX - mouseLastPosition.x()) / swipeWidth));
+			while (offset--) {
+				leftSwipe();
+			}
+		} else {
+			mousePressed(mouseX, mouseY);
+		}
+		safeLastMousePosition(mouseX, mouseY);
+	} else {
+		if (isGameState()) {
+			auto offsetX = mouseX - mouseLastPosition.x();
+			auto offsetY = mouseY - mouseLastPosition.y();
+			mouseMoved(offsetX, offsetY);
+			safeLastMousePosition(mouseX, mouseY);
+		}
+	}
+}
+
+void ScreenController::doubleClick(int x, int y) {
 	if (!activeRect.contains(QPoint(x, y))) {
 		return;
 	}
@@ -70,31 +107,18 @@ void ScreenController::onDoubleClick(int x, int y) {
 			D_PostEvent(event_t{ev_keydown, 'n', 0, 0});
 		}
 	} else {
-
-        if (MenuActive) {
-            checkMenuInteraction(x, y);
-        }
-
-        if (!MenuActive && gamestate != GS_LEVEL) {
-            checkNoneGameMenuInteraction(x, y);
-        }
+		if (MenuActive) {
+			checkMenuInteraction(x, y);
+		}
+		if (!MenuActive && !isGameState()) {
+			checkNoneGameMenuInteraction(x, y);
+		}
 	}
 }
 
 void ScreenController::onActiveScreenRectChanged(const QRect& screen) {
 	activeRect = QRect(screen.x(), screen.y(), screen.width(), screen.height());
-}
-
-void ScreenController::onLeftSwipe() {
-	if (MenuActive) {
-		D_PostEvent(event_t{ev_keydown, KEY_LEFTARROW, 0, 0});
-	}
-}
-
-void ScreenController::onRightSwipe() {
-	if (MenuActive) {
-		D_PostEvent(event_t{ev_keydown, KEY_RIGHTARROW, 0, 0});
-	}
+	swipeWidth = std::min(scenePainter->width(), scenePainter->height()) / 32;
 }
 
 QVector<ScreenController::MenuItems> ScreenController::menuItems() const {
@@ -149,40 +173,54 @@ bool ScreenController::yesButtonPressed(int x, int y) {
 }
 
 bool ScreenController::noButtonPressed(int x, int y) {
-    return scenePainter->fromGameCoord(noButton, baseScreen).contains(x, y);
+	return scenePainter->fromGameCoord(noButton, baseScreen).contains(x, y);
 }
 
-void ScreenController::menuMissClicked()
-{
-    D_PostEvent(event_t{ev_keydown, KEY_BACKSPACE, 0, 0});
+void ScreenController::menuMissClicked() {
+	D_PostEvent(backspaceKeyPressed);
 }
 
-void ScreenController::menuItemClicked()
-{
-    D_PostEvent(event_t{ev_keydown, KEY_ENTER, 0, 0});
+void ScreenController::menuItemClicked() {
+	D_PostEvent(enterKeyPressed);
 }
 
-void ScreenController::mainMenuEmptyScreenClicked()
-{
-    D_PostEvent(event_t{ev_keydown, KEY_ESCAPE, 0, 0});
+void ScreenController::menuPressed() {
+	D_PostEvent(escapeKeyPressed);
 }
 
-void ScreenController::checkNoneGameMenuInteraction(int x, int y)
-{
-    auto pos = clickOnMenuPosition(x, y);
-
-    if (pos == -1) {
-        mainMenuEmptyScreenClicked();
-    }
+void ScreenController::leftSwipe() {
+	if (MenuActive) {
+		D_PostEvent(leftKeyPressed);
+	}
 }
 
-void ScreenController::checkMenuInteraction(int x, int y)
-{
-    auto pos = clickOnMenuPosition(x, y);
+void ScreenController::rightSwipe() {
+	if (MenuActive) {
+		D_PostEvent(rightKeyPressed);
+	}
+}
 
-    if (pos == -1) {
-        menuMissClicked();
-    } else {
-        menuItemClicked();
-    }
+void ScreenController::checkNoneGameMenuInteraction(int x, int y) {
+	auto pos = clickOnMenuPosition(x, y);
+
+	if (pos == -1) {
+		menuPressed();
+	}
+}
+
+void ScreenController::checkMenuInteraction(int x, int y) {
+	auto pos = clickOnMenuPosition(x, y);
+
+	if (pos == -1) {
+		menuMissClicked();
+	} else {
+		menuItemClicked();
+	}
+}
+
+void ScreenController::safeLastMousePosition(int mouseX, int mouseY) {
+	mouseLastPosition = QPoint(mouseX, mouseY);
+}
+
+void ScreenController::mouseMoved(int offsetX, int offsetY) {
 }
