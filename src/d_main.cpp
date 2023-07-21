@@ -183,11 +183,14 @@ void D_Display(void) {
 
 	/* Change the view size if needed */
 	if (setsizeneeded)
-		R_ExecuteSetViewSize();
+        R_ExecuteSetViewSize();
 
 	/*
    * do buffered drawing
    */
+
+	screenController->checkGameState(gamestate);
+
 	switch (gamestate) {
 		case GS_LEVEL:
 			if (!gametic)
@@ -750,6 +753,8 @@ void D_DoomMain(void) {
 
 	printf("SB_Init: Loading patches.\n");
 	SB_Init();
+
+	screenController->init();
 
 	/*
    * start the apropriate game based on parms

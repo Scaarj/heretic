@@ -14,6 +14,7 @@ class ScreenController : public QQuickItem {
 	event_t upKeyPressed{ev_keydown, KEY_UPARROW, 0, 0};
 	event_t rightKeyPressed{ev_keydown, KEY_RIGHTARROW, 0, 0};
 	event_t downKeyPressed{ev_keydown, KEY_DOWNARROW, 0, 0};
+	event_t backspaceKeyPressed{ev_keydown, KEY_BACKSPACE, 0, 0};
 	event_t enterKeyPressed{ev_keydown, KEY_ENTER, 0, 0};
 	event_t escapeKeyPressed{ev_keydown, KEY_ESCAPE, 0, 0};
 
@@ -22,31 +23,55 @@ class ScreenController : public QQuickItem {
 		QRect rect;
 	};
 
+	QRect baseScreen{0, 0, 320, 200};
+
+	Q_PROPERTY(bool isGameState READ isGameState NOTIFY isGameStateChanged)
+
 public:
 	ScreenController(ScenePainter* painter, QQuickItem* parent = nullptr);
 
 	void waitUntilTap();
+	void init();
 
-private slots:
-	void onMousePressed(int x, int y);
-	void onDoubleClick(int x, int y);
-	void onActiveScreenRectChanged(const QRect& screen);
-	void onLeftSwipe();
-	void onRightSwipe();
+	void checkGameState(gamestate_t state);
+
+public slots:
+	void mousePressed(int mouseX, int mouseY);
+	void mousePositionChanged(int mouseX, int mouseY);
+	void doubleClick(int x, int y);
+
+	void menuPressed();
+	bool isGameState();
 
 signals:
-	void mousePressed(int x, int y);
-	void doubleClick(int x, int y);
+	void isGameStateChanged();
+
+private slots:
+	void onActiveScreenRectChanged(const QRect& screen);
+
+private:
+	bool yesButtonPressed(int x, int y);
+	bool noButtonPressed(int x, int y);
+	int itemWidth(int x, const char* text) const;
+	int clickOnMenuPosition(int x, int y);
+
+	QVector<MenuItems> menuItems() const;
+	void menuMissClicked();
+	void menuItemClicked();
+	void checkNoneGameMenuInteraction(int x, int y);
+	void checkMenuInteraction(int x, int y);
+	void safeLastMousePosition(int mouseX, int mouseY);
+	void mouseMoved(int offsetX, int offsetY);
 	void leftSwipe();
 	void rightSwipe();
 
 private:
-	QVector<MenuItems> menuItems() const;
-	int itemWidth(int x, int y, const char* text) const;
-	int clickOnMenuPosition(int x, int y);
-
-private:
+	int swipeWidth;
 	std::atomic_bool tapLock;
 	ScenePainter* scenePainter;
+	QPoint mouseLastPosition;
 	QRect activeRect;
+	QRect yesButton;
+	QRect noButton;
+	bool m_isGameState;
 };
