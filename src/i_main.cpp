@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 	scenePainter = view->rootObject()->findChild<ScenePainter*>("scenePainter");
 	Q_ASSERT(scenePainter);
 
-	screenController = std::make_unique<ScreenController>();
+	screenController = std::make_unique<ScreenController>(scenePainter);
 	view->rootContext()->setContextProperty("screenController", screenController.get());
 
 	myargc = argc;

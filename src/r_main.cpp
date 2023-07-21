@@ -796,7 +796,6 @@ void R_RenderPlayerView(player_t* player) {
 	NetUpdate(); /* check for new console commands */
 	R_DrawMasked();
 	NetUpdate(); /* check for new console commands */
-	scenePainter->update();
 }
 
 #ifdef __cplusplus

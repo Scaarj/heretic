@@ -117,6 +117,7 @@ HEADERS += \
 	src/dstrings.h \
 	src/am_data.h \
 	src/am_map.h \
+	src/mn_menu.h \
 	src/sound/sounds.h \
 	src/sound/soundst.h \
 	src/sound/i_sound.h \

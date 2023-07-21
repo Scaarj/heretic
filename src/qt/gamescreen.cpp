@@ -1,7 +1,7 @@
 #include "gamescreen.h"
 
-#include <auroraapp.h>
 #include <QScreen>
+#include <auroraapp.h>
 
 extern byte* screen;
 
@@ -20,24 +20,10 @@ void GameScreen::draw(QPainter* painter) {
 	QImage image(reinterpret_cast<const uchar*>(data.constData()), pixel_width, pixel_height, QImage::Format_RGB32);
 	QBrush brush(QColor(0, 0, 0));
 
-	QRectF imageRect;
-	QRectF backgroundRect;
+	auto screen = screenRect();
 
-	if (image_width == QGuiApplication::primaryScreen()->size().width()) {
-		auto screenWidth = QGuiApplication::primaryScreen()->size().width();
-		auto screenHeight = QGuiApplication::primaryScreen()->size().height();
-		auto heightOffset = (screenHeight - image_height) / 2;
-
-		imageRect = QRectF(0, heightOffset, image_width, image_height);
-		backgroundRect = QRectF(0, 0, screenWidth, screenHeight);
-	} else {
-		auto screenWidth = QGuiApplication::primaryScreen()->size().height();
-		auto screenHeight = QGuiApplication::primaryScreen()->size().width();
-		auto widthOffset = (screenWidth - image_width) / 2;
-
-		imageRect = QRectF(widthOffset, 0, image_width, image_height);
-		backgroundRect = QRectF(0, 0, screenWidth, screenHeight);
-	}
+	QRectF imageRect = QRectF(screen.x(), screen.y(), image_width, image_height);
+	QRectF backgroundRect = QRectF(0, 0, screen.width(), screen.height());
 
 	painter->fillRect(backgroundRect, brush);
 	painter->drawImage(imageRect, image);
@@ -61,4 +47,28 @@ QSize GameScreen::resize(int orientation) {
 	}
 
 	return screenSize;
+}
+
+QRect GameScreen::activeScreen() const {
+	auto screen = screenRect();
+	return QRect(screen.x(), screen.y(), image_width, image_height);
+}
+
+QRect GameScreen::screenRect() const {
+	auto screenWidth{0};
+	auto screenHeight{0};
+	auto heightOffset{0};
+	auto widthOffset{0};
+
+	if (image_width == QGuiApplication::primaryScreen()->size().width()) {
+		screenWidth = QGuiApplication::primaryScreen()->size().width();
+		screenHeight = QGuiApplication::primaryScreen()->size().height();
+		heightOffset = (screenHeight - image_height) / 2;
+	} else {
+		screenWidth = QGuiApplication::primaryScreen()->size().height();
+		screenHeight = QGuiApplication::primaryScreen()->size().width();
+		widthOffset = (screenWidth - image_width) / 2;
+	}
+
+	return QRect(widthOffset, heightOffset, screenWidth, screenHeight);
 }

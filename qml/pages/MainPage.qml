@@ -39,6 +39,8 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Painter.Global 1.0
 
+import "controller" as Controller
+
 Page {
     id: root
 
@@ -50,15 +52,16 @@ Page {
 
     Painter {
         id: painter
-
         objectName: "scenePainter"
-        anchors.centerIn: parent
     }
 
     MouseArea {
         id: mouseArea
         anchors.fill: parent
-
         onClicked: screenController.mousePressed()
+    }
+
+    Controller.GestureArea {
+        anchors.fill: parent
     }
 }

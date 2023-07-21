@@ -368,6 +368,15 @@ extern int snd_SBport, snd_SBirq, snd_SBdma; /* sound blaster variables */
 extern int snd_Mport; /* midi variables */
 #endif
 
+//typedef struct {
+//	const char* name;
+//	long* location;
+//	long defaultvalue;
+//	int scantranslate; /* PC scan code hack */
+//	int untranslated; /* lousy hack */
+//} default_t;
+
+// clang-format off
 default_t defaults[] = {{"mouse_sensitivity", &mouseXSensitivity, 5, 0, 0},
 	/* rhandeev: added mouse Y sensitivity default */
 	{"mouse_ysensitivity", &mouseYSensitivity, 5, 0, 0},
@@ -378,47 +387,59 @@ default_t defaults[] = {{"mouse_sensitivity", &mouseXSensitivity, 5, 0, 0},
 	{"sfx_volume", reinterpret_cast<long*>(&snd_SfxVolume), 10, 0, 0},
 	{"music_volume", reinterpret_cast<long*>(&snd_MusicVolume), 10, 0, 0},
 
-#ifdef UNIX
-	{"key_right", &key_right, KEY_RIGHTARROW}, {"key_left", &key_left, KEY_LEFTARROW}, {"key_up", &key_up, KEY_UPARROW},
-	{"key_down", &key_down, KEY_DOWNARROW}, {"key_strafeleft", &key_strafeleft, ','},
-	{"key_straferight", &key_straferight, '.'},
+	{"key_right", &key_right, KEY_RIGHTARROW, 0, 0},
+	{"key_left", &key_left, KEY_LEFTARROW, 0, 0},
+	{"key_up", &key_up, KEY_UPARROW, 0, 0},
+	{"key_down", &key_down, KEY_DOWNARROW, 0, 0},
+	{"key_strafeleft", &key_strafeleft, ',', 0, 0},
+	{"key_straferight", &key_straferight, '.', 0, 0},
 
-	{"key_fire", &key_fire, KEY_RCTRL, 1}, {"key_use", &key_use, ' ', 1}, {"key_strafe", &key_strafe, KEY_RALT, 1},
-	{"key_speed", &key_speed, KEY_RSHIFT, 1},
+	{"key_fire", &key_fire, KEY_RCTRL, 1, 0},
+	{"key_use", &key_use, ' ', 1, 0},
+	{"key_strafe", &key_strafe, KEY_RALT, 1, 0},
+	{"key_speed", &key_speed, KEY_RSHIFT, 1, 0},
 
-	{"key_flyup", &key_flyup, KEY_PAGEUP}, {"key_flydown", &key_flydown, KEY_INSERT},
-	{"key_flycenter", &key_flycenter, KEY_HOME}, {"key_lookup", &key_lookup, KEY_PAGEDOWN},
-	{"key_lookdown", &key_lookdown, KEY_DELETE}, {"key_lookcenter", &key_lookcenter, KEY_END},
+	{"key_flyup", &key_flyup, KEY_PAGEUP, 0, 0},
+	{"key_flydown", &key_flydown, KEY_INSERT, 0, 0},
+	{"key_flycenter", &key_flycenter, KEY_HOME, 0, 0},
+	{"key_lookup", &key_lookup, KEY_PAGEDOWN, 0, 0},
+	{"key_lookdown", &key_lookdown, KEY_DELETE, 0, 0},
+	{"key_lookcenter", &key_lookcenter, KEY_END, 0, 0},
 
-	#ifdef ORIG_INVKEYS
+#ifdef ORIG_INVKEYS
 	{"key_invleft", &key_invleft, '['}, {"key_invright", &key_invright, ']'},
-	#else
-	{"key_invleft", &key_invleft, 'k'}, {"key_invright", &key_invright, 'l'},
-	#endif
+#else
+	{"key_invleft", &key_invleft, 'k', 0, 0},
+	{"key_invright", &key_invright, 'l', 0, 0},
+#endif
 
-	{"key_useartifact", &key_useartifact, KEY_ENTER},
+	{"key_useartifact", &key_useartifact, KEY_ENTER, 0, 0},
 
-	#ifdef SNDSERV
+#ifdef SNDSERV
 	{"sndserver", (long*) &sndserver_filename, (long) "sndserver"},
 	{"sndopts", (long*) &sndserver_options, (long) "-quiet"},
-	#endif
-	#ifdef __DOSOUND__
+#endif
+#ifdef __DOSOUND__
 	{"mb_used", &mb_used, 2},
-	#endif
-	#ifdef MUSSERV
+#endif
+#ifdef MUSSERV
 	{"musserver", (long*) &musserver_filename, (long) "musserver"}, {"musopts", (long*) &musserver_options, (long) ""},
-	#endif
 #endif
 
 #ifdef LINUX_MOUSE
 	{"mousedev", (long*) &mousedev, (long) "/dev/mouse"}, {"mousetype", (long*) &mousetype, (long) "microsoft"},
 #endif
 
-	{"use_mouse", &usemouse, 1, 0, 0}, {"mouseb_fire", &mousebfire, 0, 0, 0}, {"mouseb_strafe", &mousebstrafe, 1, 0, 0},
+	{"use_mouse", &usemouse, 1, 0, 0},
+	{"mouseb_fire", &mousebfire, 0, 0, 0},
+	{"mouseb_strafe", &mousebstrafe, 1, 0, 0},
 	{"mouseb_forward", &mousebforward, 2, 0, 0},
 
-	{"use_joystick", &usejoystick, 0, 0, 0}, {"joyb_fire", &joybfire, 0, 0, 0}, {"joyb_strafe", &joybstrafe, 1, 0, 0},
-	{"joyb_use", &joybuse, 3, 0, 0}, {"joyb_speed", &joybspeed, 2, 0, 0},
+	{"use_joystick", &usejoystick, 0, 0, 0},
+	{"joyb_fire", &joybfire, 0, 0, 0},
+	{"joyb_strafe", &joybstrafe, 1, 0, 0},
+	{"joyb_use", &joybuse, 3, 0, 0},
+	{"joyb_speed", &joybspeed, 2, 0, 0},
 
 	{"screenblocks", &screenblocks, 10, 0, 0},
 
@@ -436,6 +457,8 @@ default_t defaults[] = {{"mouse_sensitivity", &mouseXSensitivity, 5, 0, 0},
 	{"chatmacro7", (long*) &chat_macros[7], (long) HUSTR_CHATMACRO7, 0, 0},
 	{"chatmacro8", (long*) &chat_macros[8], (long) HUSTR_CHATMACRO8, 0, 0},
 	{"chatmacro9", (long*) &chat_macros[9], (long) HUSTR_CHATMACRO9, 0, 0}};
+
+// clang-format on
 
 int numdefaults;
 char* defaultfile;

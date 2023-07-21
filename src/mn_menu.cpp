@@ -1,11 +1,12 @@
 
 /* MN_menu.c */
 
-#include <ctype.h>
+#include "mn_menu.h"
 #include "doomdef.h"
 #include "p_local.h"
 #include "r_local.h"
 #include "soundst.h"
+#include <ctype.h>
 
 /* Macros */
 #ifdef __cplusplus
@@ -17,43 +18,10 @@ extern "C" {
 #define ITEM_HEIGHT 20
 #define SELECTOR_XOFFSET (-28)
 #define SELECTOR_YOFFSET (-1)
-#define SLOTTEXTLEN     16
+#define SLOTTEXTLEN 16
 #define ASCII_CURSOR '['
 
 /* Types */
-
-typedef enum { ITT_EMPTY, ITT_EFUNC, ITT_LRFUNC, ITT_SETMENU, ITT_INERT } ItemType_t;
-
-typedef enum {
-	MENU_MAIN,
-	MENU_EPISODE,
-	MENU_SKILL,
-	MENU_OPTIONS,
-	MENU_OPTIONS2,
-	MENU_OPTIONS3,
-	MENU_FILES,
-	MENU_LOAD,
-	MENU_SAVE,
-	MENU_NONE
-} MenuType_t;
-
-typedef struct {
-	ItemType_t type;
-	const char* text;
-	boolean (*func)(int option);
-	int option;
-	MenuType_t menu;
-} MenuItem_t;
-
-typedef struct {
-	int x;
-	int y;
-	void (*drawFunc)(void);
-	int itemCount;
-	MenuItem_t* items;
-	int oldItPos;
-	MenuType_t prevMenu;
-} Menu_t;
 
 /* Private Functions */
 
@@ -81,12 +49,12 @@ static void DrawSkillMenu(void);
 static void DrawOptionsMenu(void);
 static void DrawOptions2Menu(void);
 static void DrawOptions3Menu(void);
-static void DrawFileSlots(Menu_t *menu);
+static void DrawFileSlots(Menu_t* menu);
 static void DrawFilesMenu(void);
 static void MN_DrawInfo(void);
 static void DrawLoadMenu(void);
 static void DrawSaveMenu(void);
-static void DrawSlider(Menu_t *menu, int item, int width, int slot);
+static void DrawSlider(Menu_t* menu, int item, int width, int slot);
 void MN_LoadSlotText(void);
 
 /* External Data */
@@ -103,24 +71,24 @@ extern char* homedir;
 boolean MenuActive;
 int InfoType;
 boolean messageson;
+int FontBBaseLump;
+int CurrentItPos;
+Menu_t* CurrentMenu;
+boolean askforquit;
 
 /* Private Data */
 
 static int FontABaseLump;
-static int FontBBaseLump;
 static int SkullBaseLump;
-static Menu_t *CurrentMenu;
-static int CurrentItPos;
 static int MenuEpisode;
 static int MenuTime;
 static boolean soundchanged;
 
-boolean askforquit;
 int typeofask;
 static boolean FileMenuKeySteal;
 static boolean slottextloaded;
-static char SlotText[6][SLOTTEXTLEN+2];
-static char oldSlotText[SLOTTEXTLEN+2];
+static char SlotText[6][SLOTTEXTLEN + 2];
+static char oldSlotText[SLOTTEXTLEN + 2];
 static int SlotStatus[6];
 static int slotptr;
 static int currentSlot;
@@ -379,6 +347,7 @@ void MN_Drawer(void) {
 		if (screenblocks < maxblocks - 1) {
 			BorderNeedRefresh = true;
 		}
+
 		if (CurrentMenu->drawFunc != NULL) {
 			CurrentMenu->drawFunc();
 		}
@@ -422,10 +391,8 @@ static void DrawMainMenu(void) {
   //
   //---------------------------------------------------------------------------
 */
-static void DrawEpisodeMenu(void)
-{
+static void DrawEpisodeMenu(void) {
 }
-
 
 /*
   //---------------------------------------------------------------------------
@@ -434,8 +401,7 @@ static void DrawEpisodeMenu(void)
   //
   //---------------------------------------------------------------------------
 */
-static void DrawSkillMenu(void)
-{
+static void DrawSkillMenu(void) {
 }
 
 //---------------------------------------------------------------------------
