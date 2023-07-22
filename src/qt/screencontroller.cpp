@@ -101,10 +101,10 @@ void ScreenController::doubleClick(int x, int y) {
 
 	if (askforquit) {
 		if (yesButtonPressed(x, y)) {
-			D_PostEvent(event_t{ev_keydown, 'y', 0, 0});
+			D_PostEvent(yKeyPressed);
 		}
 		if (noButtonPressed(x, y)) {
-			D_PostEvent(event_t{ev_keydown, 'n', 0, 0});
+			D_PostEvent(nKeyPressed);
 		}
 	} else {
 		if (MenuActive) {
@@ -223,4 +223,12 @@ void ScreenController::safeLastMousePosition(int mouseX, int mouseY) {
 }
 
 void ScreenController::mouseMoved(int offsetX, int offsetY) {
+	int maxOffsetY = std::min(scenePainter->height(), scenePainter->width()) / 4;
+	int finalOffsetX = offsetX << 5;
+	int finalOffsetY = offsetY << 5;
+	if (abs(finalOffsetY) >= maxOffsetY) {
+		finalOffsetY = finalOffsetY > 0 ? maxOffsetY : -maxOffsetY;
+	}
+
+	D_PostEvent(event_t{ev_mouse, 0, finalOffsetX, finalOffsetY});
 }

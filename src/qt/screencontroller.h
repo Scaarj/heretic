@@ -1,7 +1,11 @@
 #pragma once
 
 #include <QQuickItem>
-#include <auroraapp.h>
+#ifdef sailfishapp
+	#include <sailfishapp.h>
+#elif auroraapp
+	#include <auroraapp.h>
+#endif
 
 #include "mn_menu.h"
 
@@ -17,6 +21,8 @@ class ScreenController : public QQuickItem {
 	event_t backspaceKeyPressed{ev_keydown, KEY_BACKSPACE, 0, 0};
 	event_t enterKeyPressed{ev_keydown, KEY_ENTER, 0, 0};
 	event_t escapeKeyPressed{ev_keydown, KEY_ESCAPE, 0, 0};
+	event_t yKeyPressed{ev_keydown, 'y', 0, 0};
+	event_t nKeyPressed{ev_keydown, 'n', 0, 0};
 
 	struct MenuItems {
 		int pos;

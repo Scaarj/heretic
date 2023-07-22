@@ -45,7 +45,7 @@ contains(QMAKE_HOST.arch, armv7l) {
 	DEFINES += ARCH_I486
 }
 
-CONFIG += auroraapp warn_on exceptions
+CONFIG += sailfishapp warn_on exceptions
 
 PKGCONFIG += \
 
@@ -141,9 +141,9 @@ DISTFILES += \
 	LICENSE.BSD-3-CLAUSE.md \
 	README.md \
 
-AURORAAPP_ICONS = 86x86 108x108 128x128 172x172
+SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
-CONFIG += auroraapp_i18n
+CONFIG += sailfishapp_i18n
 
 RESOURCES += res.qrc
 
@@ -152,7 +152,8 @@ wad_file.path = /usr/share/$${TARGET}
 INSTALLS += wad_file
 
 DEFINES += \
-    __32BIT__
+    __32BIT__ \
+	sailfishapp \
 
 TRANSLATIONS += \
     translations/ru.auroraos.heretic.ts \

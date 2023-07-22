@@ -580,13 +580,18 @@ boolean G_Responder(event_t* ev) {
 			}
 			return (false); /* always let key up events filter down */
 
-		case ev_mouse:
+		case ev_mouse: {
+			auto sensivityScale = [](int sensivity) -> float {
+				return (1.2 + 0.2 * sensivity) / 10;
+			};
+
 			mousebuttons[0] = ev->data1 & 1;
 			mousebuttons[1] = ev->data1 & 2;
 			mousebuttons[2] = ev->data1 & 4;
-			mousex = ev->data2 * mouseXSensitivity / 10;
-			mousey = ev->data3 * mouseYSensitivity / 10;
+			mousex = ev->data2 * sensivityScale(mouseXSensitivity);
+			mousey = ev->data3 * sensivityScale(mouseYSensitivity);
 			return (true); /* eat events */
+		}
 
 		case ev_joystick:
 			joybuttons[0] = ev->data1 & 1;
