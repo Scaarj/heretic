@@ -80,6 +80,22 @@ void ScreenController::rightPressed(bool pressed) {
 	}
 }
 
+void ScreenController::leftStrafePressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(commaKeyPressed);
+	} else {
+		D_PostEvent(commaKeyReleased);
+	}
+}
+
+void ScreenController::rightStrafePressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(dotKeyPressed);
+	} else {
+		D_PostEvent(dotKeyReleased);
+	}
+}
+
 void ScreenController::mousePressed(int mouseX, int mouseY) {
 	safeLastMousePosition(mouseX, mouseY);
 
@@ -255,9 +271,15 @@ void ScreenController::safeLastMousePosition(int mouseX, int mouseY) {
 }
 
 void ScreenController::mouseMoved(int offsetX, int offsetY) {
+	int maxOffsetX = std::min(scenePainter->height(), scenePainter->width()) / 2;
 	int maxOffsetY = std::min(scenePainter->height(), scenePainter->width()) / 4;
 	int finalOffsetX = offsetX << 5;
 	int finalOffsetY = offsetY << 5;
+
+	if (abs(finalOffsetX) >= maxOffsetX) {
+		finalOffsetX = finalOffsetX > 0 ? maxOffsetX : -maxOffsetX;
+	}
+
 	if (abs(finalOffsetY) >= maxOffsetY) {
 		finalOffsetY = finalOffsetY > 0 ? maxOffsetY : -maxOffsetY;
 	}

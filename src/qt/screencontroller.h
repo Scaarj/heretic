@@ -27,6 +27,10 @@ class ScreenController : public QQuickItem {
 	event_t escapeKeyPressed{ev_keydown, KEY_ESCAPE, 0, 0};
 	event_t yKeyPressed{ev_keydown, 'y', 0, 0};
 	event_t nKeyPressed{ev_keydown, 'n', 0, 0};
+	event_t commaKeyPressed{ev_keydown, ',', 0, 0};
+	event_t commaKeyReleased{ev_keyup, ',', 0, 0};
+	event_t dotKeyPressed{ev_keydown, '.', 0, 0};
+	event_t dotKeyReleased{ev_keyup, '.', 0, 0};
 
 	struct MenuItems {
 		int pos;
@@ -55,6 +59,8 @@ public slots:
 	void backPressed(bool pressed);
 	void leftPressed(bool pressed);
 	void rightPressed(bool pressed);
+	void leftStrafePressed(bool pressed);
+	void rightStrafePressed(bool pressed);
 
 signals:
 	void isGameStateChanged();

@@ -12,31 +12,31 @@ Rectangle {
         switch(command) {
         case 0:
             screenController.forwardPressed(pressed)
-            screenController.rightPressed(pressed)
+            screenController.rightStrafePressed(pressed)
             break;
         case 1:
             screenController.forwardPressed(pressed)
             break;
         case 2:
             screenController.forwardPressed(pressed)
-            screenController.leftPressed(pressed)
+            screenController.leftStrafePressed(pressed)
             break;
         case 3:
-            screenController.leftPressed(pressed)
+            screenController.leftStrafePressed(pressed)
             break;
         case 4:
             screenController.backPressed(pressed)
-            screenController.leftPressed(pressed)
+            screenController.leftStrafePressed(pressed)
             break;
         case 5:
             screenController.backPressed(pressed)
             break;
         case 6:
             screenController.backPressed(pressed)
-            screenController.rightPressed(pressed)
+            screenController.rightStrafePressed(pressed)
             break;
         case 7:
-            screenController.rightPressed(pressed)
+            screenController.rightStrafePressed(pressed)
             break;
         default:
             break;
