@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
 #elif auroraapp
 	QScopedPointer<QGuiApplication> application(Aurora::Application::application(argc, argv));
 #endif
-	qmlRegisterType<ScenePainter>("Painter.Global", 1, 0, "Painter");
+	qmlRegisterType<ScenePainter>("Painter.Global", 1, 0, "ScenePainter");
 	qmlRegisterType<ScenePainter>("Controller.Global", 1, 0, "ScreenController");
 
 	application->setOrganizationName(QStringLiteral("ru.auroraos"));

@@ -48,6 +48,38 @@ bool ScreenController::isGameState() {
 	return m_isGameState;
 }
 
+void ScreenController::forwardPressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(upKeyPressed);
+	} else {
+		D_PostEvent(upKeyReleased);
+	}
+}
+
+void ScreenController::backPressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(downKeyPressed);
+	} else {
+		D_PostEvent(downKeyReleased);
+	}
+}
+
+void ScreenController::leftPressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(leftKeyPressed);
+	} else {
+		D_PostEvent(leftKeyReleased);
+	}
+}
+
+void ScreenController::rightPressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(rightKeyPressed);
+	} else {
+		D_PostEvent(rightKeyReleased);
+	}
+}
+
 void ScreenController::mousePressed(int mouseX, int mouseY) {
 	safeLastMousePosition(mouseX, mouseY);
 

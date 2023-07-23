@@ -18,6 +18,10 @@ class ScreenController : public QQuickItem {
 	event_t upKeyPressed{ev_keydown, KEY_UPARROW, 0, 0};
 	event_t rightKeyPressed{ev_keydown, KEY_RIGHTARROW, 0, 0};
 	event_t downKeyPressed{ev_keydown, KEY_DOWNARROW, 0, 0};
+	event_t leftKeyReleased{ev_keyup, KEY_LEFTARROW, 0, 0};
+	event_t upKeyReleased{ev_keyup, KEY_UPARROW, 0, 0};
+	event_t rightKeyReleased{ev_keyup, KEY_RIGHTARROW, 0, 0};
+	event_t downKeyReleased{ev_keyup, KEY_DOWNARROW, 0, 0};
 	event_t backspaceKeyPressed{ev_keydown, KEY_BACKSPACE, 0, 0};
 	event_t enterKeyPressed{ev_keydown, KEY_ENTER, 0, 0};
 	event_t escapeKeyPressed{ev_keydown, KEY_ESCAPE, 0, 0};
@@ -45,9 +49,12 @@ public slots:
 	void mousePressed(int mouseX, int mouseY);
 	void mousePositionChanged(int mouseX, int mouseY);
 	void doubleClick(int x, int y);
-
 	void menuPressed();
 	bool isGameState();
+	void forwardPressed(bool pressed);
+	void backPressed(bool pressed);
+	void leftPressed(bool pressed);
+	void rightPressed(bool pressed);
 
 signals:
 	void isGameStateChanged();
