@@ -31,7 +31,6 @@ MultiPointTouchArea {
             return
         }
 
-        var moveControllerPressed = moveController.handling
         var movingTouchFound = false
         var movingTouchId = moveController.movingTouchId
 
@@ -55,7 +54,7 @@ MultiPointTouchArea {
         var yOffset = moveController.y + moveController.height / 2 + moveController.anchors.bottomMargin
         var normalizedPoint = Qt.point(point.x - xOffset, -(point.y - yOffset))
 
-        if (moveController.exist(normalizedPoint)) {
+        if (moveController.exist(normalizedPoint) || point.pointId === moveController.movingTouchId) {
             moveController.handleTouch(normalizedPoint, point.pointId)
         } else {
             var xCoord = point.x
@@ -67,12 +66,12 @@ MultiPointTouchArea {
     MoveController {
         id: moveController
         anchors { left: parent.left; bottom: parent.bottom; leftMargin: Theme.paddingMedium; bottomMargin: anchors.leftMargin }
-        visible: screenController.isGameState
+        visible: screenController.visibleInGameControll
     }
 
     Keys.MenuButton {
         anchors { left: parent.left; top: parent.top; leftMargin: Theme.paddingMedium; topMargin: anchors.leftMargin }
-        visible: screenController.isGameState
+        visible: screenController.visibleInGameControll
 
         onClicked: screenController.menuPressed()
     }

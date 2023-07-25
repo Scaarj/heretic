@@ -188,7 +188,7 @@ void D_Display(void) {
    * do buffered drawing
    */
 
-	screenController->checkGameState(gamestate);
+	screenController->checkGameState(gamestate, MenuActive);
 
 	switch (gamestate) {
 		case GS_LEVEL:

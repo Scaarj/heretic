@@ -14,7 +14,7 @@ extern boolean askforquit;
 ScreenController::ScreenController(ScenePainter* painter, QQuickItem* parent)
 	: QQuickItem{parent}
 	, scenePainter{painter}
-	, m_isGameState{false} {
+	, m_visibleInGameControll{false} {
 	connect(scenePainter, &ScenePainter::activeScreenRectChanged, this, &ScreenController::onActiveScreenRectChanged);
 }
 
@@ -35,17 +35,17 @@ void ScreenController::init() {
 	noButton = QRect(NoButtonX, ConfirmationButtonY, itemWidth(NoButtonX, QuitEndMsgAnswer[1]), ITEM_HEIGHT);
 }
 
-void ScreenController::checkGameState(gamestate_t state) {
-	auto currentState = GS_LEVEL == state;
+void ScreenController::checkGameState(gamestate_t state, bool menuactive) {
+	auto currentState = GS_LEVEL == state && !menuactive && !askforquit;
 
-	if (currentState != m_isGameState) {
-		m_isGameState = currentState;
-		emit isGameStateChanged();
+	if (currentState != m_visibleInGameControll) {
+		m_visibleInGameControll = currentState;
+		emit visibleInGameControllChanged();
 	}
 }
 
-bool ScreenController::isGameState() {
-	return m_isGameState;
+bool ScreenController::visibleInGameControll() {
+	return m_visibleInGameControll;
 }
 
 void ScreenController::forwardPressed(bool pressed) {
@@ -133,7 +133,7 @@ void ScreenController::mousePositionChanged(int mouseX, int mouseY) {
 		}
 		safeLastMousePosition(mouseX, mouseY);
 	} else {
-		if (isGameState()) {
+		if (visibleInGameControll()) {
 			auto offsetX = mouseX - mouseLastPosition.x();
 			auto offsetY = mouseY - mouseLastPosition.y();
 			mouseMoved(offsetX, offsetY);
@@ -158,7 +158,7 @@ void ScreenController::doubleClick(int x, int y) {
 		if (MenuActive) {
 			checkMenuInteraction(x, y);
 		}
-		if (!MenuActive && !isGameState()) {
+		if (!MenuActive && !visibleInGameControll()) {
 			checkNoneGameMenuInteraction(x, y);
 		}
 	}

@@ -1,11 +1,16 @@
 import QtQuick 2.6
+import Sailfish.Silica 1.0
 
 Rectangle {
     id: root
 
+    readonly property point baseCursourPosition: Qt.point(0, 0)
+
     property bool handling: direction !== -1
     property int movingTouchId: -1
     property int direction: -1
+    property point cursorPosition: baseCursourPosition
+    property real currentAngle: 0
 
     function pressDirectionKey(command, pressed)
     {
@@ -44,15 +49,16 @@ Rectangle {
     }
 
     function exist(point) {
-        return Math.abs(point.x) <= radius && Math.abs(point.y) <= radius
+        return Math.pow(point.x, 2) + Math.pow(point.y, 2) <= Math.pow(radius, 2)
     }
 
     function handleTouch(point, id) {
-        var angle = convertToAngle(point)
+        currentAngle = convertToAngle(point)
         movingTouchId = id
-        var newDirection = handleAngle(angle)
+        var newDirection = handleAngle(currentAngle)
         setDirection(newDirection)
         pressDirectionKey(direction, true)
+        setСursorPosition(point)
     }
 
     function handleAngle(angle) {
@@ -94,6 +100,7 @@ Rectangle {
         movingTouchId = -1
         pressDirectionKey(direction, false)
         setDirection(-1)
+        setСursorPosition(baseCursourPosition)
     }
 
     function setDirection(newDirection)
@@ -105,17 +112,53 @@ Rectangle {
         direction = newDirection
     }
 
+    function setСursorPosition(point)
+    {
+        var distance = Math.sqrt(Math.pow(point.x, 2) + Math.pow(point.y, 2))
+
+        if (distance <= radius) {
+            cursorPosition = point
+        } else {
+            var tempX = radius * Math.cos(currentAngle * Math.PI / 180)
+            var tempY = radius * Math.sin(currentAngle * Math.PI / 180)
+            cursorPosition = Qt.point(tempX, tempY)
+        }
+    }
+
     width: 300
     height: width
     radius: width / 2
-    color: "white"
-    opacity: 0.3
+    color: "#3FFFFFFF"
+    border.width: 2
+    border.color: "#7fFFFFFF"
 
     Rectangle {
         anchors.centerIn: parent
-        width: 30
+        width: 10
         height: width
         radius: width / 2
         color: "red"
+    }
+
+    Canvas {
+        anchors.fill: parent
+        onPaint: {
+          var ctx = getContext("2d");
+          ctx.fillStyle = Qt.rgba(1, 0, 0, 1);
+          ctx.arc(0, 0, 50, Math.PI * 2, false);
+        }
+    }
+
+    Rectangle {
+        id: cursor
+        x: cursorPosition.x + root.width / 2 - cursor.width / 2
+        y: -cursorPosition.y + root.height / 2 - cursor.height / 2
+        width: 30
+        height: width
+        radius: width / 2
+        color: "grey"
+
+        Behavior on x { NumberAnimation { duration: 100 } }
+        Behavior on y { NumberAnimation { duration: 100 } }
     }
 }

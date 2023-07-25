@@ -56,12 +56,6 @@ Page {
         objectName: "scenePainter"
     }
 
-//    MouseArea {
-//        id: mouseArea
-//        anchors.fill: parent
-//        onClicked: screenController.mousePressed(mouseX, mouseY)
-//    }
-
     Controller.GestureArea {
         anchors.fill: parent
     }
