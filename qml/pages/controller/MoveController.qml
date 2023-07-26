@@ -6,11 +6,20 @@ Rectangle {
 
     readonly property point baseCursourPosition: Qt.point(0, 0)
 
+    property bool active: movingTouchId !== -1
     property bool handling: direction !== -1
     property int movingTouchId: -1
     property int direction: -1
     property point cursorPosition: baseCursourPosition
     property real currentAngle: 0
+    property int size: Theme.buttonWidthSmall
+
+    function setBasePosition(point)
+    {
+        movingTouchId = point.pointId
+        x = point.x - width / 2
+        y = point.y - height / 2
+    }
 
     function pressDirectionKey(command, pressed)
     {
@@ -46,10 +55,6 @@ Rectangle {
         default:
             break;
         }
-    }
-
-    function exist(point) {
-        return Math.pow(point.x, 2) + Math.pow(point.y, 2) <= Math.pow(radius, 2)
     }
 
     function handleTouch(point, id) {
@@ -125,7 +130,7 @@ Rectangle {
         }
     }
 
-    width: 300
+    width: size
     height: width
     radius: width / 2
     color: "#3FFFFFFF"
