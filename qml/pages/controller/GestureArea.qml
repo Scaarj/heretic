@@ -26,66 +26,65 @@ MultiPointTouchArea {
     }
 
     onTouchUpdated: {
-        if (!touchPoints.length) {
-            moveController.stopHandling()
-            return
-        }
-
-        var movingTouchFound = false
-        var movingTouchId = moveController.movingTouchId
-
         for (var i = 0; i < touchPoints.length; ++i) {
             var touchPoint = touchPoints[i]
             if (touchPoint.pressed) {
                 handleTouchPressed(touchPoint)
-                if (touchPoint.pointId === moveController.movingTouchId) {
-                    movingTouchFound = true
-                }
             }
         }
 
-        if (!movingTouchFound) {
+        if (!existMoveControllerTouch(touchPoints)) {
             moveController.stopHandling()
         }
     }
 
-    function handleTouchPressed(point) {
-        if (!moveController.visible && inLeftBottomSide(point)) {
-            moveController.setBasePosition(point)
+    function existMoveControllerTouch(touchPoints)
+    {
+        for (var i = 0; i < touchPoints.length; ++i) {
+            if (touchPoints[i].pointId === moveController.movingTouchId) {
+                return true
+            }
         }
 
-        if(moveController.visible && moveController.movingTouchId === point.pointId) {
-            var xOffset = moveController.x + moveController.width / 2 + moveController.anchors.leftMargin
-            var yOffset = moveController.y + moveController.height / 2 + moveController.anchors.bottomMargin
-            var normalizedPoint = Qt.point(point.x - xOffset, -(point.y - yOffset))
-            moveController.handleTouch(normalizedPoint, point.pointId)
+        return false
+    }
+
+    function handleTouchPressed(point) {
+        if (screenController.gameStateActive) {
+            if (!moveController.active && inLeftBottomSide(point)) {
+                moveController.setBasePosition(point)
+            }
+
+            if(moveController.visible && moveController.movingTouchId === point.pointId) {
+                moveController.handleTouch(Qt.point(point.x, point.y))
+            } else {
+                screenController.mousePositionChanged(point.x, point.y)
+            }
         } else {
-            var xCoord = point.x
-            var yCoord = point.y
-            screenController.mousePositionChanged(xCoord, yCoord)
+            screenController.mousePositionChanged(point.x, point.y)
         }
     }
 
     function inLeftBottomSide(point)
     {
-        return point.x < (root.width - moveController.width) / 2
+        return point.x < root.width / 2
     }
 
     MoveController {
         id: moveController
-
-        visible: screenController.visibleInGameControll && active
+        anchors.fill: parent
+        active: screenController.gameStateActive && movingTouchId !== -1
     }
 
     Keys.MenuButton {
         anchors { left: parent.left; top: parent.top; leftMargin: Theme.paddingMedium; topMargin: anchors.leftMargin }
-        visible: screenController.visibleInGameControll
+        visible: screenController.gameStateActive
 
         onClicked: screenController.menuPressed()
     }
 
     Timer {
         id: doubleClickingTimer
-        interval: 100
+        interval: 200
     }
 }

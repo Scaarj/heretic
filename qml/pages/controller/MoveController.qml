@@ -1,24 +1,20 @@
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 
-Rectangle {
+Item {
     id: root
 
-    readonly property point baseCursourPosition: Qt.point(0, 0)
-
-    property bool active: movingTouchId !== -1
+    property bool active: false
     property bool handling: direction !== -1
     property int movingTouchId: -1
     property int direction: -1
-    property point cursorPosition: baseCursourPosition
-    property real currentAngle: 0
-    property int size: Theme.buttonWidthSmall
+    property point baseCursorPosition: Qt.point(0, 0)
+    property point cursorPosition: baseCursorPosition
 
     function setBasePosition(point)
     {
         movingTouchId = point.pointId
-        x = point.x - width / 2
-        y = point.y - height / 2
+        baseCursorPosition = Qt.point(point.x, point.y)
     }
 
     function pressDirectionKey(command, pressed)
@@ -57,10 +53,9 @@ Rectangle {
         }
     }
 
-    function handleTouch(point, id) {
-        currentAngle = convertToAngle(point)
-        movingTouchId = id
-        var newDirection = handleAngle(currentAngle)
+    function handleTouch(point) {
+        var angle = convertToAngle(point)
+        var newDirection = handleAngle(angle)
         setDirection(newDirection)
         pressDirectionKey(direction, true)
         setСursorPosition(point)
@@ -87,16 +82,16 @@ Rectangle {
     }
 
     function convertToAngle(point) {
-        var atanAngle = Math.atan(point.y / point.x) * 180 / Math.PI
+        var atanAngle = Math.atan((baseCursorPosition.y - point.y) / (point.x - baseCursorPosition.x)) * 180 / Math.PI
 
-        if (point.x >= 0) {
-            if (point.y >= 0) {
+        if (point.x >= baseCursorPosition.x) {
+            if (point.y <= baseCursorPosition.y) {
                 return atanAngle
             } else {
-                return 360 + atanAngle
+                return atanAngle + 360
             }
         } else {
-            return 180 + atanAngle
+            return atanAngle + 180
         }
     }
 
@@ -105,7 +100,7 @@ Rectangle {
         movingTouchId = -1
         pressDirectionKey(direction, false)
         setDirection(-1)
-        setСursorPosition(baseCursourPosition)
+        setСursorPosition(baseCursorPosition)
     }
 
     function setDirection(newDirection)
@@ -119,51 +114,51 @@ Rectangle {
 
     function setСursorPosition(point)
     {
-        var distance = Math.sqrt(Math.pow(point.x, 2) + Math.pow(point.y, 2))
-
-        if (distance <= radius) {
-            cursorPosition = point
-        } else {
-            var tempX = radius * Math.cos(currentAngle * Math.PI / 180)
-            var tempY = radius * Math.sin(currentAngle * Math.PI / 180)
-            cursorPosition = Qt.point(tempX, tempY)
-        }
+        cursorPosition = point
     }
 
-    width: size
-    height: width
-    radius: width / 2
-    color: "#3FFFFFFF"
-    border.width: 2
-    border.color: "#7fFFFFFF"
-
-    Rectangle {
-        anchors.centerIn: parent
-        width: 10
-        height: width
-        radius: width / 2
-        color: "red"
-    }
+    onCursorPositionChanged: cursor.updateRender()
 
     Canvas {
-        anchors.fill: parent
-        onPaint: {
-          var ctx = getContext("2d");
-          ctx.fillStyle = Qt.rgba(1, 0, 0, 1);
-          ctx.arc(0, 0, 50, Math.PI * 2, false);
-        }
-    }
-
-    Rectangle {
         id: cursor
-        x: cursorPosition.x + root.width / 2 - cursor.width / 2
-        y: -cursorPosition.y + root.height / 2 - cursor.height / 2
-        width: 30
-        height: width
-        radius: width / 2
-        color: "grey"
+        anchors.fill: parent
 
-        Behavior on x { NumberAnimation { duration: 100 } }
-        Behavior on y { NumberAnimation { duration: 100 } }
+        function updateRender()
+        {
+            var ctx = getContext("2d");
+            ctx.reset();
+            requestPaint();
+        }
+
+        onPaint: {
+            const r1 = 30
+            const r2 = 45
+            const x1 = baseCursorPosition.x
+            const y1 = baseCursorPosition.y
+            const x2 = cursorPosition.x
+            const y2 = cursorPosition.y
+
+            const atan2 = Math.atan2(y2 - y1, x2 - x1)
+            const arcos = Math.acos((r1 - r2) / Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)))
+            const phy1 = atan2 + arcos
+            const phy2 = atan2 - arcos
+            const t12 = Qt.point(r1 * Math.cos(phy1), r1 * Math.sin(phy1))
+            const t2 = Qt.point(x1 + t12.x, y1 + t12.y)
+            var ctx = getContext("2d")
+
+            ctx.reset()
+            ctx.beginPath()
+            ctx.arc(x1, y1, r1, phy1, phy2)
+            ctx.arc(x2, y2, r2, phy2, phy1)
+            ctx.lineTo(t2.x, t2.y)
+
+            ctx.lineWidth = 2
+            ctx.fillStyle = "grey"
+            ctx.strokeStyle = "red"
+
+            ctx.fill()
+            ctx.stroke()
+        }
+        visible: active
     }
 }
