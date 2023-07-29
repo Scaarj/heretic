@@ -43,6 +43,7 @@ class ScreenController : public QQuickItem {
 
 public:
 	ScreenController(ScenePainter* painter, QQuickItem* parent = nullptr);
+	virtual ~ScreenController() = default;
 
 	void waitUntilTap();
 	void init();

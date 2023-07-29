@@ -31,7 +31,7 @@ signals:
 	void activeScreenRectChanged(const QRect&);
 
 protected:
-	void paint(QPainter* painter);
+	void paint(QPainter* painter) override;
 
 private:
 	std::vector<std::unique_ptr<Context>> contexts;

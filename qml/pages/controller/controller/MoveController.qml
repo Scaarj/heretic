@@ -4,17 +4,17 @@ import Sailfish.Silica 1.0
 Item {
     id: root
 
-    property bool active: false
+    readonly property bool active: screenController.gameStateActive && touchId !== -1
     property bool handling: direction !== -1
-    property int movingTouchId: -1
+    property int touchId: -1
     property int direction: -1
     property point baseCursorPosition: Qt.point(0, 0)
     property point cursorPosition: baseCursorPosition
 
-    function setBasePosition(point)
+    function setBaseTouchPoint(id, point)
     {
-        movingTouchId = point.pointId
-        baseCursorPosition = Qt.point(point.x, point.y)
+        touchId = id
+        baseCursorPosition = point
     }
 
     function pressDirectionKey(command, pressed)
@@ -97,7 +97,7 @@ Item {
 
     function stopHandling()
     {
-        movingTouchId = -1
+        touchId = -1
         pressDirectionKey(direction, false)
         setDirection(-1)
         setСursorPosition(baseCursorPosition)
@@ -105,10 +105,10 @@ Item {
 
     function setDirection(newDirection)
     {
-        if (newDirection !== direction) {
-            pressDirectionKey(direction, false)
+        if (newDirection === direction) {
+            return
         }
-
+        pressDirectionKey(direction, false)
         direction = newDirection
     }
 

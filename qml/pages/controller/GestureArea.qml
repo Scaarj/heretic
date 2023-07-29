@@ -3,6 +3,8 @@ import Sailfish.Silica 1.0
 
 import "keys" as Keys
 
+import "controller" as Controller
+
 MultiPointTouchArea {
     id: root
 
@@ -41,7 +43,7 @@ MultiPointTouchArea {
     function existMoveControllerTouch(touchPoints)
     {
         for (var i = 0; i < touchPoints.length; ++i) {
-            if (touchPoints[i].pointId === moveController.movingTouchId) {
+            if (touchPoints[i].pointId === moveController.touchId) {
                 return true
             }
         }
@@ -50,13 +52,16 @@ MultiPointTouchArea {
     }
 
     function handleTouchPressed(point) {
+        var id = point.pointId
+        var position = Qt.point(point.x, point.y)
+
         if (screenController.gameStateActive) {
             if (!moveController.active && inLeftBottomSide(point)) {
-                moveController.setBasePosition(point)
+                moveController.setBaseTouchPoint(id, position)
             }
 
-            if(moveController.visible && moveController.movingTouchId === point.pointId) {
-                moveController.handleTouch(Qt.point(point.x, point.y))
+            if(moveController.visible && moveController.touchId === id) {
+                moveController.handleTouch(position)
             } else {
                 screenController.mousePositionChanged(point.x, point.y)
             }
@@ -70,10 +75,9 @@ MultiPointTouchArea {
         return point.x < root.width / 2
     }
 
-    MoveController {
+    Controller.MoveController {
         id: moveController
         anchors.fill: parent
-        active: screenController.gameStateActive && movingTouchId !== -1
     }
 
     Keys.MenuButton {
