@@ -1,7 +1,11 @@
 #include "introscreen.h"
 
 #include <QScreen>
-#include <auroraapp.h>
+#ifdef sailfishapp
+	#include <sailfishapp.h>
+#else
+	#include <auroraapp.h>
+#endif
 
 IntroScreen::IntroScreen() {
 }

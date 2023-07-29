@@ -1,7 +1,11 @@
 #include "gamescreen.h"
 
 #include <QScreen>
-#include <auroraapp.h>
+#ifdef sailfishapp
+	#include <sailfishapp.h>
+#else
+	#include <auroraapp.h>
+#endif
 
 extern byte* screen;
 

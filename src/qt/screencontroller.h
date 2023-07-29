@@ -39,7 +39,7 @@ class ScreenController : public QQuickItem {
 
 	QRect baseScreen{0, 0, 320, 200};
 
-	Q_PROPERTY(bool visibleInGameControll READ visibleInGameControll NOTIFY visibleInGameControllChanged)
+	Q_PROPERTY(bool gameStateActive READ gameStateActive NOTIFY gameStateActiveChanged)
 
 public:
 	ScreenController(ScenePainter* painter, QQuickItem* parent = nullptr);
@@ -54,7 +54,7 @@ public slots:
 	void mousePositionChanged(int mouseX, int mouseY);
 	void doubleClick(int x, int y);
 	void menuPressed();
-	bool visibleInGameControll();
+	bool gameStateActive();
 	void forwardPressed(bool pressed);
 	void backPressed(bool pressed);
 	void leftPressed(bool pressed);
@@ -63,7 +63,7 @@ public slots:
 	void rightStrafePressed(bool pressed);
 
 signals:
-	void visibleInGameControllChanged();
+	void gameStateActiveChanged();
 
 private slots:
 	void onActiveScreenRectChanged(const QRect& screen);
@@ -92,5 +92,5 @@ private:
 	QRect activeRect;
 	QRect yesButton;
 	QRect noButton;
-	bool m_visibleInGameControll;
+	bool m_gameStateActive;
 };
