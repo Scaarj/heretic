@@ -4,25 +4,26 @@ import Sailfish.Silica 1.0
 Item {
     id: root
 
-    readonly property bool active: touchId !== -1
     readonly property int baseRadius: 10
     readonly property int cursorRadius: 30
     readonly property int minDistance: (baseRadius + cursorRadius) * 2
 
+    property real indicatorPosition: 0.0
+    property bool active: false
     property bool handling: direction !== -1
+    property color cursorColorBegin: "#646464"
+    property color cursorColorEnd: "#A8A8A8"
     property int touchId: -1
     property int direction: -1
     property point baseCursorPosition: Qt.point(0, 0)
     property point cursorPosition: baseCursorPosition
 
-    function setBaseTouchPoint(id, point)
-    {
+    function setBaseTouchPoint(id, point) {
         touchId = id
         baseCursorPosition = point
     }
 
-    function pressDirectionKey(pressed)
-    {
+    function pressDirectionKey(pressed) {
         switch(direction) {
         case 0:
             screenController.forwardPressed(pressed)
@@ -65,9 +66,11 @@ Item {
         var distance = Math.sqrt(Math.pow(baseCursorPosition.x - cursorPosition.x, 2) + Math.pow(baseCursorPosition.y - cursorPosition.y, 2))
 
         if (newDirection === direction && distance < minDistance) {
+            active = false
             pressDirectionKey(false)
             setDirection(-1)
         } else if (newDirection !== direction && distance >= minDistance) {
+            active = true
             pressDirectionKey(false)
             setDirection(newDirection)
             pressDirectionKey(true)
@@ -108,35 +111,33 @@ Item {
         }
     }
 
-    function stopHandling()
-    {
+    function stopHandling() {
+        active = false
         touchId = -1
         pressDirectionKey(false)
         setDirection(-1)
         setСursorPosition(baseCursorPosition)
     }
 
-    function setDirection(newDirection)
-    {
+    function setDirection(newDirection) {
         if (newDirection === direction) {
             return
         }
         direction = newDirection
     }
 
-    function setСursorPosition(point)
-    {
+    function setСursorPosition(point) {
         cursorPosition = point
     }
 
     onCursorPositionChanged: cursor.updateRender()
+    onActiveChanged: indicatorPosition = 0.0
 
     Canvas {
         id: cursor
         anchors.fill: parent
 
-        function updateRender()
-        {
+        function updateRender() {
             var ctx = getContext("2d");
             ctx.reset();
             requestPaint();
@@ -158,8 +159,15 @@ Item {
             const t2 = Qt.point(x1 + t12.x, y1 + t12.y)
             var ctx = getContext("2d")
             var gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-            gradient.addColorStop(0.2, "#646464");
-            gradient.addColorStop(0.8, "#A8A8A8");
+
+            if (active) {
+                gradient.addColorStop(0, cursorColorEnd);
+                gradient.addColorStop(indicatorPosition, cursorColorBegin);
+                gradient.addColorStop(1.0, cursorColorEnd);
+            } else {
+                gradient.addColorStop(0, cursorColorBegin);
+                gradient.addColorStop(1.0, cursorColorEnd);
+            }
 
             ctx.reset()
             ctx.beginPath()
@@ -171,6 +179,19 @@ Item {
             ctx.fill()
             ctx.stroke()
         }
-        visible: active
+        visible: touchId !== -1
+    }
+
+    Timer {
+        running: active
+        repeat: true
+        interval: 100
+        onTriggered: {
+            indicatorPosition += .1
+            if (indicatorPosition >= 1.0) {
+                indicatorPosition = 0.0
+            }
+            cursor.updateRender()
+        }
     }
 }
