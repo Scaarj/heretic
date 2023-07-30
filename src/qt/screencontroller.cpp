@@ -255,10 +255,11 @@ void ScreenController::safeLastMousePosition(int mouseX, int mouseY) {
 }
 
 void ScreenController::mouseMoved(int offsetX, int offsetY) {
-	int maxOffsetX = std::min(scenePainter->height(), scenePainter->width()) / 2;
-	int maxOffsetY = std::min(scenePainter->height(), scenePainter->width()) / 4;
-	int finalOffsetX = offsetX << 5;
-	int finalOffsetY = offsetY << 5;
+	int minSide = std::min(scenePainter->height(), scenePainter->width());
+	int maxOffsetX = minSide;
+	int maxOffsetY = minSide / 4;
+	int finalOffsetX = offsetX << 6;
+	int finalOffsetY = offsetY << 6;
 
 	if (abs(finalOffsetX) >= maxOffsetX) {
 		finalOffsetX = finalOffsetX > 0 ? maxOffsetX : -maxOffsetX;
