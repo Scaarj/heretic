@@ -7,6 +7,7 @@ Item {
     readonly property bool active: touchId !== -1
     readonly property int baseRadius: 10
     readonly property int cursorRadius: 30
+    readonly property int minDistance: (baseRadius + cursorRadius) * 2
 
     property bool handling: direction !== -1
     property int touchId: -1
@@ -57,18 +58,20 @@ Item {
     }
 
     function handleTouch(point) {
-
-        var distance = Math.sqrt(Math.pow(baseCursorPosition.x - point.x, 2) - Math.pow(baseCursorPosition.y - point.y, 2))
-
         var angle = convertToAngle(point)
         var newDirection = handleAngle(angle)
-        var changed = setDirection(newDirection)
-        if (changed) {
-            pressDirectionKey(true)
-
-        }
-
         setСursorPosition(point)
+
+        var distance = Math.sqrt(Math.pow(baseCursorPosition.x - cursorPosition.x, 2) + Math.pow(baseCursorPosition.y - cursorPosition.y, 2))
+
+        if (newDirection === direction && distance < minDistance) {
+            pressDirectionKey(false)
+            setDirection(-1)
+        } else if (newDirection !== direction && distance >= minDistance) {
+            pressDirectionKey(false)
+            setDirection(newDirection)
+            pressDirectionKey(true)
+        }
     }
 
     function handleAngle(angle) {
@@ -116,11 +119,9 @@ Item {
     function setDirection(newDirection)
     {
         if (newDirection === direction) {
-            return false
+            return
         }
-        pressDirectionKey(false)
         direction = newDirection
-        return true
     }
 
     function setСursorPosition(point)
