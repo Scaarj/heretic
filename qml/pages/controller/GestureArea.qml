@@ -58,9 +58,7 @@ MultiPointTouchArea {
         if (screenController.gameStateActive) {
             if (!moveController.active && inLeftBottomSide(point)) {
                 moveController.setBaseTouchPoint(id, position)
-            }
-
-            if(moveController.visible && moveController.touchId === id) {
+            } else if(moveController.active && moveController.touchId === id) {
                 moveController.handleTouch(position)
             } else {
                 screenController.mousePositionChanged(point.x, point.y)

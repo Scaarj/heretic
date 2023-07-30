@@ -5,6 +5,9 @@ Item {
     id: root
 
     readonly property bool active: screenController.gameStateActive && touchId !== -1
+    readonly property int baseRadius: 10
+    readonly property int cursorRadius: 30
+
     property bool handling: direction !== -1
     property int touchId: -1
     property int direction: -1
@@ -17,9 +20,9 @@ Item {
         baseCursorPosition = point
     }
 
-    function pressDirectionKey(command, pressed)
+    function pressDirectionKey(pressed)
     {
-        switch(command) {
+        switch(direction) {
         case 0:
             screenController.forwardPressed(pressed)
             screenController.rightStrafePressed(pressed)
@@ -54,10 +57,13 @@ Item {
     }
 
     function handleTouch(point) {
+
+        var distance = Math.sqrt(Math.pow(baseCursorPosition.x - point.x, 2) - Math.pow(baseCursorPosition.y - point.y, 2))
+
         var angle = convertToAngle(point)
         var newDirection = handleAngle(angle)
         setDirection(newDirection)
-        pressDirectionKey(direction, true)
+        pressDirectionKey(true)
         setСursorPosition(point)
     }
 
@@ -98,7 +104,7 @@ Item {
     function stopHandling()
     {
         touchId = -1
-        pressDirectionKey(direction, false)
+        pressDirectionKey(false)
         setDirection(-1)
         setСursorPosition(baseCursorPosition)
     }
@@ -108,7 +114,7 @@ Item {
         if (newDirection === direction) {
             return
         }
-        pressDirectionKey(direction, false)
+        pressDirectionKey(false)
         direction = newDirection
     }
 
@@ -131,8 +137,8 @@ Item {
         }
 
         onPaint: {
-            const r1 = 30
-            const r2 = 45
+            const r1 = baseRadius
+            const r2 = cursorRadius
             const x1 = baseCursorPosition.x
             const y1 = baseCursorPosition.y
             const x2 = cursorPosition.x
@@ -145,6 +151,9 @@ Item {
             const t12 = Qt.point(r1 * Math.cos(phy1), r1 * Math.sin(phy1))
             const t2 = Qt.point(x1 + t12.x, y1 + t12.y)
             var ctx = getContext("2d")
+            var gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+            gradient.addColorStop(0.2, "#646464");
+            gradient.addColorStop(0.8, "#A8A8A8");
 
             ctx.reset()
             ctx.beginPath()
@@ -152,10 +161,9 @@ Item {
             ctx.arc(x2, y2, r2, phy2, phy1)
             ctx.lineTo(t2.x, t2.y)
 
-            ctx.lineWidth = 2
-            ctx.fillStyle = "grey"
-            ctx.strokeStyle = "red"
 
+
+            ctx.fillStyle = gradient
             ctx.fill()
             ctx.stroke()
         }
