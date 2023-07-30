@@ -91,5 +91,5 @@ private:
 	QRect activeRect;
 	QRect yesButton;
 	QRect noButton;
-	bool m_gameStateActive;
+	bool gameState;
 };

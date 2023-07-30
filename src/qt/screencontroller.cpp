@@ -14,7 +14,7 @@ extern boolean askforquit;
 ScreenController::ScreenController(ScenePainter* painter, QQuickItem* parent)
 	: QQuickItem{parent}
 	, scenePainter{painter}
-	, m_gameStateActive{false} {
+	, gameState{false} {
 	connect(scenePainter, &ScenePainter::activeScreenRectChanged, this, &ScreenController::onActiveScreenRectChanged);
 }
 
@@ -38,14 +38,14 @@ void ScreenController::init() {
 void ScreenController::checkGameState(gamestate_t state, bool menuactive) {
 	auto currentState = GS_LEVEL == state && !menuactive && !askforquit;
 
-	if (currentState != m_gameStateActive) {
-		m_gameStateActive = currentState;
+	if (currentState != gameState) {
+		gameState = currentState;
 		emit gameStateActiveChanged();
 	}
 }
 
 bool ScreenController::gameStateActive() {
-	return m_gameStateActive;
+	return gameState;
 }
 
 void ScreenController::forwardPressed(bool pressed) {
@@ -150,7 +150,7 @@ void ScreenController::doubleClick(int x, int y) {
 
 void ScreenController::onActiveScreenRectChanged(const QRect& screen) {
 	activeRect = QRect(screen.x(), screen.y(), screen.width(), screen.height());
-	swipeWidth = std::min(scenePainter->width(), scenePainter->height()) / 32;
+	swipeWidth = std::min(scenePainter->width(), scenePainter->height()) / 16;
 }
 
 QVector<ScreenController::MenuItems> ScreenController::menuItems() const {
@@ -223,12 +223,14 @@ void ScreenController::menuPressed() {
 void ScreenController::leftSwipe() {
 	if (MenuActive) {
 		D_PostEvent(leftKeyPressed);
+		D_PostEvent(leftKeyReleased);
 	}
 }
 
 void ScreenController::rightSwipe() {
 	if (MenuActive) {
 		D_PostEvent(rightKeyPressed);
+		D_PostEvent(rightKeyReleased);
 	}
 }
 
