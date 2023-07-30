@@ -167,8 +167,6 @@ Item {
             ctx.arc(x2, y2, r2, phy2, phy1)
             ctx.lineTo(t2.x, t2.y)
 
-
-
             ctx.fillStyle = gradient
             ctx.fill()
             ctx.stroke()
