@@ -8,6 +8,8 @@ import "controller" as Controller
 MultiPointTouchArea {
     id: root
 
+    property int mouseViewId: -1
+
     minimumTouchPoints: 1
     maximumTouchPoints: 2
 
@@ -35,15 +37,19 @@ MultiPointTouchArea {
             }
         }
 
-        if (!existMoveControllerTouch(touchPoints)) {
+        if (!touchExist(touchPoints, moveController.touchId)) {
             moveController.stopHandling()
+        }
+
+        if (!touchExist(touchPoints, viewController.touchId)) {
+            viewController.stopHandling()
         }
     }
 
-    function existMoveControllerTouch(touchPoints)
+    function touchExist(touchPoints, id)
     {
         for (var i = 0; i < touchPoints.length; ++i) {
-            if (touchPoints[i].pointId === moveController.touchId) {
+            if (touchPoints[i].pointId === id) {
                 return true
             }
         }
@@ -56,12 +62,16 @@ MultiPointTouchArea {
         var position = Qt.point(point.x, point.y)
 
         if (screenController.gameStateActive) {
-            if (!moveController.active && inLeftBottomSide(point)) {
-                moveController.setBaseTouchPoint(id, position)
-            } else if(moveController.active && moveController.touchId === id) {
+            if (id === moveController.touchId) {
                 moveController.handleTouch(position)
+            } else if (id === viewController.touchId) {
+                viewController.handleTouch(position)
             } else {
-                screenController.mousePositionChanged(point.x, point.y)
+                if (inLeftBottomSide(point)) {
+                    moveController.setBaseTouchPoint(id, position)
+                } else {
+                    viewController.setBaseTouchPoint(id, position)
+                }
             }
         } else {
             screenController.mousePositionChanged(point.x, point.y)
@@ -75,6 +85,11 @@ MultiPointTouchArea {
 
     Controller.MoveController {
         id: moveController
+        anchors.fill: parent
+    }
+
+    Controller.ViewController {
+        id: viewController
         anchors.fill: parent
     }
 

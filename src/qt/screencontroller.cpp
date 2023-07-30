@@ -64,22 +64,6 @@ void ScreenController::backPressed(bool pressed) {
 	}
 }
 
-void ScreenController::leftPressed(bool pressed) {
-	if (pressed) {
-		D_PostEvent(leftKeyPressed);
-	} else {
-		D_PostEvent(leftKeyReleased);
-	}
-}
-
-void ScreenController::rightPressed(bool pressed) {
-	if (pressed) {
-		D_PostEvent(rightKeyPressed);
-	} else {
-		D_PostEvent(rightKeyReleased);
-	}
-}
-
 void ScreenController::leftStrafePressed(bool pressed) {
 	if (pressed) {
 		D_PostEvent(commaKeyPressed);

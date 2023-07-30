@@ -58,8 +58,6 @@ public slots:
 	bool gameStateActive();
 	void forwardPressed(bool pressed);
 	void backPressed(bool pressed);
-	void leftPressed(bool pressed);
-	void rightPressed(bool pressed);
 	void leftStrafePressed(bool pressed);
 	void rightStrafePressed(bool pressed);
 

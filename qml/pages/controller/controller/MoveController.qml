@@ -4,7 +4,7 @@ import Sailfish.Silica 1.0
 Item {
     id: root
 
-    readonly property bool active: screenController.gameStateActive && touchId !== -1
+    readonly property bool active: touchId !== -1
     readonly property int baseRadius: 10
     readonly property int cursorRadius: 30
 
@@ -62,8 +62,12 @@ Item {
 
         var angle = convertToAngle(point)
         var newDirection = handleAngle(angle)
-        setDirection(newDirection)
-        pressDirectionKey(true)
+        var changed = setDirection(newDirection)
+        if (changed) {
+            pressDirectionKey(true)
+
+        }
+
         setСursorPosition(point)
     }
 
@@ -112,10 +116,11 @@ Item {
     function setDirection(newDirection)
     {
         if (newDirection === direction) {
-            return
+            return false
         }
         pressDirectionKey(false)
         direction = newDirection
+        return true
     }
 
     function setСursorPosition(point)
