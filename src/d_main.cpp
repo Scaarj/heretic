@@ -2,7 +2,6 @@
 /* D_main.c */
 
 #include <assert.h>
-#include <auroraapp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -189,7 +188,7 @@ void D_Display(void) {
    * do buffered drawing
    */
 
-	screenController->checkGameState(gamestate);
+	screenController->checkGameState(gamestate, MenuActive);
 
 	switch (gamestate) {
 		case GS_LEVEL:

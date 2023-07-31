@@ -44,21 +44,16 @@ import "controller" as Controller
 Page {
     id: root
 
+    property alias scenePainter: scenePainter
     property bool verticalAlignment: orientation === Orientation.Portrait
 
     objectName: "mainPage"
     allowedOrientations: Orientation.All
-    onOrientationChanged: painter.orientationChanged(orientation)
+    onOrientationChanged: scenePainter.orientationChanged(orientation)
 
-    Painter {
-        id: painter
+    ScenePainter {
+        id: scenePainter
         objectName: "scenePainter"
-    }
-
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        onClicked: screenController.mousePressed()
     }
 
     Controller.GestureArea {

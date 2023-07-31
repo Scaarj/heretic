@@ -21,7 +21,7 @@ public:
 	void setContext(ContextType context);
 	void printTextLine(const QString& line);
 
-	QRect activeScreen() const;
+	Q_INVOKABLE QRect activeScreen() const;
 	QRect fromGameCoord(const QRect& rect, const QRect& base);
 
 public slots:
@@ -31,7 +31,7 @@ signals:
 	void activeScreenRectChanged(const QRect&);
 
 protected:
-	void paint(QPainter* painter);
+	void paint(QPainter* painter) override;
 
 private:
 	std::vector<std::unique_ptr<Context>> contexts;

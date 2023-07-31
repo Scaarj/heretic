@@ -1,7 +1,11 @@
 #pragma once
 
 #include <QQuickItem>
-#include <auroraapp.h>
+#ifdef sailfishapp
+	#include <sailfishapp.h>
+#elif auroraapp
+	#include <auroraapp.h>
+#endif
 
 #include "mn_menu.h"
 
@@ -14,9 +18,19 @@ class ScreenController : public QQuickItem {
 	event_t upKeyPressed{ev_keydown, KEY_UPARROW, 0, 0};
 	event_t rightKeyPressed{ev_keydown, KEY_RIGHTARROW, 0, 0};
 	event_t downKeyPressed{ev_keydown, KEY_DOWNARROW, 0, 0};
+	event_t leftKeyReleased{ev_keyup, KEY_LEFTARROW, 0, 0};
+	event_t upKeyReleased{ev_keyup, KEY_UPARROW, 0, 0};
+	event_t rightKeyReleased{ev_keyup, KEY_RIGHTARROW, 0, 0};
+	event_t downKeyReleased{ev_keyup, KEY_DOWNARROW, 0, 0};
 	event_t backspaceKeyPressed{ev_keydown, KEY_BACKSPACE, 0, 0};
 	event_t enterKeyPressed{ev_keydown, KEY_ENTER, 0, 0};
 	event_t escapeKeyPressed{ev_keydown, KEY_ESCAPE, 0, 0};
+	event_t yKeyPressed{ev_keydown, 'y', 0, 0};
+	event_t nKeyPressed{ev_keydown, 'n', 0, 0};
+	event_t commaKeyPressed{ev_keydown, ',', 0, 0};
+	event_t commaKeyReleased{ev_keyup, ',', 0, 0};
+	event_t dotKeyPressed{ev_keydown, '.', 0, 0};
+	event_t dotKeyReleased{ev_keyup, '.', 0, 0};
 
 	struct MenuItems {
 		int pos;
@@ -25,26 +39,30 @@ class ScreenController : public QQuickItem {
 
 	QRect baseScreen{0, 0, 320, 200};
 
-	Q_PROPERTY(bool isGameState READ isGameState NOTIFY isGameStateChanged)
+	Q_PROPERTY(bool gameStateActive READ gameStateActive NOTIFY gameStateActiveChanged)
 
 public:
 	ScreenController(ScenePainter* painter, QQuickItem* parent = nullptr);
+	virtual ~ScreenController() = default;
 
 	void waitUntilTap();
 	void init();
 
-	void checkGameState(gamestate_t state);
+	void checkGameState(gamestate_t state, bool menuactive);
 
 public slots:
 	void mousePressed(int mouseX, int mouseY);
 	void mousePositionChanged(int mouseX, int mouseY);
 	void doubleClick(int x, int y);
-
 	void menuPressed();
-	bool isGameState();
+	bool gameStateActive();
+	void forwardPressed(bool pressed);
+	void backPressed(bool pressed);
+	void leftStrafePressed(bool pressed);
+	void rightStrafePressed(bool pressed);
 
 signals:
-	void isGameStateChanged();
+	void gameStateActiveChanged();
 
 private slots:
 	void onActiveScreenRectChanged(const QRect& screen);
@@ -73,5 +91,5 @@ private:
 	QRect activeRect;
 	QRect yesButton;
 	QRect noButton;
-	bool m_isGameState;
+	bool gameState;
 };

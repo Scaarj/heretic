@@ -14,7 +14,7 @@ extern boolean askforquit;
 ScreenController::ScreenController(ScenePainter* painter, QQuickItem* parent)
 	: QQuickItem{parent}
 	, scenePainter{painter}
-	, m_isGameState{false} {
+	, gameState{false} {
 	connect(scenePainter, &ScenePainter::activeScreenRectChanged, this, &ScreenController::onActiveScreenRectChanged);
 }
 
@@ -35,17 +35,49 @@ void ScreenController::init() {
 	noButton = QRect(NoButtonX, ConfirmationButtonY, itemWidth(NoButtonX, QuitEndMsgAnswer[1]), ITEM_HEIGHT);
 }
 
-void ScreenController::checkGameState(gamestate_t state) {
-	auto currentState = GS_LEVEL == state;
+void ScreenController::checkGameState(gamestate_t state, bool menuactive) {
+	auto currentState = GS_LEVEL == state && !menuactive && !askforquit;
 
-	if (currentState != m_isGameState) {
-		m_isGameState = currentState;
-		emit isGameStateChanged();
+	if (currentState != gameState) {
+		gameState = currentState;
+		emit gameStateActiveChanged();
 	}
 }
 
-bool ScreenController::isGameState() {
-	return m_isGameState;
+bool ScreenController::gameStateActive() {
+	return gameState;
+}
+
+void ScreenController::forwardPressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(upKeyPressed);
+	} else {
+		D_PostEvent(upKeyReleased);
+	}
+}
+
+void ScreenController::backPressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(downKeyPressed);
+	} else {
+		D_PostEvent(downKeyReleased);
+	}
+}
+
+void ScreenController::leftStrafePressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(commaKeyPressed);
+	} else {
+		D_PostEvent(commaKeyReleased);
+	}
+}
+
+void ScreenController::rightStrafePressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(dotKeyPressed);
+	} else {
+		D_PostEvent(dotKeyReleased);
+	}
 }
 
 void ScreenController::mousePressed(int mouseX, int mouseY) {
@@ -85,7 +117,7 @@ void ScreenController::mousePositionChanged(int mouseX, int mouseY) {
 		}
 		safeLastMousePosition(mouseX, mouseY);
 	} else {
-		if (isGameState()) {
+		if (gameStateActive()) {
 			auto offsetX = mouseX - mouseLastPosition.x();
 			auto offsetY = mouseY - mouseLastPosition.y();
 			mouseMoved(offsetX, offsetY);
@@ -101,16 +133,16 @@ void ScreenController::doubleClick(int x, int y) {
 
 	if (askforquit) {
 		if (yesButtonPressed(x, y)) {
-			D_PostEvent(event_t{ev_keydown, 'y', 0, 0});
+			D_PostEvent(yKeyPressed);
 		}
 		if (noButtonPressed(x, y)) {
-			D_PostEvent(event_t{ev_keydown, 'n', 0, 0});
+			D_PostEvent(nKeyPressed);
 		}
 	} else {
 		if (MenuActive) {
 			checkMenuInteraction(x, y);
 		}
-		if (!MenuActive && !isGameState()) {
+		if (!MenuActive && !gameStateActive()) {
 			checkNoneGameMenuInteraction(x, y);
 		}
 	}
@@ -118,7 +150,7 @@ void ScreenController::doubleClick(int x, int y) {
 
 void ScreenController::onActiveScreenRectChanged(const QRect& screen) {
 	activeRect = QRect(screen.x(), screen.y(), screen.width(), screen.height());
-	swipeWidth = std::min(scenePainter->width(), scenePainter->height()) / 32;
+	swipeWidth = std::min(scenePainter->width(), scenePainter->height()) / 16;
 }
 
 QVector<ScreenController::MenuItems> ScreenController::menuItems() const {
@@ -191,12 +223,14 @@ void ScreenController::menuPressed() {
 void ScreenController::leftSwipe() {
 	if (MenuActive) {
 		D_PostEvent(leftKeyPressed);
+		D_PostEvent(leftKeyReleased);
 	}
 }
 
 void ScreenController::rightSwipe() {
 	if (MenuActive) {
 		D_PostEvent(rightKeyPressed);
+		D_PostEvent(rightKeyReleased);
 	}
 }
 
@@ -223,4 +257,19 @@ void ScreenController::safeLastMousePosition(int mouseX, int mouseY) {
 }
 
 void ScreenController::mouseMoved(int offsetX, int offsetY) {
+	int minSide = std::min(scenePainter->height(), scenePainter->width());
+	int maxOffsetX = minSide;
+	int maxOffsetY = minSide / 4;
+	int finalOffsetX = offsetX << 6;
+	int finalOffsetY = offsetY << 6;
+
+	if (abs(finalOffsetX) >= maxOffsetX) {
+		finalOffsetX = finalOffsetX > 0 ? maxOffsetX : -maxOffsetX;
+	}
+
+	if (abs(finalOffsetY) >= maxOffsetY) {
+		finalOffsetY = finalOffsetY > 0 ? maxOffsetY : -maxOffsetY;
+	}
+
+	D_PostEvent(event_t{ev_mouse, 0, finalOffsetX, finalOffsetY});
 }
