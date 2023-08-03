@@ -25,8 +25,16 @@ class ScreenController : public QQuickItem {
 	event_t backspaceKeyPressed{ev_keydown, KEY_BACKSPACE, 0, 0};
 	event_t enterKeyPressed{ev_keydown, KEY_ENTER, 0, 0};
 	event_t escapeKeyPressed{ev_keydown, KEY_ESCAPE, 0, 0};
+	event_t shiftKeyPressed{ev_keydown, KEY_RSHIFT, 0, 0};
+	event_t shiftKeyReleased{ev_keyup, KEY_RSHIFT, 0, 0};
+	event_t attackKeyPressed{ev_keydown, KEY_RCTRL, 0, 0};
+	event_t attackKeyReleased{ev_keyup, KEY_RCTRL, 0, 0};
+	event_t useKeyPressed{ev_keydown, ' ', 0, 0};
+	event_t useKeyReleased{ev_keyup, ' ', 0, 0};
 	event_t yKeyPressed{ev_keydown, 'y', 0, 0};
+	event_t yKeyReleased{ev_keyup, 'y', 0, 0};
 	event_t nKeyPressed{ev_keydown, 'n', 0, 0};
+	event_t nKeyReleased{ev_keyup, 'n', 0, 0};
 	event_t commaKeyPressed{ev_keydown, ',', 0, 0};
 	event_t commaKeyReleased{ev_keyup, ',', 0, 0};
 	event_t dotKeyPressed{ev_keydown, '.', 0, 0};
@@ -60,6 +68,9 @@ public slots:
 	void backPressed(bool pressed);
 	void leftStrafePressed(bool pressed);
 	void rightStrafePressed(bool pressed);
+	void shiftPressed(bool pressed);
+	void attackPressed(bool pressed);
+	void usePressed(bool pressed);
 
 signals:
 	void gameStateActiveChanged();

@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>resource/image/menu-dots-circle.svg</file>
+        <file>resource/image/action_attack.svg</file>
+        <file>resource/image/action_jump.svg</file>
+        <file>resource/image/action_run.svg</file>
+        <file>resource/image/action_use.svg</file>
     </qresource>
 </RCC>
