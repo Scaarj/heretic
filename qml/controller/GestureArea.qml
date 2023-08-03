@@ -100,6 +100,27 @@ MultiPointTouchArea {
         onClicked: screenController.menuPressed()
     }
 
+    Keys.RunButton {
+        anchors { left: parent.left; bottom: parent.bottom; leftMargin: Theme.paddingMedium; bottomMargin: anchors.leftMargin }
+        visible: screenController.gameStateActive
+
+        onCheckedChanged: screenController.shiftPressed(checked)
+    }
+
+    Keys.AttackButton {
+        id: attackButton
+        anchors { right: parent.right; bottom: parent.bottom; rightMargin: Theme.paddingMedium; bottomMargin: anchors.rightMargin; }
+        visible: screenController.gameStateActive
+        onCheckedChanged: screenController.attackPressed(checked)
+    }
+
+    Keys.UseButton {
+        anchors { right: parent.right; bottom: attackButton.top; rightMargin: Theme.paddingMedium; bottomMargin: anchors.rightMargin }
+        visible: screenController.gameStateActive
+
+        onCheckedChanged: screenController.usePressed(checked)
+    }
+
     Timer {
         id: doubleClickingTimer
         interval: 200

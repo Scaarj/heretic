@@ -80,6 +80,30 @@ void ScreenController::rightStrafePressed(bool pressed) {
 	}
 }
 
+void ScreenController::shiftPressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(shiftKeyPressed);
+	} else {
+		D_PostEvent(shiftKeyReleased);
+	}
+}
+
+void ScreenController::attackPressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(attackKeyPressed);
+	} else {
+		D_PostEvent(attackKeyReleased);
+	}
+}
+
+void ScreenController::usePressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(useKeyPressed);
+	} else {
+		D_PostEvent(useKeyReleased);
+	}
+}
+
 void ScreenController::mousePressed(int mouseX, int mouseY) {
 	safeLastMousePosition(mouseX, mouseY);
 
@@ -134,9 +158,11 @@ void ScreenController::doubleClick(int x, int y) {
 	if (askforquit) {
 		if (yesButtonPressed(x, y)) {
 			D_PostEvent(yKeyPressed);
+			D_PostEvent(yKeyReleased);
 		}
 		if (noButtonPressed(x, y)) {
 			D_PostEvent(nKeyPressed);
+			D_PostEvent(nKeyReleased);
 		}
 	} else {
 		if (MenuActive) {
