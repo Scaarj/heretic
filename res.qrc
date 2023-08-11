@@ -5,5 +5,14 @@
         <file>resource/image/action_jump.svg</file>
         <file>resource/image/action_run.svg</file>
         <file>resource/image/action_use.svg</file>
+        <file>resource/image/switch-weapon.svg</file>
+        <file>resource/image/weapons/WBLSA0.png</file>
+        <file>resource/image/weapons/WBOWA0.png</file>
+        <file>resource/image/weapons/WGNTA0.png</file>
+        <file>resource/image/weapons/WMCEA0.png</file>
+        <file>resource/image/weapons/WPHXA0.png</file>
+        <file>resource/image/weapons/WSKLA0.png</file>
+        <file>resource/image/weapons/WELVA0.png</file>
+        <file>resource/image/weapons/WSTFA0.png</file>
     </qresource>
 </RCC>

@@ -15,11 +15,13 @@ Item {
     }
 
     function handleTouch(point) {
-        screenController.mousePositionChanged(point.x, point.y)
+        cursorPosition = point
+        screenController.mousePositionChanged(cursorPosition.x, cursorPosition.y)
     }
 
     function stopHandling()
     {
+        cursorPosition = baseCursorPosition
         touchId = -1
     }
 }

@@ -5,6 +5,7 @@ Item {
     id: root
 
     property alias color: overlay.color
+    property alias fillMode: image.fillMode
     property alias source: image.source
 
     Image {
@@ -13,6 +14,7 @@ Item {
         height: parent.height
         smooth:  true
         visible: false
+        fillMode: Image.PreserveAspectFit
         sourceSize: Qt.size(width, height)
     }
 

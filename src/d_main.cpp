@@ -10,6 +10,7 @@
 #include "p_local.h"
 #include "scenepainter.h"
 #include "screencontroller.h"
+#include "weaponmodel.h"
 
 #ifdef USE_GSI
 	#include "gsisound/soundst.h"
@@ -46,7 +47,8 @@ int bilifilter = 0;
 extern char* basedefault;
 extern char* homedir;
 extern ScenePainter* scenePainter;
-extern ScreenController* screenController;
+extern std::unique_ptr<ScreenController> screenController;
+extern std::unique_ptr<WeaponModel> weaponModel;
 
 boolean advancedemo;
 extern boolean MenuActive;
@@ -271,6 +273,7 @@ void D_DoomLoop(void) {
 		/* Move positional sounds */
 		S_UpdateSounds(players[consoleplayer].mo);
 		D_Display();
+		weaponModel->actualizeWeapon();
 		QGuiApplication::processEvents();
 	}
 }

@@ -60,6 +60,7 @@ SOURCES += \
 	src/g_game.cpp \
 	src/in_lude.cpp \
 	src/i_system.cpp \
+    src/qt/weaponmodel.cpp \
 	src/z_zone.cpp \
 	src/mn_menu.cpp \
 	src/am_map.cpp \
@@ -109,6 +110,7 @@ SOURCES += \
 	src/qt/introscreen.cpp \
 
 HEADERS += \
+    src/qt/weaponmodel.h \
 	src/r_local.h \
 	src/p_local.h \
 	src/doomdef.h \

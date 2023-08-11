@@ -1279,6 +1279,13 @@ extern long usegamma;
 extern int bilifilter;
 extern int lifilter;
 
+/*
+* ------
+*  GAME EVENT
+* ------
+*/
+extern boolean sendpause; /* send a pause event next tic */
+
 void V_Init(void); /* Allocates buffer screens, call before R_Init */
 void V_DrawPatch(int x, int y, patch_t* patch);
 void V_DrawFuzzPatch(int x, int y, patch_t* patch);

@@ -15,7 +15,8 @@ void ScenePainter::setPallete(byte* palette) {
 void ScenePainter::setContext(ContextType context) {
 	currentContext = context;
 	update();
-	emit activeScreenRectChanged(activeScreen());
+	activeScreenRect = contexts.at(currentContext)->activeScreen();
+	emit activeScreenChanged();
 }
 
 void ScenePainter::printTextLine(const QString& line) {
@@ -23,7 +24,7 @@ void ScenePainter::printTextLine(const QString& line) {
 }
 
 QRect ScenePainter::activeScreen() const {
-	return contexts.at(currentContext)->activeScreen();
+	return activeScreenRect;
 }
 
 QRect ScenePainter::fromGameCoord(const QRect& rect, const QRect& base) {
@@ -47,5 +48,6 @@ void ScenePainter::orientationChanged(int orientation) {
 	auto size = contexts.at(currentContext)->resize(orientation);
 	setWidth(size.width());
 	setHeight(size.height());
-	emit activeScreenRectChanged(activeScreen());
+	activeScreenRect = contexts.at(currentContext)->activeScreen();
+	emit activeScreenChanged();
 }

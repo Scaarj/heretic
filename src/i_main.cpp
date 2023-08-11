@@ -5,10 +5,12 @@
 
 #include "scenepainter.h"
 #include "screencontroller.h"
+#include "weaponmodel.h"
 
 QGuiApplication* app;
 ScenePainter* scenePainter = nullptr;
 std::unique_ptr<ScreenController> screenController;
+std::unique_ptr<WeaponModel> weaponModel;
 
 int main(int argc, char* argv[]) {
 #ifdef sailfishapp
@@ -35,6 +37,9 @@ int main(int argc, char* argv[]) {
 
 	screenController = std::make_unique<ScreenController>(scenePainter);
 	view->rootContext()->setContextProperty("screenController", screenController.get());
+
+	weaponModel = std::make_unique<WeaponModel>();
+	view->rootContext()->setContextProperty("weaponModel", weaponModel.get());
 
 	myargc = argc;
 	myargv = argv;

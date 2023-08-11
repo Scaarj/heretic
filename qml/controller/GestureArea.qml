@@ -1,4 +1,5 @@
 import QtQuick 2.6
+import QtQuick.Layouts 1.1
 import Sailfish.Silica 1.0
 
 import "keys" as Keys
@@ -11,7 +12,7 @@ MultiPointTouchArea {
     property int mouseViewId: -1
 
     minimumTouchPoints: 1
-    maximumTouchPoints: 2
+    maximumTouchPoints: 3
 
     onPressed: {
         var xCoord = touchPoints[0].x
@@ -100,25 +101,58 @@ MultiPointTouchArea {
         onClicked: screenController.menuPressed()
     }
 
-    Keys.RunButton {
-        anchors { left: parent.left; bottom: parent.bottom; leftMargin: Theme.paddingMedium; bottomMargin: anchors.leftMargin }
-        visible: screenController.gameStateActive
-
-        onCheckedChanged: screenController.shiftPressed(checked)
-    }
-
     Keys.AttackButton {
         id: attackButton
-        anchors { right: parent.right; bottom: parent.bottom; rightMargin: Theme.paddingMedium; bottomMargin: anchors.rightMargin; }
+        x: pressed ? viewController.cursorPosition.x - width / 2 : root.width - (width + Theme.paddingMedium) * 2
+        y: pressed ? viewController.cursorPosition.y - height / 2 : root.height - (height + Theme.paddingMedium) * 2
         visible: screenController.gameStateActive
-        onCheckedChanged: screenController.attackPressed(checked)
+
+        onPressed: screenController.attackPressed(true)
+        onReleased: screenController.attackPressed(false)
     }
 
     Keys.UseButton {
-        anchors { right: parent.right; bottom: attackButton.top; rightMargin: Theme.paddingMedium; bottomMargin: anchors.rightMargin }
+        anchors { right: parent.right; bottom: parent.bottom; rightMargin: Theme.paddingMedium; bottomMargin: anchors.rightMargin }
         visible: screenController.gameStateActive
 
-        onCheckedChanged: screenController.usePressed(checked)
+        onPressed: screenController.usePressed(true)
+        onReleased: screenController.usePressed(false)
+    }
+
+    GridLayout {
+        anchors { left: parent.left; bottom: parent.bottom; leftMargin: Theme.paddingMedium; bottomMargin: anchors.leftMargin }
+        rows: 2
+        columns: 2
+        rowSpacing: Theme.paddingMedium
+        columnSpacing: rowSpacing
+
+        Keys.RunButton {
+            Layout.row: 1
+            Layout.column: 0
+            visible: screenController.gameStateActive
+
+            onCheckedChanged: screenController.shiftPressed(checked)
+        }
+
+        // NOTE: stub
+        Item {
+            Layout.row: 1
+            Layout.column: 1
+        }
+
+        Keys.SwitchWeapon {
+            Layout.row: 0
+            Layout.column: 0
+            visible: screenController.gameStateActive
+
+            onClicked: weaponChoice.toggle()
+        }
+    }
+
+    Controller.WeaponChoiceController {
+        id: weaponChoice
+        anchors.fill: parent
+        z: root.z + 1
     }
 
     Timer {
