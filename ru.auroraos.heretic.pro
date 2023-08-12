@@ -102,12 +102,12 @@ SOURCES += \
 	src/sound/sounds.cpp \
 	src/sound/soundst.cpp \
 	src/graphic/graphic_qml.cpp \
-	src/application/scenepainter.cpp \
-	src/application/screencontroller.cpp \
+	src/application/application.cpp \
 	src/application/context.cpp \
 	src/application/gamescreen.cpp \
 	src/application/introscreen.cpp \
-	src/application/looptimer.cpp \
+	src/application/scenepainter.cpp \
+	src/application/screencontroller.cpp \
 	src/application/weaponmodel.cpp \
 
 HEADERS += \
@@ -129,13 +129,12 @@ HEADERS += \
 	src/sound/i_sound.h \
 	src/sound/sounds.h \
 	src/sound/soundst.h \
-	src/application/scenepainter.h \
-	src/application/screencontroller.h \
+	src/application/application.h \
 	src/application/context.h \
 	src/application/gamescreen.h \
 	src/application/introscreen.h \
-	src/application/quitobserver.h \
-	src/application/looptimer.h \
+	src/application/scenepainter.h \
+	src/application/screencontroller.h \
 	src/application/weaponmodel.h \
 
 DISTFILES += \

@@ -1,11 +1,6 @@
 #pragma once
 
 #include <QQuickItem>
-#ifdef sailfishapp
-	#include <sailfishapp.h>
-#elif auroraapp
-	#include <auroraapp.h>
-#endif
 
 #include "mn_menu.h"
 
@@ -56,7 +51,7 @@ public:
 	virtual ~ScreenController() = default;
 
 	void waitUntilTap();
-	void init();
+	void initYesNoButton();
 
 	void checkGameState(gamestate_t state, bool menuactive);
 

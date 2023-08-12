@@ -31,7 +31,7 @@ void ScreenController::waitUntilTap() {
 	}
 }
 
-void ScreenController::init() {
+void ScreenController::initYesNoButton() {
 	YesButtonX = 100 - MN_TextAWidth(QuitEndMsgAnswer[0]) / 2;
 	NoButtonX = 200 - MN_TextAWidth(QuitEndMsgAnswer[1]) / 2;
 	ConfirmationButtonY = Y_DISP + 100;

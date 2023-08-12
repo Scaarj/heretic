@@ -2,11 +2,6 @@
 
 #include <QGuiApplication>
 #include <QScreen>
-#ifdef sailfishapp
-	#include <sailfishapp.h>
-#else
-	#include <auroraapp.h>
-#endif
 
 IntroScreen::IntroScreen() {
 }

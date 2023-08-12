@@ -7,11 +7,9 @@
 #include <unistd.h>
 
 #include "doomdef.h"
-#include "looptimer.h"
 #include "p_local.h"
-#include "scenepainter.h"
-#include "screencontroller.h"
-#include "weaponmodel.h"
+
+#include "application.h"
 
 #ifdef USE_GSI
 	#include "gsisound/soundst.h"
@@ -47,10 +45,7 @@ int bilifilter = 0;
 
 extern char* basedefault;
 extern char* homedir;
-extern ScenePainter* scenePainter;
-extern std::unique_ptr<ScreenController> screenController;
-extern std::unique_ptr<WeaponModel> weaponModel;
-extern LoopTimer loopTimer;
+extern std::unique_ptr<Application> application;
 
 boolean advancedemo;
 extern boolean MenuActive;
@@ -192,8 +187,6 @@ void D_Display(void) {
    * do buffered drawing
    */
 
-	screenController->checkGameState(gamestate, MenuActive);
-
 	switch (gamestate) {
 		case GS_LEVEL:
 			if (!gametic)
@@ -229,7 +222,7 @@ void D_Display(void) {
 
 	/* Flush buffered stuff to screen */
 	I_FinishUpdate();
-	scenePainter->update();
+	application->updateDraw(gamestate, MenuActive);
 }
 
 /*
@@ -250,8 +243,7 @@ void D_PrepareDoomLoop(void) {
 
 	I_SetPalette(static_cast<byte*>(W_CacheLumpName("PLAYPAL", PU_CACHE)));
 
-	scenePainter->setContext(ScenePainter::GameType);
-	loopTimer.start();
+	application->setGameContext();
 }
 
 void D_DoomLoop(void) {
@@ -277,10 +269,8 @@ void D_DoomLoop(void) {
 	/* Move positional sounds */
 	S_UpdateSounds(players[consoleplayer].mo);
 	D_Display();
-	// TODO: put in qt dispatcher
-	weaponModel->actualizeWeapon();
-	// NOTE: forever loop
-	loopTimer.start();
+
+	application->loop();
 }
 
 /*
@@ -539,26 +529,7 @@ void D_DoomMain(void) {
 	/*   char *startup;   */
 	/*   char smsg[80];   */
 
-	scenePainter->setContext(ScenePainter::IntroType);
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("");
-	// TODO: read version from pri/rpm
-	scenePainter->printTextLine("HERETIC v0.0.1");
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("Works on x86, armv7hl Aurora OS");
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("Heretic was ported to Aurora OS");
-	scenePainter->printTextLine("by Steve Dubrov");
-	scenePainter->printTextLine("You can download the latest versions under:");
-	scenePainter->printTextLine("https://github.com/Scaarj/heretic");
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("Tap on Screen to go on.");
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("");
-	scenePainter->update();
-
-	screenController->waitUntilTap();
+	application->setIntroContext();
 
 	/* calls SVGALib init and revokes root rights, dummy for other displays */
 	InitGraphLib();
@@ -759,8 +730,6 @@ void D_DoomMain(void) {
 
 	printf("SB_Init: Loading patches.\n");
 	SB_Init();
-
-	screenController->init();
 
 	/*
    * start the apropriate game based on parms

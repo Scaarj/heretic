@@ -5,7 +5,6 @@
 #include <math.h>
 
 #include "r_local.h"
-#include "scenepainter.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,8 +12,6 @@ extern "C" {
 /*
   
 */
-
-extern ScenePainter* scenePainter;
 
 int viewangleoffset;
 
