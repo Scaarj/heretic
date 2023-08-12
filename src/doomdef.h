@@ -871,6 +871,8 @@ void tprintf(char *string, int initflag);
 * if not overrided, calls N_AdvanceDemo
 */
 
+void D_PrepareDoomLoop(void);
+
 void D_DoomLoop(void);
 /*
 * not a globally visible function, just included for source reference

@@ -6,9 +6,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <QGuiApplication>
-
 #include "doomdef.h"
+#include "looptimer.h"
 #include "p_local.h"
 #include "scenepainter.h"
 #include "screencontroller.h"
@@ -51,7 +50,7 @@ extern char* homedir;
 extern ScenePainter* scenePainter;
 extern std::unique_ptr<ScreenController> screenController;
 extern std::unique_ptr<WeaponModel> weaponModel;
-extern QGuiApplication* application;
+extern LoopTimer loopTimer;
 
 boolean advancedemo;
 extern boolean MenuActive;
@@ -240,7 +239,7 @@ void D_Display(void) {
   //
   //---------------------------------------------------------------------------
 */
-void D_DoomLoop(void) {
+void D_PrepareDoomLoop(void) {
 	if (M_CheckParm("-debugfile")) {
 		char filename[20];
 		sprintf(filename, "debug%i.txt", consoleplayer);
@@ -252,33 +251,36 @@ void D_DoomLoop(void) {
 	I_SetPalette(static_cast<byte*>(W_CacheLumpName("PLAYPAL", PU_CACHE)));
 
 	scenePainter->setContext(ScenePainter::GameType);
+	loopTimer.start();
+}
 
-	while (1) {
-		/* Frame syncronous IO operations */
-		I_StartFrame();
+void D_DoomLoop(void) {
+	/* Frame syncronous IO operations */
+	I_StartFrame();
 
-		/* Process one or more tics */
-		if (singletics) {
-			I_StartTic();
-			D_ProcessEvents();
-			G_BuildTiccmd(&netcmds[consoleplayer][maketic % BACKUPTICS]);
-			if (advancedemo)
-				D_DoAdvanceDemo();
-			G_Ticker();
-			gametic++;
-			maketic++;
-			printf("SINGLE\n");
-		} else {
-			/* Will run at least one tic */
-			TryRunTics();
-		}
-
-		/* Move positional sounds */
-		S_UpdateSounds(players[consoleplayer].mo);
-		D_Display();
-		weaponModel->actualizeWeapon();
-		application->processEvents();
+	/* Process one or more tics */
+	if (singletics) {
+		I_StartTic();
+		D_ProcessEvents();
+		G_BuildTiccmd(&netcmds[consoleplayer][maketic % BACKUPTICS]);
+		if (advancedemo)
+			D_DoAdvanceDemo();
+		G_Ticker();
+		gametic++;
+		maketic++;
+		printf("SINGLE\n");
+	} else {
+		/* Will run at least one tic */
+		TryRunTics();
 	}
+
+	/* Move positional sounds */
+	S_UpdateSounds(players[consoleplayer].mo);
+	D_Display();
+	// TODO: put in qt dispatcher
+	weaponModel->actualizeWeapon();
+	// NOTE: forever loop
+	loopTimer.start();
 }
 
 /*
@@ -435,7 +437,7 @@ bool D_CheckRecordFrom(void) {
 	G_DoLoadGame(); /* load the gameskill etc info from savegame */
 
 	G_RecordDemo(gameskill, 1, gameepisode, gamemap, myargv[p + 2]);
-	D_DoomLoop(); /* never returns */
+	D_PrepareDoomLoop(); /* never returns */
 }
 
 /*
@@ -769,20 +771,20 @@ void D_DoomMain(void) {
 	p = M_CheckParm("-record");
 	if (p && p < myargc - 1) {
 		G_RecordDemo(startskill, 1, startepisode, startmap, myargv[p + 1]);
-		D_DoomLoop(); /* Never returns */
+		D_PrepareDoomLoop(); /* Never returns */
 	}
 
 	p = M_CheckParm("-playdemo");
 	if (p && p < myargc - 1) {
 		singledemo = true; /* Quit after one demo */
 		G_DeferedPlayDemo(myargv[p + 1]);
-		D_DoomLoop(); /* Never returns */
+		D_PrepareDoomLoop(); /* Never returns */
 	}
 
 	p = M_CheckParm("-timedemo");
 	if (p && p < myargc - 1) {
 		G_TimeDemo(myargv[p + 1]);
-		D_DoomLoop(); /* Never returns */
+		D_PrepareDoomLoop(); /* Never returns */
 	}
 
 	p = M_CheckParm("-loadgame");
@@ -813,7 +815,7 @@ void D_DoomMain(void) {
 		}
 	}
 
-	D_DoomLoop();
+	D_PrepareDoomLoop();
 }
 
 #ifdef __cplusplus
