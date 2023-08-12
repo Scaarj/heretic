@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <QGuiApplication>
+
 #include "doomdef.h"
 #include "p_local.h"
 #include "scenepainter.h"

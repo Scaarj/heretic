@@ -1,5 +1,6 @@
 #include "gamescreen.h"
 
+#include <QGuiApplication>
 #include <QScreen>
 #ifdef sailfishapp
 	#include <sailfishapp.h>

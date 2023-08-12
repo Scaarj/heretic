@@ -1,5 +1,8 @@
 #include "screencontroller.h"
 
+#include <QGuiApplication>
+#include <math.h>
+
 #include "doomdef.h"
 #include "gamescreen.h"
 #include "mn_menu.h"
