@@ -341,7 +341,7 @@ void D_DoAdvanceDemo(void) {
 	switch (demosequence) {
 		case 0:
 			// NOTE: demo waiting reduce
-			pagetic = 2100000;
+			pagetic = 210;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "TITLE";
 			S_StartMusic(mus_titl);
@@ -349,7 +349,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 1:
 			// NOTE: demo waiting reduce
-			pagetic = 2100000;
+			pagetic = 140;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "TITLE";
 			break;
@@ -360,7 +360,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 3:
 			// NOTE: demo waiting reduce
-			pagetic = 2100000;
+			pagetic = 200;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "CREDIT";
 			break;
@@ -371,7 +371,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 5:
 			// NOTE: demo waiting reduce
-			pagetic = 2100000;
+			pagetic = 200;
 			gamestate = GS_DEMOSCREEN;
 			if (shareware) {
 				pagename = "ORDER";
