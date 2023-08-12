@@ -41,7 +41,7 @@ void ScreenController::initYesNoButton() {
 }
 
 void ScreenController::checkGameState(gamestate_t state, bool menuactive) {
-	auto currentState = GS_LEVEL == state && !menuactive && !askforquit;
+	auto currentState = GS_LEVEL == state && !menuactive && !askforquit && !demosequence;
 
 	if (currentState != gameState) {
 		gameState = currentState;

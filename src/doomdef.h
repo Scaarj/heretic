@@ -747,6 +747,7 @@ extern skill_t startskill;
 extern int startepisode;
 extern int startmap;
 extern boolean autostart;
+extern int demosequence;
 
 /*
 ===============================================================================
