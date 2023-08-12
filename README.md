@@ -15,6 +15,17 @@ Ported game Heretic for mobile platform Aurora OS. Control by touch screen and s
 <img src="https://github.com/Scaarj/heretic/assets/25565781/d3ef5398-3012-4304-bd94-3c37b71c006c" width="320">
 <img src="https://github.com/Scaarj/heretic/assets/25565781/506740b9-40bd-4ed8-8e25-3d97fca96749" width="320">
 <img src="https://github.com/Scaarj/heretic/assets/25565781/2a85ca27-1b28-4473-bff9-31e302265c3b" width="320">
+<img src="https://github.com/Scaarj/heretic/assets/25565781/f827329e-8837-43a1-9118-ea2939d54798" width="320">
+
+## Todo list
+
+- Select and use artifacts
+- Sound player
+- Save/load games
+- Flight controll
+- Map viewing
+- Game controllers - ps4, bt-keyboard, etc
+- Network game (wifi, bluethoot)
 
 ## Documentation
 
