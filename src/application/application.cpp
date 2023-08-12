@@ -22,6 +22,10 @@ void Application::setApplicationName(const QString& applicationName) {
 	instance->setApplicationName(applicationName);
 }
 
+void Application::setApplicationVersion(const QString& applicationVersion) {
+	instance->setApplicationVersion(applicationVersion);
+}
+
 void Application::setSource(const QString& path) {
 #ifdef sailfishapp
 	view->setSource(SailfishApp::pathTo(path));
@@ -72,15 +76,15 @@ void Application::setIntroContext() {
 	scenePainter->setContext(ScenePainter::IntroType);
 	scenePainter->printTextLine("");
 	scenePainter->printTextLine("");
-	scenePainter->printTextLine("HERETIC v0.0.1"); // TODO: read version from pri/rpm
+	scenePainter->printTextLine(QString("HERETIC v%1").arg(instance->applicationVersion()));
 	scenePainter->printTextLine("");
 	scenePainter->printTextLine("Works on x86, armv7hl Aurora OS");
+	scenePainter->printTextLine("ported by Steve Dubrov");
 	scenePainter->printTextLine("");
-	scenePainter->printTextLine("Heretic was ported to Aurora OS");
-	scenePainter->printTextLine("by Steve Dubrov");
-	scenePainter->printTextLine("You can download the latest versions under:");
+	scenePainter->printTextLine("You can download the latest versions from:");
 	scenePainter->printTextLine("https://github.com/Scaarj/heretic");
-	scenePainter->printTextLine("");
+	scenePainter->printTextLine("based on Linux Heretic 1.03 (Andre` Werthmann)");
+	scenePainter->printTextLine("from https://doomwiki.org/wiki/Linux_Heretic");
 	scenePainter->printTextLine("");
 	scenePainter->printTextLine("Tap on Screen to go on.");
 	scenePainter->printTextLine("");

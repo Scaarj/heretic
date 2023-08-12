@@ -29,6 +29,7 @@ public:
 
 	void setOrganizationName(const QString& organizationName);
 	void setApplicationName(const QString& applicationName);
+	void setApplicationVersion(const QString& applicationVersion);
 	void setSource(const QString& path);
 	void updateDraw(gamestate_t state, bool menuactive);
 	void setDrawPallete(byte* palette);

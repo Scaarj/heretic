@@ -10,6 +10,7 @@ int main(int argc, char* argv[]) {
 
 	application->setOrganizationName(QStringLiteral("ru.auroraos"));
 	application->setApplicationName(QStringLiteral("heretic"));
+	application->setApplicationVersion(QStringLiteral(APP_VERSION));
 	application->setSource(QStringLiteral("qml/heretic.qml"));
 	application->show();
 

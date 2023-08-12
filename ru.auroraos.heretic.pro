@@ -155,9 +155,16 @@ wad_file.files = $$PWD/resource/Heretic.wad
 wad_file.path = /usr/share/$${TARGET}
 INSTALLS += wad_file
 
+MAJOR_VERSION=1
+MINOR_VERSION=0
+BUILD_NUMBER=42
+
+APP_VERSION = "$${MAJOR_VERSION}.$${MINOR_VERSION}.$${BUILD_NUMBER}"
+
 DEFINES += \
     __32BIT__ \
 	sailfishapp \
+	APP_VERSION='\\"$$APP_VERSION\\"' \
 
 TRANSLATIONS += \
     translations/ru.auroraos.heretic.ts \
