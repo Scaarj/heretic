@@ -100,7 +100,7 @@ private:
 
 private:
 	int swipeWidth;
-	std::atomic_bool tapLock;
+	bool tapLock;
 	ScenePainter* scenePainter;
 	QPoint mouseLastPosition;
 	QRect activeRect;

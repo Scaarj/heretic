@@ -51,6 +51,7 @@ extern char* homedir;
 extern ScenePainter* scenePainter;
 extern std::unique_ptr<ScreenController> screenController;
 extern std::unique_ptr<WeaponModel> weaponModel;
+extern QGuiApplication* application;
 
 boolean advancedemo;
 extern boolean MenuActive;
@@ -276,7 +277,7 @@ void D_DoomLoop(void) {
 		S_UpdateSounds(players[consoleplayer].mo);
 		D_Display();
 		weaponModel->actualizeWeapon();
-		QGuiApplication::processEvents();
+		application->processEvents();
 	}
 }
 
@@ -554,7 +555,6 @@ void D_DoomMain(void) {
 	scenePainter->printTextLine("");
 	scenePainter->printTextLine("");
 	scenePainter->update();
-	// TODO: interrupt loop on tap
 
 	screenController->waitUntilTap();
 

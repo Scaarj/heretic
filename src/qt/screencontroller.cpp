@@ -14,6 +14,8 @@ extern int FontBBaseLump;
 extern int CurrentItPos;
 extern boolean askforquit;
 
+extern QGuiApplication* application;
+
 ScreenController::ScreenController(ScenePainter* painter, QQuickItem* parent)
 	: QQuickItem{parent}
 	, scenePainter{painter}
@@ -25,7 +27,7 @@ void ScreenController::waitUntilTap() {
 	tapLock = true;
 
 	while (tapLock) {
-		QGuiApplication::processEvents();
+		application->processEvents();
 	}
 }
 

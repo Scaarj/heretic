@@ -134,9 +134,10 @@ HEADERS += \
 	src/qt/context.h \
 	src/qt/gamescreen.h \
 	src/qt/introscreen.h \
+	src/qt/quitobserver.h \
 
 DISTFILES += \
-	rpm/ru.auroraos.heretic.spec \
+    rpm/ru.auroraos.heretic.spec \
 	AUTHORS.md \
 	CODE_OF_CONDUCT.md \
 	CONTRIBUTING.md \
