@@ -12,17 +12,26 @@ MouseArea {
     property color contentColorPressed: "coral"
     property color currentColor: clickAnimation.running ? contentColorPressed : contentColor
     property int size: Theme.buttonWidthTiny
+    property var background: null
+
 
     onClicked: clickAnimation.restart()
 
     width: size
     height: width
 
+    Item {
+        anchors.fill: parent
+        data: [
+            background
+        ]
+    }
+
     Base.ColoredImage {
         id: image
+        anchors.centerIn: parent
         width: clickAnimation.running ? size * 0.9 : size
         height: width
-        anchors.centerIn: parent
         color: root.currentColor
     }
 

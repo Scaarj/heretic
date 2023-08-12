@@ -4,9 +4,8 @@
 <context>
     <name>DefaultCoverPage</name>
     <message>
-        <location filename="../qml/cover/DefaultCoverPage.qml" line="46"/>
         <source>Template</source>
-        <translation>Шаблон</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

@@ -52,7 +52,7 @@ PKGCONFIG += \
 INCLUDEPATH += \
 	src \
 	src/sound \
-	src/qt \
+	src/application \
 
 SOURCES += \
 	src/i_main.cpp \
@@ -102,11 +102,13 @@ SOURCES += \
 	src/sound/sounds.cpp \
 	src/sound/soundst.cpp \
 	src/graphic/graphic_qml.cpp \
-	src/qt/scenepainter.cpp \
-	src/qt/screencontroller.cpp \
-	src/qt/context.cpp \
-	src/qt/gamescreen.cpp \
-	src/qt/introscreen.cpp \
+	src/application/application.cpp \
+	src/application/context.cpp \
+	src/application/gamescreen.cpp \
+	src/application/introscreen.cpp \
+	src/application/scenepainter.cpp \
+	src/application/screencontroller.cpp \
+	src/application/weaponmodel.cpp \
 
 HEADERS += \
 	src/r_local.h \
@@ -127,14 +129,16 @@ HEADERS += \
 	src/sound/i_sound.h \
 	src/sound/sounds.h \
 	src/sound/soundst.h \
-	src/qt/scenepainter.h \
-	src/qt/screencontroller.h \
-	src/qt/context.h \
-	src/qt/gamescreen.h \
-	src/qt/introscreen.h \
+	src/application/application.h \
+	src/application/context.h \
+	src/application/gamescreen.h \
+	src/application/introscreen.h \
+	src/application/scenepainter.h \
+	src/application/screencontroller.h \
+	src/application/weaponmodel.h \
 
 DISTFILES += \
-	rpm/ru.auroraos.heretic.spec \
+    rpm/ru.auroraos.heretic.spec \
 	AUTHORS.md \
 	CODE_OF_CONDUCT.md \
 	CONTRIBUTING.md \
@@ -151,9 +155,16 @@ wad_file.files = $$PWD/resource/Heretic.wad
 wad_file.path = /usr/share/$${TARGET}
 INSTALLS += wad_file
 
+MAJOR_VERSION=1
+MINOR_VERSION=0
+BUILD_NUMBER=42
+
+APP_VERSION = "$${MAJOR_VERSION}.$${MINOR_VERSION}.$${BUILD_NUMBER}"
+
 DEFINES += \
     __32BIT__ \
 	sailfishapp \
+	APP_VERSION='\\"$$APP_VERSION\\"' \
 
 TRANSLATIONS += \
     translations/ru.auroraos.heretic.ts \

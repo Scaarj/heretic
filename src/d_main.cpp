@@ -8,8 +8,8 @@
 
 #include "doomdef.h"
 #include "p_local.h"
-#include "scenepainter.h"
-#include "screencontroller.h"
+
+#include "application.h"
 
 #ifdef USE_GSI
 	#include "gsisound/soundst.h"
@@ -45,8 +45,7 @@ int bilifilter = 0;
 
 extern char* basedefault;
 extern char* homedir;
-extern ScenePainter* scenePainter;
-extern ScreenController* screenController;
+extern std::unique_ptr<Application> application;
 
 boolean advancedemo;
 extern boolean MenuActive;
@@ -188,8 +187,6 @@ void D_Display(void) {
    * do buffered drawing
    */
 
-	screenController->checkGameState(gamestate, MenuActive);
-
 	switch (gamestate) {
 		case GS_LEVEL:
 			if (!gametic)
@@ -225,7 +222,7 @@ void D_Display(void) {
 
 	/* Flush buffered stuff to screen */
 	I_FinishUpdate();
-	scenePainter->update();
+	application->updateDraw(gamestate, MenuActive);
 }
 
 /*
@@ -235,7 +232,7 @@ void D_Display(void) {
   //
   //---------------------------------------------------------------------------
 */
-void D_DoomLoop(void) {
+void D_PrepareDoomLoop(void) {
 	if (M_CheckParm("-debugfile")) {
 		char filename[20];
 		sprintf(filename, "debug%i.txt", consoleplayer);
@@ -246,33 +243,34 @@ void D_DoomLoop(void) {
 
 	I_SetPalette(static_cast<byte*>(W_CacheLumpName("PLAYPAL", PU_CACHE)));
 
-	scenePainter->setContext(ScenePainter::GameType);
+	application->setGameContext();
+}
 
-	while (1) {
-		/* Frame syncronous IO operations */
-		I_StartFrame();
+void D_DoomLoop(void) {
+	/* Frame syncronous IO operations */
+	I_StartFrame();
 
-		/* Process one or more tics */
-		if (singletics) {
-			I_StartTic();
-			D_ProcessEvents();
-			G_BuildTiccmd(&netcmds[consoleplayer][maketic % BACKUPTICS]);
-			if (advancedemo)
-				D_DoAdvanceDemo();
-			G_Ticker();
-			gametic++;
-			maketic++;
-			printf("SINGLE\n");
-		} else {
-			/* Will run at least one tic */
-			TryRunTics();
-		}
-
-		/* Move positional sounds */
-		S_UpdateSounds(players[consoleplayer].mo);
-		D_Display();
-		QGuiApplication::processEvents();
+	/* Process one or more tics */
+	if (singletics) {
+		I_StartTic();
+		D_ProcessEvents();
+		G_BuildTiccmd(&netcmds[consoleplayer][maketic % BACKUPTICS]);
+		if (advancedemo)
+			D_DoAdvanceDemo();
+		G_Ticker();
+		gametic++;
+		maketic++;
+		printf("SINGLE\n");
+	} else {
+		/* Will run at least one tic */
+		TryRunTics();
 	}
+
+	/* Move positional sounds */
+	S_UpdateSounds(players[consoleplayer].mo);
+	D_Display();
+
+	application->loop();
 }
 
 /*
@@ -343,7 +341,7 @@ void D_DoAdvanceDemo(void) {
 	switch (demosequence) {
 		case 0:
 			// NOTE: demo waiting reduce
-			pagetic = 2100000;
+			pagetic = 210;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "TITLE";
 			S_StartMusic(mus_titl);
@@ -351,7 +349,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 1:
 			// NOTE: demo waiting reduce
-			pagetic = 2100000;
+			pagetic = 140;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "TITLE";
 			break;
@@ -362,7 +360,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 3:
 			// NOTE: demo waiting reduce
-			pagetic = 2100000;
+			pagetic = 200;
 			gamestate = GS_DEMOSCREEN;
 			pagename = "CREDIT";
 			break;
@@ -373,7 +371,7 @@ void D_DoAdvanceDemo(void) {
 			break;
 		case 5:
 			// NOTE: demo waiting reduce
-			pagetic = 2100000;
+			pagetic = 200;
 			gamestate = GS_DEMOSCREEN;
 			if (shareware) {
 				pagename = "ORDER";
@@ -429,7 +427,7 @@ bool D_CheckRecordFrom(void) {
 	G_DoLoadGame(); /* load the gameskill etc info from savegame */
 
 	G_RecordDemo(gameskill, 1, gameepisode, gamemap, myargv[p + 2]);
-	D_DoomLoop(); /* never returns */
+	D_PrepareDoomLoop(); /* never returns */
 }
 
 /*
@@ -531,27 +529,7 @@ void D_DoomMain(void) {
 	/*   char *startup;   */
 	/*   char smsg[80];   */
 
-	scenePainter->setContext(ScenePainter::IntroType);
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("");
-	// TODO: read version from pri/rpm
-	scenePainter->printTextLine("HERETIC v0.0.1");
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("Works on x86, armv7hl Aurora OS");
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("Heretic was ported to Aurora OS");
-	scenePainter->printTextLine("by Steve Dubrov");
-	scenePainter->printTextLine("You can download the latest versions under:");
-	scenePainter->printTextLine("https://github.com/Scaarj/heretic");
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("Tap on Screen to go on.");
-	scenePainter->printTextLine("");
-	scenePainter->printTextLine("");
-	scenePainter->update();
-	// TODO: interrupt loop on tap
-
-	screenController->waitUntilTap();
+	application->setIntroContext();
 
 	/* calls SVGALib init and revokes root rights, dummy for other displays */
 	InitGraphLib();
@@ -753,8 +731,6 @@ void D_DoomMain(void) {
 	printf("SB_Init: Loading patches.\n");
 	SB_Init();
 
-	screenController->init();
-
 	/*
    * start the apropriate game based on parms
    */
@@ -764,20 +740,20 @@ void D_DoomMain(void) {
 	p = M_CheckParm("-record");
 	if (p && p < myargc - 1) {
 		G_RecordDemo(startskill, 1, startepisode, startmap, myargv[p + 1]);
-		D_DoomLoop(); /* Never returns */
+		D_PrepareDoomLoop(); /* Never returns */
 	}
 
 	p = M_CheckParm("-playdemo");
 	if (p && p < myargc - 1) {
 		singledemo = true; /* Quit after one demo */
 		G_DeferedPlayDemo(myargv[p + 1]);
-		D_DoomLoop(); /* Never returns */
+		D_PrepareDoomLoop(); /* Never returns */
 	}
 
 	p = M_CheckParm("-timedemo");
 	if (p && p < myargc - 1) {
 		G_TimeDemo(myargv[p + 1]);
-		D_DoomLoop(); /* Never returns */
+		D_PrepareDoomLoop(); /* Never returns */
 	}
 
 	p = M_CheckParm("-loadgame");
@@ -808,7 +784,7 @@ void D_DoomMain(void) {
 		}
 	}
 
-	D_DoomLoop();
+	D_PrepareDoomLoop();
 }
 
 #ifdef __cplusplus

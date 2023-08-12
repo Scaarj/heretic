@@ -1,5 +1,8 @@
 #include "screencontroller.h"
 
+#include <QGuiApplication>
+#include <math.h>
+
 #include "doomdef.h"
 #include "gamescreen.h"
 #include "mn_menu.h"
@@ -11,22 +14,24 @@ extern int FontBBaseLump;
 extern int CurrentItPos;
 extern boolean askforquit;
 
+extern QGuiApplication* application;
+
 ScreenController::ScreenController(ScenePainter* painter, QQuickItem* parent)
 	: QQuickItem{parent}
 	, scenePainter{painter}
 	, gameState{false} {
-	connect(scenePainter, &ScenePainter::activeScreenRectChanged, this, &ScreenController::onActiveScreenRectChanged);
+	connect(scenePainter, &ScenePainter::activeScreenChanged, this, &ScreenController::onActiveScreenChanged);
 }
 
 void ScreenController::waitUntilTap() {
 	tapLock = true;
 
 	while (tapLock) {
-		QGuiApplication::processEvents();
+		application->processEvents();
 	}
 }
 
-void ScreenController::init() {
+void ScreenController::initYesNoButton() {
 	YesButtonX = 100 - MN_TextAWidth(QuitEndMsgAnswer[0]) / 2;
 	NoButtonX = 200 - MN_TextAWidth(QuitEndMsgAnswer[1]) / 2;
 	ConfirmationButtonY = Y_DISP + 100;
@@ -36,7 +41,7 @@ void ScreenController::init() {
 }
 
 void ScreenController::checkGameState(gamestate_t state, bool menuactive) {
-	auto currentState = GS_LEVEL == state && !menuactive && !askforquit;
+	auto currentState = GS_LEVEL == state && !menuactive && !askforquit && !demosequence;
 
 	if (currentState != gameState) {
 		gameState = currentState;
@@ -104,6 +109,14 @@ void ScreenController::usePressed(bool pressed) {
 	}
 }
 
+void ScreenController::selectWeapon(int index) {
+	players[0].pendingweapon = static_cast<weapontype_t>(index);
+}
+
+void ScreenController::pausePressed(bool pressed) {
+	sendpause = pressed;
+}
+
 void ScreenController::mousePressed(int mouseX, int mouseY) {
 	safeLastMousePosition(mouseX, mouseY);
 
@@ -144,8 +157,11 @@ void ScreenController::mousePositionChanged(int mouseX, int mouseY) {
 		if (gameStateActive()) {
 			auto offsetX = mouseX - mouseLastPosition.x();
 			auto offsetY = mouseY - mouseLastPosition.y();
-			mouseMoved(offsetX, offsetY);
-			safeLastMousePosition(mouseX, mouseY);
+			// TODO: Search why got double click with same coords on viewing and attacking
+			if (offsetX || offsetY) {
+				mouseMoved(offsetX, offsetY);
+				safeLastMousePosition(mouseX, mouseY);
+			}
 		}
 	}
 }
@@ -174,7 +190,8 @@ void ScreenController::doubleClick(int x, int y) {
 	}
 }
 
-void ScreenController::onActiveScreenRectChanged(const QRect& screen) {
+void ScreenController::onActiveScreenChanged() {
+	auto screen = scenePainter->activeScreen();
 	activeRect = QRect(screen.x(), screen.y(), screen.width(), screen.height());
 	swipeWidth = std::min(scenePainter->width(), scenePainter->height()) / 16;
 }
@@ -286,8 +303,8 @@ void ScreenController::mouseMoved(int offsetX, int offsetY) {
 	int minSide = std::min(scenePainter->height(), scenePainter->width());
 	int maxOffsetX = minSide;
 	int maxOffsetY = minSide / 4;
-	int finalOffsetX = offsetX << 6;
-	int finalOffsetY = offsetY << 6;
+	int finalOffsetX = offsetX << 5;
+	int finalOffsetY = offsetY << 5;
 
 	if (abs(finalOffsetX) >= maxOffsetX) {
 		finalOffsetX = finalOffsetX > 0 ? maxOffsetX : -maxOffsetX;

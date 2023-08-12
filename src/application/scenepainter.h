@@ -13,6 +13,8 @@ class ScenePainter : public QQuickPaintedItem {
 public:
 	enum ContextType : int { IntroType = 0, GameType };
 
+	Q_PROPERTY(QRect activeScreen READ activeScreen NOTIFY activeScreenChanged)
+
 public:
 	ScenePainter(QQuickPaintedItem* parent = nullptr);
 	virtual ~ScenePainter() = default;
@@ -21,14 +23,14 @@ public:
 	void setContext(ContextType context);
 	void printTextLine(const QString& line);
 
-	Q_INVOKABLE QRect activeScreen() const;
+	QRect activeScreen() const;
 	QRect fromGameCoord(const QRect& rect, const QRect& base);
 
 public slots:
 	void orientationChanged(int orientation);
 
 signals:
-	void activeScreenRectChanged(const QRect&);
+	void activeScreenChanged();
 
 protected:
 	void paint(QPainter* painter) override;
@@ -36,4 +38,5 @@ protected:
 private:
 	std::vector<std::unique_ptr<Context>> contexts;
 	ContextType currentContext;
+	QRect activeScreenRect;
 };

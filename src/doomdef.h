@@ -747,6 +747,7 @@ extern skill_t startskill;
 extern int startepisode;
 extern int startmap;
 extern boolean autostart;
+extern int demosequence;
 
 /*
 ===============================================================================
@@ -870,6 +871,8 @@ void tprintf(char *string, int initflag);
 * parses command line options
 * if not overrided, calls N_AdvanceDemo
 */
+
+void D_PrepareDoomLoop(void);
 
 void D_DoomLoop(void);
 /*
@@ -1278,6 +1281,13 @@ extern byte gammatable[5][256];
 extern long usegamma;
 extern int bilifilter;
 extern int lifilter;
+
+/*
+* ------
+*  GAME EVENT
+* ------
+*/
+extern boolean sendpause; /* send a pause event next tic */
 
 void V_Init(void); /* Allocates buffer screens, call before R_Init */
 void V_DrawPatch(int x, int y, patch_t* patch);

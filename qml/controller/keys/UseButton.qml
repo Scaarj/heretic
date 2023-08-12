@@ -7,8 +7,5 @@ Base.Button {
     property bool checked: false
 
     source: "qrc:/resource/image/action_use.svg"
-    currentColor: checked ? contentColorPressed : contentColor
-
-    onPressed: checked = true
-    onReleased: checked = false
+    currentColor: pressed ? contentColorPressed : contentColor
 }
