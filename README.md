@@ -10,7 +10,7 @@
 
 ## About
 
-Heretic is a dark fantasy first-person shooter video game released in December 1994. It was developed by Raven Software and published by id Software through GT Interactive. This project based on anothor port Linux Heretic 1.03 by Andre` Werthmann.
+Heretic is a dark fantasy first-person shooter video game released in December 1994. It was developed by Raven Software and published by id Software through GT Interactive. This project based on anothor port Linux Heretic 1.03 by Andre` Werthmann. You may check [doomwiki](https://doomwiki.org/wiki/Linux_Heretic) for inforamtion and download Linux Heretic 1.03 source code from [here](https://www.doomworld.com/3ddownloads/ports/linux-heretic-1.03.tar.gz).
 
 In this repository, the port of the game to the mobile operating system Aurora Os. Source code was ported from C to C++ using the Aurora Framework. All control is through the touch screen and special buttons. The render was saved from the original game and the screen matrix is ​​converted to QImage and displayed through the qml engine at 18-19 frames per second (fps is original). Game event loop works in parallel with QT eventloop via QTimer calls and event queue.
 
@@ -51,11 +51,6 @@ In this repository, the port of the game to the mobile operating system Aurora O
 - Game controllers - ps4, bt-keyboard, etc
 - Android port
 - Network game (wifi, bluethoot)
-
-## Documentation
-
-- [Aurora OS Documentation](https://developer.auroraos.ru/doc/software_development/reference)
-- [Doom Wiki: Linux Heretic](https://doomwiki.org/wiki/Linux_Heretic)
 
 ## Download
 
