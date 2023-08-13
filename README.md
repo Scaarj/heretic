@@ -19,7 +19,7 @@ In this repository, the port of the game to the mobile operating system Aurora O
 <img src="https://github.com/Scaarj/heretic/assets/25565781/2a85ca27-1b28-4473-bff9-31e302265c3b" width="320">
 <img src="https://github.com/Scaarj/heretic/assets/25565781/f827329e-8837-43a1-9118-ea2939d54798" width="320">
 
-<img src="https://github.com/Scaarj/heretic/assets/25565781/5b4174ae-8d51-41a0-a161-dbc03b86f139" width="320">
+<img src="https://github.com/Scaarj/heretic/assets/25565781/f99bf87f-c5e3-48cf-8c5f-ddc616773349" width="320">
 
 ## Control
 
@@ -59,8 +59,8 @@ In this repository, the port of the game to the mobile operating system Aurora O
 
 ## Distribute
 
-- Devices - [armv7hl](https://disk.yandex.ru/d/siIeMQ-0lSES-A)
-- Emulator - [i486](https://disk.yandex.ru/d/9RVe8ZyXoeDY4w)
+- Devices - [armv7hl](https://disk.yandex.ru/d/SRlvKJRETS8lWg)
+- Emulator - [i486](https://disk.yandex.ru/d/LOEW0_0kcjBiUg)
 
 ## Developers
 
