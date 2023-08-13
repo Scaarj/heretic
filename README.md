@@ -57,7 +57,7 @@ In this repository, the port of the game to the mobile operating system Aurora O
 - [Aurora OS Documentation](https://developer.auroraos.ru/doc/software_development/reference)
 - [Doom Wiki: Linux Heretic](https://doomwiki.org/wiki/Linux_Heretic)
 
-## Distribute
+## Download
 
 - Devices - [armv7hl](https://disk.yandex.ru/d/SRlvKJRETS8lWg)
 - Emulator - [i486](https://disk.yandex.ru/d/LOEW0_0kcjBiUg)
