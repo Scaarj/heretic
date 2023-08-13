@@ -1,8 +1,8 @@
 Name:       ru.auroraos.heretic
 
 Summary:    My Aurora OS Application
-Version:    0.42
-Release:    1
+Version:    1.0
+Release:    56
 Group:      Qt/Qt
 License:    BSD-3-Clause
 URL:        https://auroraos.ru
