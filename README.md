@@ -4,7 +4,7 @@
 
 <p align="center">
    <img src="https://img.shields.io/badge/Sdk%20Version-4.0.2.89-green" alt="SDK Version">
-   <img src="https://img.shields.io/badge/Game%20Version-1.0.42-blue" alt="Game Version">
+   <img src="https://img.shields.io/badge/Game%20Version-1.0.56-blue" alt="Game Version">
    <img src="https://img.shields.io/badge/License-Apache%20License-yellow" alt="License">
 </p>
 
