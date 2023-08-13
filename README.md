@@ -12,7 +12,7 @@
 
 Heretic is a dark fantasy first-person shooter video game released in December 1994. It was developed by Raven Software and published by id Software through GT Interactive. This project based on anothor port Linux Heretic 1.03 by Andre` Werthmann.
 
-In this repository, the port of the game to the mobile operating system Aurora Os. Source code was ported from c to c++ using the Aurora Framework. All control is through the touch screen and special buttons. The render was saved from the original game and the screen matrix is ​​converted to QImage and displayed through the qml engine at 18-19 frames per second (fps is saved). Game event loop works in parallel with QT eventloop via QTimer calls and event queue.
+In this repository, the port of the game to the mobile operating system Aurora Os. Source code was ported from C to C++ using the Aurora Framework. All control is through the touch screen and special buttons. The render was saved from the original game and the screen matrix is ​​converted to QImage and displayed through the qml engine at 18-19 frames per second (fps is original). Game event loop works in parallel with QT eventloop via QTimer calls and event queue.
 
 <img src="https://github.com/Scaarj/heretic/assets/25565781/d3ef5398-3012-4304-bd94-3c37b71c006c" width="320">
 <img src="https://github.com/Scaarj/heretic/assets/25565781/506740b9-40bd-4ed8-8e25-3d97fca96749" width="320">
