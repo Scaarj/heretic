@@ -12,7 +12,7 @@
 
 Heretic is a dark fantasy first-person shooter video game released in December 1994. It was developed by Raven Software and published by id Software through GT Interactive. This project based on anothor port Linux Heretic 1.03 by Andre` Werthmann. You may check [doomwiki](https://doomwiki.org/wiki/Linux_Heretic) for inforamtion and download Linux Heretic 1.03 source code from [here](https://www.doomworld.com/3ddownloads/ports/linux-heretic-1.03.tar.gz).
 
-In this repository, the port of the game to the mobile operating system Aurora Os. Source code was ported from C to C++ using the Aurora Framework. All control is through the touch screen and special buttons. The render was saved from the original game and the screen matrix is ​​converted to QImage and displayed through the qml engine at 18-19 frames per second (fps is original). Game event loop works in parallel with QT eventloop via QTimer calls and event queue.
+In this repository, the port of the game to the mobile operating system Aurora Os. Source code was ported from C to C++ using the Aurora Framework. All control is through the touch screen and special buttons. The render was saved from the original game and the screen matrix is ​​converted to QImage and displayed through the qml engine at 18-19 frames per second (fps is original). Game event loop works in parallel with QT eventloop via QTimer calls.
 
 <img src="https://github.com/Scaarj/heretic/assets/25565781/d3ef5398-3012-4304-bd94-3c37b71c006c" width="320">
 <img src="https://github.com/Scaarj/heretic/assets/25565781/506740b9-40bd-4ed8-8e25-3d97fca96749" width="320">
@@ -50,7 +50,7 @@ In this repository, the port of the game to the mobile operating system Aurora O
 - Map viewing
 - Game controllers - ps4, bt-keyboard, etc
 - Android port
-- Network game (wifi, bluethoot)
+- Network game (wifi, bluethooth)
 
 ## Download
 
