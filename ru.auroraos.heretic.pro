@@ -55,87 +55,93 @@ INCLUDEPATH += \
 	src/application \
 
 SOURCES += \
-	src/i_main.cpp \
-	src/d_main.cpp \
-	src/g_game.cpp \
-	src/in_lude.cpp \
-	src/i_system.cpp \
-	src/z_zone.cpp \
-	src/mn_menu.cpp \
-	src/am_map.cpp \
-	src/p_setup.cpp \
-	src/r_things.cpp \
-	src/r_bsp.cpp \
-	src/r_plane.cpp \
-	src/r_segs.cpp \
-	src/r_data.cpp \
-	src/w_wad.cpp \
-	src/r_main.cpp \
-	src/tables.cpp \
-	src/d_net.cpp \
-	src/i_net.cpp \
-	src/m_misc.cpp \
-	src/ct_chat.cpp \
-	src/r_draw.cpp \
-	src/v_video.cpp \
-	src/p_spec.cpp \
-	src/info.cpp \
-	src/sb_bar.cpp \
-	src/p_ceilng.cpp \
-	src/p_tick.cpp \
-	src/p_plats.cpp \
-	src/p_pspr.cpp \
-	src/f_finale.cpp \
-	src/p_doors.cpp \
-	src/p_maputl.cpp \
-	src/p_map.cpp \
-	src/p_floor.cpp \
-	src/p_enemy.cpp \
-	src/p_inter.cpp \
-	src/p_lights.cpp \
-	src/p_mobj.cpp \
-	src/p_sight.cpp \
-	src/p_switch.cpp \
-	src/p_telept.cpp \
-	src/p_user.cpp \
-	src/sound/i_sound.cpp \
-	src/sound/sounds.cpp \
-	src/sound/soundst.cpp \
-	src/graphic/graphic_qml.cpp \
+    src/am_map.cpp \
 	src/application/application.cpp \
+	src/application/artifactmodel.cpp \
 	src/application/context.cpp \
 	src/application/gamescreen.cpp \
 	src/application/introscreen.cpp \
+	src/application/item.cpp \
+	src/application/itemmodel.cpp \
 	src/application/scenepainter.cpp \
 	src/application/screencontroller.cpp \
 	src/application/weaponmodel.cpp \
+	src/ct_chat.cpp \
+	src/d_main.cpp \
+	src/d_net.cpp \
+	src/f_finale.cpp \
+	src/g_game.cpp \
+	src/graphic/graphic_qml.cpp \
+	src/i_main.cpp \
+	src/i_net.cpp \
+	src/i_system.cpp \
+	src/in_lude.cpp \
+	src/info.cpp \
+	src/m_misc.cpp \
+	src/mn_menu.cpp \
+	src/p_ceilng.cpp \
+	src/p_doors.cpp \
+	src/p_enemy.cpp \
+	src/p_floor.cpp \
+	src/p_inter.cpp \
+	src/p_lights.cpp \
+	src/p_map.cpp \
+	src/p_maputl.cpp \
+	src/p_mobj.cpp \
+	src/p_plats.cpp \
+	src/p_pspr.cpp \
+	src/p_setup.cpp \
+	src/p_sight.cpp \
+	src/p_spec.cpp \
+	src/p_switch.cpp \
+	src/p_telept.cpp \
+	src/p_tick.cpp \
+	src/p_user.cpp \
+	src/r_bsp.cpp \
+	src/r_data.cpp \
+	src/r_draw.cpp \
+	src/r_main.cpp \
+	src/r_plane.cpp \
+	src/r_segs.cpp \
+	src/r_things.cpp \
+	src/sb_bar.cpp \
+	src/sound/i_sound.cpp \
+	src/sound/sounds.cpp \
+	src/sound/soundst.cpp \
+	src/tables.cpp \
+	src/v_video.cpp \
+	src/w_wad.cpp \
+	src/z_zone.cpp \
 
 HEADERS += \
-	src/r_local.h \
-	src/p_local.h \
-	src/doomdef.h \
-	src/doomtype.h \
-	src/doomdata.h \
-	src/dstrings.h \
-	src/am_data.h \
+    src/am_data.h \
 	src/am_map.h \
-	src/mn_menu.h \
-	src/sound/sounds.h \
-	src/sound/soundst.h \
-	src/sound/i_sound.h \
-	src/p_spec.h \
-	src/ct_chat.h \
-	src/info.h \
-	src/sound/i_sound.h \
-	src/sound/sounds.h \
-	src/sound/soundst.h \
 	src/application/application.h \
+	src/application/artifactmodel.h \
 	src/application/context.h \
 	src/application/gamescreen.h \
 	src/application/introscreen.h \
+	src/application/item.h \
+	src/application/itemmodel.h \
 	src/application/scenepainter.h \
 	src/application/screencontroller.h \
 	src/application/weaponmodel.h \
+	src/ct_chat.h \
+	src/doomdata.h \
+	src/doomdef.h \
+	src/doomtype.h \
+	src/dstrings.h \
+	src/info.h \
+	src/mn_menu.h \
+	src/p_local.h \
+	src/p_spec.h \
+	src/r_local.h \
+	src/sound/i_sound.h \
+	src/sound/i_sound.h \
+	src/sound/sounds.h \
+	src/sound/sounds.h \
+	src/sound/soundst.h \
+	src/sound/soundst.h \
 
 DISTFILES += \
     rpm/ru.auroraos.heretic.spec \
@@ -162,9 +168,10 @@ BUILD_NUMBER=56
 APP_VERSION = "$${MAJOR_VERSION}.$${MINOR_VERSION}.$${BUILD_NUMBER}"
 
 DEFINES += \
-    __32BIT__ \
+        __32BIT__ \
 	sailfishapp \
 	APP_VERSION='\\"$$APP_VERSION\\"' \
+	ENDLESS_WEAPON \
 
 TRANSLATIONS += \
     translations/ru.auroraos.heretic.ts \

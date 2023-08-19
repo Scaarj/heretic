@@ -1,11 +1,13 @@
 #include "screencontroller.h"
 
 #include <QGuiApplication>
+#include <QTimer>
 #include <math.h>
 
 #include "doomdef.h"
 #include "gamescreen.h"
 #include "mn_menu.h"
+#include "p_local.h"
 #include "scenepainter.h"
 
 extern Menu_t* CurrentMenu;
@@ -13,6 +15,17 @@ extern boolean MenuActive;
 extern int FontBBaseLump;
 extern int CurrentItPos;
 extern boolean askforquit;
+extern int curpos;
+extern int inv_ptr;
+extern bool inventory;
+extern boolean gamekeydown[NUMKEYS];
+
+extern long key_right, key_left, key_up, key_down;
+extern long key_strafeleft, key_straferight;
+extern long key_fire, key_use, key_strafe, key_speed;
+extern long key_flyup, key_flydown, key_flycenter;
+extern long key_lookup, key_lookdown, key_lookcenter;
+extern long key_invleft, key_invright, key_useartifact;
 
 extern QGuiApplication* application;
 
@@ -40,8 +53,8 @@ void ScreenController::initYesNoButton() {
 	noButton = QRect(NoButtonX, ConfirmationButtonY, itemWidth(NoButtonX, QuitEndMsgAnswer[1]), ITEM_HEIGHT);
 }
 
-void ScreenController::checkGameState(gamestate_t state, bool menuactive) {
-	auto currentState = GS_LEVEL == state && !menuactive && !askforquit && !demosequence;
+void ScreenController::checkGameState() {
+	auto currentState = GS_LEVEL == gamestate && !demoplayback && !MenuActive && !askforquit;
 
 	if (currentState != gameState) {
 		gameState = currentState;
@@ -257,6 +270,7 @@ void ScreenController::menuMissClicked() {
 
 void ScreenController::menuItemClicked() {
 	D_PostEvent(enterKeyPressed);
+	D_PostEvent(enterKeyReleased);
 }
 
 void ScreenController::menuPressed() {
@@ -315,4 +329,50 @@ void ScreenController::mouseMoved(int offsetX, int offsetY) {
 	}
 
 	D_PostEvent(event_t{ev_mouse, 0, finalOffsetX, finalOffsetY});
+}
+
+void ScreenController::useArtifact() {
+	D_PostEvent(enterKeyPressed);
+	QTimer::singleShot(100, [&]() { D_PostEvent(enterKeyReleased); });
+}
+
+void ScreenController::nextWeapon() {
+}
+
+void ScreenController::selectArtifact(int index) {
+	int offset = index - inv_ptr;
+	inventory = true; // NOTE: force open inventory
+
+	if (offset < 0) {
+		for (int i = 0; i < abs(offset); ++i) {
+			inventoryLeftPressed(true);
+			inventoryLeftPressed(false);
+		}
+	} else {
+		for (int i = 0; i < abs(offset); ++i) {
+			inventoryRightPressed(true);
+			inventoryRightPressed(false);
+		}
+	}
+
+	// NOTE: force hide inventory, after selecting
+	if (offset) {
+		useArtifact();
+	}
+}
+
+void ScreenController::inventoryLeftPressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(invLeftKeyPressed);
+	} else {
+		D_PostEvent(invLeftKeyReleased);
+	}
+}
+
+void ScreenController::inventoryRightPressed(bool pressed) {
+	if (pressed) {
+		D_PostEvent(invRightKeyPressed);
+	} else {
+		D_PostEvent(invRightKeyReleased);
+	}
 }

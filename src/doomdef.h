@@ -691,6 +691,7 @@ extern boolean DebugSound; /* debug flag for displaying sound info */
 extern int maxammo[NUMAMMO];
 
 extern boolean demoplayback;
+extern boolean advancedemo;
 extern int skytexture;
 
 extern gamestate_t gamestate;
