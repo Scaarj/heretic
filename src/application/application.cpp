@@ -11,6 +11,7 @@ Application::Application(int& argc, char** argv) {
 
 	loopTimer = std::make_unique<QTimer>();
 	qmlRegisterType<ScenePainter>("Painter.Global", 1, 0, "ScenePainter");
+	qRegisterMetaType<Item>("ModelItem");
 	QObject::connect(loopTimer.get(), &QTimer::timeout, [&]() { D_DoomLoop(); });
 }
 
@@ -39,12 +40,13 @@ void Application::show() {
 }
 
 void Application::loop() {
-	weaponModel->actualizeWeapon();
+	weaponModel->sync();
+	artifactModel->sync();
 	loopTimer->start();
 }
 
-void Application::updateDraw(gamestate_t state, bool menuactive) {
-	screenController->checkGameState(state, menuactive);
+void Application::updateDraw() {
+	screenController->checkGameState();
 	scenePainter->update();
 }
 
@@ -57,8 +59,10 @@ int Application::exec() {
 	Q_ASSERT(scenePainter);
 	screenController = std::make_unique<ScreenController>(scenePainter);
 	weaponModel = std::make_unique<WeaponModel>();
+	artifactModel = std::make_unique<ArtifactModel>();
 	view->rootContext()->setContextProperty("screenController", screenController.get());
 	view->rootContext()->setContextProperty("weaponModel", weaponModel.get());
+	view->rootContext()->setContextProperty("artifactModel", artifactModel.get());
 
 	D_DoomMain();
 

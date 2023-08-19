@@ -14,5 +14,15 @@
         <file>resource/image/weapons/WSKLA0.png</file>
         <file>resource/image/weapons/WELVA0.png</file>
         <file>resource/image/weapons/WSTFA0.png</file>
+        <file>resource/image/artifacts/ARTIEGGC.png</file>
+        <file>resource/image/artifacts/ARTIFBMB.png</file>
+        <file>resource/image/artifacts/ARTIINVS.png</file>
+        <file>resource/image/artifacts/ARTIINVU.png</file>
+        <file>resource/image/artifacts/ARTIPTN2.png</file>
+        <file>resource/image/artifacts/ARTIPWBK.png</file>
+        <file>resource/image/artifacts/ARTISOAR.png</file>
+        <file>resource/image/artifacts/ARTISPHL.png</file>
+        <file>resource/image/artifacts/ARTITRCH.png</file>
+        <file>resource/image/artifacts/ARTIATLP.png</file>
     </qresource>
 </RCC>

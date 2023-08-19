@@ -222,7 +222,7 @@ void D_Display(void) {
 
 	/* Flush buffered stuff to screen */
 	I_FinishUpdate();
-	application->updateDraw(gamestate, MenuActive);
+	application->updateDraw();
 }
 
 /*

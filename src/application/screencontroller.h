@@ -19,6 +19,7 @@ class ScreenController : public QQuickItem {
 	const event_t downKeyReleased{ev_keyup, KEY_DOWNARROW, 0, 0};
 	const event_t backspaceKeyPressed{ev_keydown, KEY_BACKSPACE, 0, 0};
 	const event_t enterKeyPressed{ev_keydown, KEY_ENTER, 0, 0};
+	const event_t enterKeyReleased{ev_keyup, KEY_ENTER, 0, 0};
 	const event_t escapeKeyPressed{ev_keydown, KEY_ESCAPE, 0, 0};
 	const event_t shiftKeyPressed{ev_keydown, KEY_RSHIFT, 0, 0};
 	const event_t shiftKeyReleased{ev_keyup, KEY_RSHIFT, 0, 0};
@@ -36,6 +37,10 @@ class ScreenController : public QQuickItem {
 	const event_t commaKeyReleased{ev_keyup, ',', 0, 0};
 	const event_t dotKeyPressed{ev_keydown, '.', 0, 0};
 	const event_t dotKeyReleased{ev_keyup, '.', 0, 0};
+	const event_t invLeftKeyPressed{ev_keydown, 'k', 0, 0};
+	const event_t invLeftKeyReleased{ev_keyup, 'k', 0, 0};
+	const event_t invRightKeyPressed{ev_keydown, 'l', 0, 0};
+	const event_t invRightKeyReleased{ev_keyup, 'l', 0, 0};
 
 	struct MenuItems {
 		int pos;
@@ -53,7 +58,7 @@ public:
 	void waitUntilTap();
 	void initYesNoButton();
 
-	void checkGameState(gamestate_t state, bool menuactive);
+	void checkGameState();
 
 public slots:
 	void mousePressed(int mouseX, int mouseY);
@@ -71,6 +76,11 @@ public slots:
 	void selectWeapon(int index);
 	void pausePressed(bool pressed);
 	void mouseMoved(int offsetX, int offsetY);
+	void useArtifact();
+	void nextWeapon();
+	void selectArtifact(int index);
+	void inventoryLeftPressed(bool pressed);
+	void inventoryRightPressed(bool pressed);
 
 signals:
 	void gameStateActiveChanged();

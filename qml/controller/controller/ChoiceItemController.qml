@@ -8,6 +8,8 @@ Item {
 
     property alias bodyCircle: bodyCircle
     property alias model: repeater.model
+    property bool openned: currentCoefficient === openCoefficient
+    property bool closed: currentCoefficient === closeCoefficient
     property color bodyBorderColor: "#A8A8A8"
     property color bodyBackgroundColor: "#7FA8A8A8"
     property int bodyCircleHeight: Math.min(bodySize.width, bodySize.height)
@@ -23,13 +25,14 @@ Item {
     property size bodySize: Qt.size(gameScreenRect.width, gameScreenRect.height)
 
     signal itemSelect(var index)
+    signal itemAction(var index)
     signal animationStopped()
 
     function toggle()
     {
-        if (currentCoefficient === openCoefficient) {
+        if (openned) {
             close()
-        } else if (currentCoefficient === closeCoefficient) {
+        } else if (closed) {
             open()
         }
     }
@@ -42,7 +45,10 @@ Item {
         currentCoefficient = closeCoefficient
     }
 
-    visible: !(currentCoefficient === closeCoefficient)
+    onVisibleChanged: screenController.pausePressed(true)
+    onAnimationStopped: screenController.pausePressed(false)
+
+    visible: !closed
 
     Rectangle {
         id: bodyCircle
@@ -75,7 +81,8 @@ Item {
                 source: model.image ? model.image : ""
                 quantity: model.quantity !== -1 ? model.quantity : "∞"
 
-                onClicked: root.itemSelect(model.code)
+                onClicked: root.itemSelect(model.index)
+                onPressAndHold: root.itemAction(model.index)
                 onAnimationComplete: root.close()
             }
         }
@@ -94,6 +101,13 @@ Item {
             }
 
             onClicked: root.close()
+        }
+
+
+        InverseMouseArea {
+            anchors.fill: parent
+
+            onPressedOutside: close()
         }
     }
 

@@ -10,6 +10,7 @@
 #include <QtQuick>
 #include <memory>
 
+#include "artifactmodel.h"
 #include "doomdef.h"
 #include "scenepainter.h"
 #include "screencontroller.h"
@@ -31,7 +32,7 @@ public:
 	void setApplicationName(const QString& applicationName);
 	void setApplicationVersion(const QString& applicationVersion);
 	void setSource(const QString& path);
-	void updateDraw(gamestate_t state, bool menuactive);
+	void updateDraw();
 	void setDrawPallete(byte* palette);
 	void setGameContext();
 	void setIntroContext();
@@ -46,6 +47,7 @@ private:
 	std::unique_ptr<QTimer> loopTimer;
 	std::unique_ptr<ScreenController> screenController;
 	std::unique_ptr<WeaponModel> weaponModel;
+	std::unique_ptr<ArtifactModel> artifactModel;
 
 	ScenePainter* scenePainter = nullptr;
 };

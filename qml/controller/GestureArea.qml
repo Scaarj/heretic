@@ -2,8 +2,8 @@ import QtQuick 2.6
 import QtQuick.Layouts 1.1
 import Sailfish.Silica 1.0
 
+import "../base" as Base
 import "keys" as Keys
-
 import "controller" as Controller
 
 MultiPointTouchArea {
@@ -47,8 +47,7 @@ MultiPointTouchArea {
         }
     }
 
-    function touchExist(touchPoints, id)
-    {
+    function touchExist(touchPoints, id) {
         for (var i = 0; i < touchPoints.length; ++i) {
             if (touchPoints[i].pointId === id) {
                 return true
@@ -79,8 +78,7 @@ MultiPointTouchArea {
         }
     }
 
-    function inLeftBottomSide(point)
-    {
+    function inLeftBottomSide(point) {
         return point.x < root.width / 2
     }
 
@@ -119,38 +117,43 @@ MultiPointTouchArea {
         onReleased: screenController.usePressed(false)
     }
 
-    GridLayout {
+    ColumnLayout {
         anchors { left: parent.left; bottom: parent.bottom; leftMargin: Theme.paddingMedium; bottomMargin: anchors.leftMargin }
-        rows: 2
-        columns: 2
-        rowSpacing: Theme.paddingMedium
-        columnSpacing: rowSpacing
+        spacing: Theme.paddingMedium
+
+        Controller.SelectItemButton {
+            id: artifactButton
+            visible: screenController.gameStateActive
+            source: artifactChoiceCircle.model.selectedItem.image
+
+            onClicked: screenController.useArtifact()
+            onPressAndHold: artifactChoiceCircle.toggle()
+        }
+
+        Controller.SelectItemButton {
+            id: weaponButton
+            visible: screenController.gameStateActive
+            source: weaponChoiceCircle.model.selectedItem.image
+
+            onClicked: screenController.nextWeapon()
+            onPressAndHold: weaponChoiceCircle.toggle()
+        }
 
         Keys.RunButton {
-            Layout.row: 1
-            Layout.column: 0
             visible: screenController.gameStateActive
 
             onCheckedChanged: screenController.shiftPressed(checked)
         }
-
-        // NOTE: stub
-        Item {
-            Layout.row: 1
-            Layout.column: 1
-        }
-
-        Keys.SwitchWeapon {
-            Layout.row: 0
-            Layout.column: 0
-            visible: screenController.gameStateActive
-
-            onClicked: weaponChoice.toggle()
-        }
     }
 
     Controller.WeaponChoiceController {
-        id: weaponChoice
+        id: weaponChoiceCircle
+        anchors.fill: parent
+        z: root.z + 1
+    }
+
+    Controller.ArtifactChoiceController {
+        id: artifactChoiceCircle
         anchors.fill: parent
         z: root.z + 1
     }

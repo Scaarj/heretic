@@ -7,6 +7,8 @@ import "../../base" as Base
 MouseArea {
     id: root
 
+    property alias backgroundGlow: backgroundGlow
+    property alias imageGlow: imageGlow
     property alias fillMode: image.fillMode
     property alias source: image.source
     property alias quantity: quantity.text
@@ -14,18 +16,22 @@ MouseArea {
     property color borderColor: "#646464"
     property color backgroundColor: "#AFA8A8A8"
     property int animationDuration: 100
-    property int size: ratio * Theme.buttonWidthTiny
+    property int size: Theme.buttonWidthTiny
     property int itemRadius: width / 2
 
     signal animationComplete()
 
-    width: size
-    height: width
+    function startAnimation() {
+        if (backgroundAnimation1.running || imageAnimation1.running) { return }
 
-    onClicked: {
         backgroundAnimation1.start()
         imageAnimation1.start()
     }
+
+    onClicked: startAnimation()
+
+    width: size
+    height: width
 
     Rectangle {
         id: background
@@ -38,6 +44,7 @@ MouseArea {
     }
 
     Glow {
+        id: backgroundGlow
         anchors.fill: background
         radius: 8
         samples: 17
@@ -47,7 +54,7 @@ MouseArea {
 
         NumberAnimation on opacity {
             id: backgroundAnimation1
-            to: 0.6
+            to: 1.0
             running: false
             duration: animationDuration
             onStopped: backgroundAnimation2.start()
@@ -63,6 +70,7 @@ MouseArea {
     }
 
     Glow {
+        id: imageGlow
         anchors.fill: image
         radius: 8
         samples: 17
