@@ -94,7 +94,7 @@ MouseArea {
     Image {
         id: image
         anchors.centerIn: parent
-        asynchronous: false
+        asynchronous: true
         width: root.size * 0.8
         height: width
         smooth: true

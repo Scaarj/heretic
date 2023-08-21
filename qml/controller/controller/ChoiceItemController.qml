@@ -79,7 +79,7 @@ Item {
                 x: Math.cos(2 / repeater.count * index * Math.PI) * itemCenterRadius + bodyCircle.width / 2 - itemRadius
                 y: Math.sin(2 / repeater.count * index * Math.PI) * itemCenterRadius + bodyCircle.height / 2 - itemRadius
                 source: model.image ? model.image : ""
-                quantity: model.quantity !== -1 ? model.quantity : "∞"
+                quantity: model.quantity !== -1 ? model.quantity : ""
 
                 onClicked: root.itemSelect(model.index)
                 onPressAndHold: root.itemAction(model.index)

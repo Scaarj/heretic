@@ -11,7 +11,7 @@ Application::Application(int& argc, char** argv) {
 
 	loopTimer = std::make_unique<QTimer>();
 	qmlRegisterType<ScenePainter>("Painter.Global", 1, 0, "ScenePainter");
-	qRegisterMetaType<Item>("ModelItem");
+	qRegisterMetaType<Item>("Item");
 	QObject::connect(loopTimer.get(), &QTimer::timeout, [&]() { D_DoomLoop(); });
 }
 
@@ -40,8 +40,8 @@ void Application::show() {
 }
 
 void Application::loop() {
-	weaponModel->sync();
-	artifactModel->sync();
+	weaponProxy->sync();
+	artifactProxy->sync();
 	loopTimer->start();
 }
 
@@ -58,11 +58,14 @@ int Application::exec() {
 	scenePainter = view->rootObject()->findChild<ScenePainter*>("scenePainter");
 	Q_ASSERT(scenePainter);
 	screenController = std::make_unique<ScreenController>(scenePainter);
-	weaponModel = std::make_unique<WeaponModel>();
-	artifactModel = std::make_unique<ArtifactModel>();
+	weaponProxy = std::make_unique<items::weapons::WeaponProxy>();
+	artifactProxy = std::make_unique<items::artifacts::ArtifactProxy>();
+
 	view->rootContext()->setContextProperty("screenController", screenController.get());
-	view->rootContext()->setContextProperty("weaponModel", weaponModel.get());
-	view->rootContext()->setContextProperty("artifactModel", artifactModel.get());
+	view->rootContext()->setContextProperty("weapons", weaponProxy.get());
+	view->rootContext()->setContextProperty("weaponModel", weaponProxy->model());
+	view->rootContext()->setContextProperty("artifacts", artifactProxy.get());
+	view->rootContext()->setContextProperty("artifactModel", artifactProxy->model());
 
 	D_DoomMain();
 

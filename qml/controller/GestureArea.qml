@@ -124,7 +124,7 @@ MultiPointTouchArea {
         Controller.SelectItemButton {
             id: artifactButton
             visible: screenController.gameStateActive
-            source: artifactChoiceCircle.model.selectedItem.image
+            source: artifacts.selectedItem.image
 
             onClicked: screenController.useArtifact()
             onPressAndHold: artifactChoiceCircle.toggle()
@@ -133,7 +133,7 @@ MultiPointTouchArea {
         Controller.SelectItemButton {
             id: weaponButton
             visible: screenController.gameStateActive
-            source: weaponChoiceCircle.model.selectedItem.image
+            source: weapons.selectedItem.image
 
             onClicked: screenController.nextWeapon()
             onPressAndHold: weaponChoiceCircle.toggle()

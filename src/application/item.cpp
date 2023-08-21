@@ -6,11 +6,12 @@ Item::Item(QObject* parent) : QObject(parent), code{-1}, name{""}, image{""} {
 Item::Item(int code, QObject* parent) : QObject(parent), code{code}, name{""}, image{""} {
 }
 
-Item::Item(int code, QString name, QString image, int quantity, QObject* parent)
+Item::Item(int code, QString name, QString image, bool owned, int quantity, QObject* parent)
 	: QObject(parent)
 	, code(code)
 	, name(name)
 	, image(image)
+	, owned(owned)
 	, quantity(quantity) {
 }
 
@@ -25,26 +26,22 @@ Item& Item::operator=(const Item& item) {
 	return *this;
 }
 
-bool Item::operator!=(const Item& weapon) const {
-	return !operator==(weapon);
+bool Item::operator<(const Item& item) const {
+	return code < item.code;
 }
 
-bool Item::operator==(const Item& weapon) const {
-	return code == weapon.code;
+bool Item::operator!=(const Item& item) const {
+	return !operator==(item);
 }
 
-//int Item::getCode() const {
-//	return code;
-//}
+bool Item::operator==(const Item& item) const {
+	return code == item.code;
+}
 
-//const QString& Item::getName() const {
-//	return name;
-//}
+bool Item::operator!=(int code) const {
+	return !operator==(code);
+}
 
-//const QString& Item::getImage() const {
-//	return image;
-//}
-
-//int Item::getQuantity() const {
-//	return quantity;
-//}
+bool Item::operator==(int code) const {
+	return this->code == code;
+}
