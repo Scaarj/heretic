@@ -55,17 +55,20 @@ INCLUDEPATH += \
 	src/application \
 
 SOURCES += \
-    src/am_map.cpp \
+        src/am_map.cpp \
 	src/application/application.cpp \
-	src/application/artifactmodel.cpp \
+        src/application/items/artifacts/artifactmodel.cpp \
+        src/application/items/artifacts/artifactproxy.cpp \
 	src/application/context.cpp \
 	src/application/gamescreen.cpp \
 	src/application/introscreen.cpp \
-	src/application/item.cpp \
-	src/application/itemmodel.cpp \
+        src/application/item.cpp \
+        src/application/items/itemmodel.cpp \
+        src/application/items/itemsproxy.cpp \
 	src/application/scenepainter.cpp \
 	src/application/screencontroller.cpp \
-	src/application/weaponmodel.cpp \
+        src/application/items/weapons/weaponmodel.cpp \
+        src/application/items/weapons/weaponproxy.cpp \
 	src/ct_chat.cpp \
 	src/d_main.cpp \
 	src/d_net.cpp \
@@ -114,18 +117,21 @@ SOURCES += \
 	src/z_zone.cpp \
 
 HEADERS += \
-    src/am_data.h \
+        src/am_data.h \
 	src/am_map.h \
 	src/application/application.h \
-	src/application/artifactmodel.h \
+        src/application/items/artifacts/artifactmodel.h \
+        src/application/items/artifacts/artifactproxy.h \
 	src/application/context.h \
 	src/application/gamescreen.h \
 	src/application/introscreen.h \
-	src/application/item.h \
-	src/application/itemmodel.h \
+        src/application/item.h \
+        src/application/items/itemmodel.h \
+        src/application/items/itemsproxy.h \
 	src/application/scenepainter.h \
 	src/application/screencontroller.h \
-	src/application/weaponmodel.h \
+        src/application/items/weapons/weaponmodel.h \
+        src/application/items/weapons/weaponproxy.h \
 	src/ct_chat.h \
 	src/doomdata.h \
 	src/doomdef.h \

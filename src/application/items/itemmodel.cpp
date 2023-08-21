@@ -1,8 +1,6 @@
 #include "itemmodel.h"
 
-#include <iostream>
-
-#include "doomdef.h"
+using namespace items;
 
 ItemModel::ItemModel(const std::vector<Item>& items, QObject* parent) : QAbstractListModel(parent), allItems(items) {
 }
@@ -22,8 +20,8 @@ QVariant ItemModel::data(const QModelIndex& index, int role) const {
 		case CodeRole: return item.code;
 		case NameRole: return item.name;
 		case ImageRole: return item.image;
+		case OwnedRole: return item.owned;
 		case QuantityRole: return item.quantity;
-		case IndexRole: return index.row();
 		default: return QVariant();
 	}
 }
@@ -48,29 +46,34 @@ bool ItemModel::setData(const QModelIndex& index, const QVariant& value, int rol
 		case NameRole: {
 			auto newValue = value.toString();
 			if (item.name != newValue) {
-				item.name = value.toString();
+				item.name = newValue;
 				result = true;
 			}
 		} break;
 		case ImageRole: {
 			auto newValue = value.toString();
 			if (item.image != newValue) {
-				item.image = value.toString();
+				item.image = newValue;
+				result = true;
+			}
+		} break;
+		case OwnedRole: {
+			auto newValue = value.toBool();
+			if (item.owned != newValue) {
+				item.owned = newValue;
 				result = true;
 			}
 		} break;
 		case QuantityRole: {
 			auto newValue = value.toInt();
 			if (item.quantity != newValue) {
-				item.quantity = value.toInt();
+				item.quantity = newValue;
 				result = true;
 			}
 		} break;
-		default: return result;
-	}
-
-	if (result) {
-		emit dataChanged(index, index, {role});
+		default: {
+			result = false;
+		}
 	}
 
 	return result;
@@ -84,42 +87,34 @@ void ItemModel::addItem(int code) {
 		beginInsertRows(QModelIndex(), index, index);
 		items.push_back(*item);
 		endInsertRows();
-		emit rowCountChanged();
 	}
 }
 
 void ItemModel::removeItem(int code) {
-	auto weapon = std::find(items.cbegin(), items.cend(), Item(code));
+	auto item = std::find(items.cbegin(), items.cend(), Item(code));
 
-	if (weapon != items.end()) {
+	if (item != items.end()) {
 		auto index = items.size();
 		beginRemoveRows(QModelIndex(), index, index);
-		items.erase(std::remove(items.begin(), items.end(), *weapon), items.end());
+		items.erase(std::remove(items.begin(), items.end(), *item), items.end());
 		endRemoveRows();
-		emit rowCountChanged();
 	}
 }
 
-bool ItemModel::exist(int code) const {
-	return std::find(items.begin(), items.end(), Item(code)) != items.cend();
-}
-
-Item ItemModel::selectedItem() const {
-	return selItem;
-}
-
-void ItemModel::setSelectedItem(Item selItem) {
-	if (this->selItem == selItem) {
-		return;
+void ItemModel::syncItemQuantity(int type, int count) {
+	auto item = std::find(items.cbegin(), items.cend(), type);
+	QModelIndex modelIndex = index(static_cast<int>(std::distance(items.cbegin(), item)));
+	if (setData(modelIndex, count, QuantityRole)) {
+		emit dataChanged(modelIndex, modelIndex, {QuantityRole});
 	}
-	this->selItem = selItem;
-	emit selectedItemChanged();
 }
 
-void ItemModel::syncItemQuantity(int code, int ammo) {
-	auto weapon = std::find(items.cbegin(), items.cend(), code);
-	QModelIndex modelIndex = index(static_cast<int>(std::distance(items.cbegin(), weapon)));
-	setData(modelIndex, ammo, QuantityRole);
+void ItemModel::syncItemOwned(int type, bool owned) {
+	auto item = std::find(items.cbegin(), items.cend(), type);
+	QModelIndex modelIndex = index(static_cast<int>(std::distance(items.cbegin(), item)));
+	if (setData(modelIndex, owned, OwnedRole)) {
+		emit dataChanged(modelIndex, modelIndex, {OwnedRole});
+	}
 }
 
 QHash<int, QByteArray> ItemModel::roleNames() const {
@@ -127,6 +122,16 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
 		{CodeRole, "code"},
 		{NameRole, "name"},
 		{ImageRole, "image"},
+		{OwnedRole, "owned"},
 		{QuantityRole, "quantity"},
 	};
+}
+
+ItemProxyModel::ItemProxyModel(QObject* parent) : QSortFilterProxyModel(parent) {
+	setDynamicSortFilter(true);
+}
+
+bool ItemProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const {
+	QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
+	return sourceModel()->data(index, ItemModel::OwnedRole).toBool();
 }

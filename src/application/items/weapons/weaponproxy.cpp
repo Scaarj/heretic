@@ -1,12 +1,11 @@
-#include "weaponmodel.h"
-
-#include <iostream>
-#include <iterator>
+#include "weaponproxy.h"
 
 #include "doomdef.h"
 
+using namespace items::weapons;
+
 // clang-format off
-const std::vector<Item> WeaponModel::allWeapons = {
+const std::vector<Item> WeaponProxy::allWeapons = {
 	{wp_staff, "staff", QString("qrc:/resource/image/weapons/WSTFA0.png")},
 	{wp_goldwand, "elven wand", QString("qrc:/resource/image/weapons/WELVA0.png")},
 	{wp_crossbow, "ethereal crossbow", QString("qrc:/resource/image/weapons/WBOWA0.png")},
@@ -18,34 +17,28 @@ const std::vector<Item> WeaponModel::allWeapons = {
 };
 // clang-format on
 
-WeaponModel::WeaponModel(QObject* parent) : ItemModel(allWeapons, parent) {
+WeaponProxy::WeaponProxy() {
+	weaponModel = std::make_unique<WeaponModel>(allWeapons);
+	weaponProxyModel = std::make_unique<ItemProxyModel>();
+	weaponProxyModel->setSourceModel(weaponModel.get());
 }
 
-void WeaponModel::sync() {
-	auto& player = players[0];
+items::ItemProxyModel* WeaponProxy::model() {
+	return weaponProxyModel.get();
+}
 
-#ifdef ENDLESS_WEAPON
-	endlessweapon();
-#endif
+void WeaponProxy::syncModel() {
+	weaponModel->sync();
+}
 
-	for (int i = 0; i <= wp_gauntlets; ++i) {
-		if (player.weaponowned[i]) {
-			if (!exist(i)) {
-				addItem(i);
-			}
-
-			if (i >= wp_goldwand && i <= wp_mace) {
-				syncItemQuantity(i, player.ammo[i - 1]);
-			}
-		} else if (!player.weaponowned[i] && exist(i)) {
-			removeItem(i);
-		}
+void WeaponProxy::syncSelected() {
+	auto readyweapon = players[0].readyweapon;
+	if (readyweapon >= wp_goldwand && readyweapon <= wp_gauntlets) {
+		setSelectedItem(allWeapons[readyweapon]);
 	}
-
-	syncSelected();
 }
 
-void WeaponModel::endlessweapon() {
+void WeaponProxy::endless() {
 	auto& player = players[0];
 
 	for (int i = wp_staff; i < NUMWEAPONS; ++i) {
@@ -54,12 +47,5 @@ void WeaponModel::endlessweapon() {
 
 	for (int i = am_goldwand; i < NUMAMMO; ++i) {
 		player.ammo[i] = maxammo[i];
-	}
-}
-
-void WeaponModel::syncSelected() {
-	auto readyweapon = players[0].readyweapon;
-	if (readyweapon >= wp_goldwand && readyweapon <= wp_gauntlets) {
-		setSelectedItem(allWeapons[readyweapon]);
 	}
 }

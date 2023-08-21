@@ -1,18 +1,26 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <QSortFilterProxyModel>
 #include <vector>
 
 #include "item.h"
 
+namespace items {
+class ItemProxyModel : public QSortFilterProxyModel {
+	Q_OBJECT
+public:
+	explicit ItemProxyModel(QObject* parent = nullptr);
+
+protected:
+	bool filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const override;
+};
+
 class ItemModel : public QAbstractListModel {
 	Q_OBJECT
 
-	Q_PROPERTY(int rowCount READ rowCount NOTIFY rowCountChanged)
-	Q_PROPERTY(Item selectedItem READ selectedItem WRITE setSelectedItem NOTIFY selectedItemChanged)
-
 public:
-	enum Roles { CodeRole = Qt::UserRole + 1, NameRole, ImageRole, QuantityRole, IndexRole };
+	enum Roles { CodeRole = Qt::UserRole + 1, NameRole, ImageRole, OwnedRole, QuantityRole };
 
 	ItemModel(const std::vector<Item>& items, QObject* parent = nullptr);
 
@@ -22,22 +30,15 @@ public:
 
 	void addItem(int code);
 	void removeItem(int code);
-	bool exist(int code) const;
-	Item selectedItem() const;
-	void setSelectedItem(Item selItem);
-	void syncItemQuantity(int code, int ammo);
-
-signals:
-	void rowCountChanged();
-	void selectedItemChanged();
+	void syncItemQuantity(int type, int count);
+	void syncItemOwned(int type, bool owned);
 
 protected:
 	QHash<int, QByteArray> roleNames() const override;
 	virtual void sync() = 0;
-	virtual void syncSelected() = 0;
 
 protected:
 	const std::vector<Item>& allItems;
 	std::vector<Item> items;
-	Item selItem;
 };
+} // namespace items

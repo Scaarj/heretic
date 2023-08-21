@@ -1,11 +1,11 @@
-#include "artifactmodel.h"
-
-#include <QQmlEngine>
+#include "artifactproxy.h"
 
 #include "doomdef.h"
 
+using namespace items::artifacts;
+
 // clang-format off
-const std::vector<Item> ArtifactModel::allArtifacts = {
+const std::vector<Item> ArtifactProxy::allArtifacts = {
 	{pw_None, "", QString("")},
 	{arti_invulnerability, "Ring of Invincibility", QString("qrc:/resource/image/artifacts/ARTIINVU.png")},
 	{arti_invisibility, "Shadowsphere", QString("qrc:/resource/image/artifacts/ARTIINVS.png")},
@@ -19,48 +19,32 @@ const std::vector<Item> ArtifactModel::allArtifacts = {
 	{arti_teleport, "Chaos Device", QString("qrc:/resource/image/artifacts/ARTIATLP.png")}};
 // clang-format on
 
-ArtifactModel::ArtifactModel(QObject* parent) : ItemModel(allArtifacts, parent) {
+items::ItemProxyModel* ArtifactProxy::model() {
+	return artifactProxyModel.get();
 }
 
-void ArtifactModel::sync() {
-	const auto& inventory = players[0].inventory;
-	const auto& slotsNum = players[0].inventorySlotNum;
-
-#ifdef ENDLESS_WEAPON
-	endlessArtifacts();
-#endif
-	for (int i = 0; i < slotsNum; ++i) {
-		auto artifact = inventory[i];
-		auto artifcatCode = i + 1;
-		if (artifact.count) {
-			if (!exist(artifcatCode)) {
-				addItem(artifcatCode);
-			}
-
-			if (artifcatCode > arti_none && artifcatCode < NUMARTIFACTS) {
-				syncItemQuantity(artifcatCode, artifact.count);
-			}
-		} else if (!inventory[i].count && exist(artifcatCode)) {
-			removeItem(artifcatCode);
-		}
-	}
-
-	syncSelected();
+void ArtifactProxy::syncModel() {
+	artifactModel->sync();
 }
 
-void ArtifactModel::syncSelected() {
+ArtifactProxy::ArtifactProxy() {
+	artifactModel = std::make_unique<ArtifactModel>(allArtifacts);
+	artifactProxyModel = std::make_unique<ItemProxyModel>();
+	artifactProxyModel->setSourceModel(artifactModel.get());
+}
+
+void ArtifactProxy::syncSelected() {
 	auto readyArtifact = players[0].readyArtifact;
 	if (readyArtifact > arti_none && readyArtifact < NUMARTIFACTS) {
 		setSelectedItem(allArtifacts[readyArtifact]);
 	}
 }
 
-void ArtifactModel::endlessArtifacts() {
+void ArtifactProxy::endless() {
 	auto& inventory = players[0].inventory;
-	auto& slotsNum = players[0].inventorySlotNum;
-	slotsNum = NUMARTIFACTS - 1;
+	auto slotsNums = players[0].inventorySlotNum = NUMARTIFACTS - 1;
 
-	for (int i = 0; i < slotsNum; ++i) {
+	for (int i = 0; i < slotsNums; ++i) {
 		inventory[i].count = maxArtifactCount;
 		inventory[i].type = i + 1;
 	}
