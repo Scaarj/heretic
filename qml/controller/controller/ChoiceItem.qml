@@ -18,6 +18,7 @@ MouseArea {
     property int animationDuration: 100
     property int size: Theme.buttonWidthTiny
     property int itemRadius: width / 2
+    property real angle: 0
 
     signal animationComplete()
 
@@ -104,7 +105,12 @@ MouseArea {
 
     Text {
         id: quantity
-        anchors { top: image.bottom; horizontalCenter: image.horizontalCenter }
+        property int halfWidth: root.width / 2
+        property int halfHeight: root.height / 2
+
+        x: Math.cos(angle - Math.PI) * (root.width + width) / 2 + (halfWidth - width / 2)
+        y: Math.sin(angle - Math.PI) * (root.height + height) / 2 + (halfHeight - height / 2)
         color: "white"
+        font.pixelSize: Theme.fontSizeTiny
     }
 }

@@ -24,5 +24,6 @@
         <file>resource/image/artifacts/ARTISPHL.png</file>
         <file>resource/image/artifacts/ARTITRCH.png</file>
         <file>resource/image/artifacts/ARTIATLP.png</file>
+        <file>resource/image/backgrounds/choiceBackground.png</file>
     </qresource>
 </RCC>
