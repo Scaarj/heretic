@@ -1,4 +1,5 @@
 import QtQuick 2.6
+import QtGraphicalEffects 1.0
 import Sailfish.Silica 1.0
 
 import "../../base" as Base
@@ -64,6 +65,16 @@ Item {
         border.color: bodyBorderColor
         border.width: 2
 
+        Image {
+            id: image
+            anchors.fill: parent
+            asynchronous: true
+            fillMode: Image.PreserveAspectCrop
+            source: "qrc:/resource/image/backgrounds/choiceBackground.png"
+            layer.enabled: true
+            layer.effect: OpacityMask { maskSource: bodyCircle }
+        }
+
         Repeater {
             id: repeater
             anchors.centerIn: parent
@@ -75,9 +86,10 @@ Item {
                 readonly property int padding: itemRadius * 1.5
                 readonly property int itemCenterRadius: circleRadius - padding
 
+                angle: 2 / repeater.count * index * Math.PI
                 size: root.bodyCircleHeight / root.itemsScale
-                x: Math.cos(2 / repeater.count * index * Math.PI) * itemCenterRadius + bodyCircle.width / 2 - itemRadius
-                y: Math.sin(2 / repeater.count * index * Math.PI) * itemCenterRadius + bodyCircle.height / 2 - itemRadius
+                x: Math.cos(angle) * itemCenterRadius + bodyCircle.width / 2 - itemRadius
+                y: Math.sin(angle) * itemCenterRadius + bodyCircle.height / 2 - itemRadius
                 source: model.image ? model.image : ""
                 quantity: model.quantity !== -1 ? model.quantity : ""
 
@@ -87,28 +99,21 @@ Item {
             }
         }
 
-        Base.Button {
-            anchors.centerIn: parent
-            source: "image://theme/icon-m-input-remove"
-            size: itemSize
-
-            background: Rectangle {
-                anchors.fill: parent
-                radius: width / 2
-                color: "transparent"
-                border.width: 2
-                border.color: root.bodyBorderColor
-            }
-
-            onClicked: root.close()
-        }
-
-
         InverseMouseArea {
             anchors.fill: parent
 
             onPressedOutside: close()
         }
+    }
+
+    Glow {
+        id: imageGlow
+        anchors.fill: bodyCircle
+        radius: 8
+        samples: 17
+        color: "azure"
+        source: bodyCircle
+        opacity: currentCoefficient
     }
 
     Behavior on currentCoefficient {
