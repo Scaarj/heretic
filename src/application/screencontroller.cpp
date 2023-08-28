@@ -35,6 +35,7 @@ ScreenController::ScreenController(ScenePainter* painter, QQuickItem* parent)
 	, scenePainter{painter}
 	, gameState{false} {
 	connect(scenePainter, &ScenePainter::activeScreenChanged, this, &ScreenController::onActiveScreenChanged);
+	memset(pressed, 0, sizeof(pressed));
 }
 
 void ScreenController::waitUntilTap() {
@@ -350,8 +351,6 @@ void ScreenController::safeLastMousePosition(int mouseX, int mouseY) {
 }
 
 void ScreenController::keyPressedAndReleased(event_t pressedKey, int timeup) {
-	constexpr int maxKeys = 255;
-	static bool pressed[maxKeys] = {false};
 	auto key = pressedKey.data1;
 	if (pressed[key]) {
 		return;

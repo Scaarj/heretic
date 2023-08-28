@@ -112,4 +112,7 @@ private:
 	QRect yesButton;
 	QRect noButton;
 	bool gameState;
+
+	static constexpr int maxKeys = 255;
+	bool pressed[maxKeys];
 };
