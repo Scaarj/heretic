@@ -19,20 +19,15 @@ class ScreenController : public QQuickItem {
 	const event_t downKeyReleased{ev_keyup, KEY_DOWNARROW, 0, 0};
 	const event_t backspaceKeyPressed{ev_keydown, KEY_BACKSPACE, 0, 0};
 	const event_t enterKeyPressed{ev_keydown, KEY_ENTER, 0, 0};
-	const event_t enterKeyReleased{ev_keyup, KEY_ENTER, 0, 0};
 	const event_t escapeKeyPressed{ev_keydown, KEY_ESCAPE, 0, 0};
 	const event_t shiftKeyPressed{ev_keydown, KEY_RSHIFT, 0, 0};
 	const event_t shiftKeyReleased{ev_keyup, KEY_RSHIFT, 0, 0};
 	const event_t attackKeyPressed{ev_keydown, KEY_RCTRL, 0, 0};
 	const event_t attackKeyReleased{ev_keyup, KEY_RCTRL, 0, 0};
-	const event_t pauseKeyPressed{ev_keydown, KEY_PAUSE, 0, 0};
-	const event_t pauseKeyReleased{ev_keyup, KEY_PAUSE, 0, 0};
 	const event_t useKeyPressed{ev_keydown, ' ', 0, 0};
 	const event_t useKeyReleased{ev_keyup, ' ', 0, 0};
 	const event_t yKeyPressed{ev_keydown, 'y', 0, 0};
-	const event_t yKeyReleased{ev_keyup, 'y', 0, 0};
 	const event_t nKeyPressed{ev_keydown, 'n', 0, 0};
-	const event_t nKeyReleased{ev_keyup, 'n', 0, 0};
 	const event_t commaKeyPressed{ev_keydown, ',', 0, 0};
 	const event_t commaKeyReleased{ev_keyup, ',', 0, 0};
 	const event_t dotKeyPressed{ev_keydown, '.', 0, 0};
@@ -79,8 +74,8 @@ public slots:
 	void useArtifact();
 	void nextWeapon();
 	void selectArtifact(int index);
-	void inventoryLeftPressed(bool pressed);
-	void inventoryRightPressed(bool pressed);
+	void inventoryLeftPressed();
+	void inventoryRightPressed();
 
 signals:
 	void gameStateActiveChanged();
@@ -91,15 +86,20 @@ private slots:
 private:
 	bool yesButtonPressed(int x, int y);
 	bool noButtonPressed(int x, int y);
-	int itemWidth(int x, const char* text) const;
+	int itemWidth(int x, const char* text = nullptr) const;
 	int clickOnMenuPosition(int x, int y);
 
 	QVector<MenuItems> menuItems() const;
+	QVector<MenuItems> savesItems() const;
 	void menuMissClicked();
+	void menuStealKeyMissClicked();
+	void menuStealKeyClicked();
 	void menuItemClicked();
 	void checkNoneGameMenuInteraction(int x, int y);
 	void checkMenuInteraction(int x, int y);
+	void checkMenuStealKeyInteraction(int x, int y);
 	void safeLastMousePosition(int mouseX, int mouseY);
+	void keyPressedAndReleased(event_t event, int timeup = 100);
 	void leftSwipe();
 	void rightSwipe();
 
@@ -112,4 +112,7 @@ private:
 	QRect yesButton;
 	QRect noButton;
 	bool gameState;
+
+	static constexpr int maxKeys = 255;
+	bool pressed[maxKeys];
 };
