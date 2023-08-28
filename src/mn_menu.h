@@ -39,6 +39,7 @@ typedef struct {
 	MenuItem_t* items;
 	int oldItPos;
 	MenuType_t prevMenu;
+	MenuType_t type;
 } Menu_t;
 
 extern Menu_t* CurrentMenu;

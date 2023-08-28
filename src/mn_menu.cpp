@@ -8,6 +8,8 @@
 #include "soundst.h"
 #include <ctype.h>
 
+#include <QDateTime>
+
 /* Macros */
 #ifdef __cplusplus
 extern "C" {
@@ -18,7 +20,7 @@ extern "C" {
 #define ITEM_HEIGHT 20
 #define SELECTOR_XOFFSET (-28)
 #define SELECTOR_YOFFSET (-1)
-#define SLOTTEXTLEN 16
+#define SLOTTEXTLEN 20
 #define ASCII_CURSOR '['
 
 /* Types */
@@ -89,7 +91,7 @@ static int MenuTime;
 static boolean soundchanged;
 
 int typeofask;
-static boolean FileMenuKeySteal;
+boolean FileMenuKeySteal;
 static boolean slottextloaded;
 static char SlotText[6][SLOTTEXTLEN + 2];
 static char oldSlotText[SLOTTEXTLEN + 2];
@@ -103,32 +105,32 @@ static MenuItem_t MainItems[] = {{ITT_EFUNC, "NEW GAME", SCNetCheck, 1, MENU_EPI
 	{ITT_SETMENU, "OPTIONS", NULL, 0, MENU_OPTIONS}, {ITT_SETMENU, "GAME FILES", NULL, 0, MENU_FILES},
 	{ITT_EFUNC, "INFO", SCInfo, 0, MENU_NONE}, {ITT_EFUNC, "QUIT GAME", SCQuitGame, 0, MENU_NONE}};
 
-static Menu_t MainMenu = {110, 56, DrawMainMenu, 5, MainItems, 0, MENU_NONE};
+static Menu_t MainMenu = {110, 56, DrawMainMenu, 5, MainItems, 0, MENU_NONE, MENU_MAIN};
 
 static MenuItem_t EpisodeItems[] = {{ITT_EFUNC, "CITY OF THE DAMNED", SCEpisode, 1, MENU_NONE},
 	{ITT_EFUNC, "HELL'S MAW", SCEpisode, 2, MENU_NONE}, {ITT_EFUNC, "THE DOME OF D'SPARIL", SCEpisode, 3, MENU_NONE},
 	{ITT_EFUNC, "THE OSSUARY", SCEpisode, 4, MENU_NONE}, {ITT_EFUNC, "THE STAGNANT DEMESNE", SCEpisode, 5, MENU_NONE}};
 
-static Menu_t EpisodeMenu = {80, 50, DrawEpisodeMenu, 3, EpisodeItems, 0, MENU_MAIN};
+static Menu_t EpisodeMenu = {80, 50, DrawEpisodeMenu, 3, EpisodeItems, 0, MENU_MAIN, MENU_EPISODE};
 
 static MenuItem_t FilesItems[] = {
 	{ITT_EFUNC, "LOAD GAME", SCNetCheck, 2, MENU_LOAD}, {ITT_SETMENU, "SAVE GAME", NULL, 0, MENU_SAVE}};
 
-static Menu_t FilesMenu = {110, 60, DrawFilesMenu, 2, FilesItems, 0, MENU_MAIN};
+static Menu_t FilesMenu = {110, 60, DrawFilesMenu, 2, FilesItems, 0, MENU_MAIN, MENU_FILES};
 
 static MenuItem_t LoadItems[] = {{ITT_EFUNC, NULL, SCLoadGame, 0, MENU_NONE},
 	{ITT_EFUNC, NULL, SCLoadGame, 1, MENU_NONE}, {ITT_EFUNC, NULL, SCLoadGame, 2, MENU_NONE},
 	{ITT_EFUNC, NULL, SCLoadGame, 3, MENU_NONE}, {ITT_EFUNC, NULL, SCLoadGame, 4, MENU_NONE},
 	{ITT_EFUNC, NULL, SCLoadGame, 5, MENU_NONE}};
 
-static Menu_t LoadMenu = {70, 30, DrawLoadMenu, 6, LoadItems, 0, MENU_FILES};
+static Menu_t LoadMenu = {70, 30, DrawLoadMenu, 6, LoadItems, 0, MENU_FILES, MENU_SAVE};
 
 static MenuItem_t SaveItems[] = {{ITT_EFUNC, NULL, SCSaveGame, 0, MENU_NONE},
 	{ITT_EFUNC, NULL, SCSaveGame, 1, MENU_NONE}, {ITT_EFUNC, NULL, SCSaveGame, 2, MENU_NONE},
 	{ITT_EFUNC, NULL, SCSaveGame, 3, MENU_NONE}, {ITT_EFUNC, NULL, SCSaveGame, 4, MENU_NONE},
 	{ITT_EFUNC, NULL, SCSaveGame, 5, MENU_NONE}};
 
-static Menu_t SaveMenu = {70, 30, DrawSaveMenu, 6, SaveItems, 0, MENU_FILES};
+static Menu_t SaveMenu = {70, 30, DrawSaveMenu, 6, SaveItems, 0, MENU_FILES, MENU_SAVE};
 
 static MenuItem_t SkillItems[] = {{ITT_EFUNC, "THOU NEEDETH A WET-NURSE", SCSkill, sk_baby, MENU_NONE},
 	{ITT_EFUNC, "YELLOWBELLIES-R-US", SCSkill, sk_easy, MENU_NONE},
@@ -136,20 +138,20 @@ static MenuItem_t SkillItems[] = {{ITT_EFUNC, "THOU NEEDETH A WET-NURSE", SCSkil
 	{ITT_EFUNC, "THOU ART A SMITE-MEISTER", SCSkill, sk_hard, MENU_NONE},
 	{ITT_EFUNC, "BLACK PLAGUE POSSESSES THEE", SCSkill, sk_nightmare, MENU_NONE}};
 
-static Menu_t SkillMenu = {38, 30, DrawSkillMenu, 5, SkillItems, 2, MENU_EPISODE};
+static Menu_t SkillMenu = {38, 30, DrawSkillMenu, 5, SkillItems, 2, MENU_EPISODE, MENU_SKILL};
 
 static MenuItem_t OptionsItems[] = {{ITT_EFUNC, "END GAME", SCEndGame, 0, MENU_NONE},
 	{ITT_EFUNC, "MESSAGES : ", SCMessages, 0, MENU_NONE}, {ITT_SETMENU, "EFFECTS...", NULL, 0, MENU_OPTIONS2},
 	{ITT_SETMENU, "CONTROLS...", NULL, 0, MENU_OPTIONS3}};
 
-static Menu_t OptionsMenu = {88, 30, DrawOptionsMenu, 4, OptionsItems, 0, MENU_MAIN};
+static Menu_t OptionsMenu = {88, 30, DrawOptionsMenu, 4, OptionsItems, 0, MENU_MAIN, MENU_OPTIONS};
 
 static MenuItem_t Options2Items[] = {{ITT_LRFUNC, "SCREEN SIZE", SCScreenSize, 0, MENU_NONE},
 	{ITT_EMPTY, NULL, NULL, 0, MENU_NONE}, {ITT_LRFUNC, "SFX VOLUME", SCSfxVolume, 0, MENU_NONE},
 	{ITT_EMPTY, NULL, NULL, 0, MENU_NONE}, {ITT_LRFUNC, "MUSIC VOLUME", SCMusicVolume, 0, MENU_NONE},
 	{ITT_EMPTY, NULL, NULL, 0, MENU_NONE}};
 
-static Menu_t Options2Menu = {90, 20, DrawOptions2Menu, 6, Options2Items, 0, MENU_OPTIONS};
+static Menu_t Options2Menu = {90, 20, DrawOptions2Menu, 6, Options2Items, 0, MENU_OPTIONS, MENU_OPTIONS2};
 
 static MenuItem_t Options3Items[] = {
 	{ITT_EFUNC, "MOUSE LOOK : ", SCMouseLook, 0, MENU_NONE},
@@ -160,7 +162,7 @@ static MenuItem_t Options3Items[] = {
 	{ITT_EMPTY, NULL, NULL, 0, MENU_NONE},
 };
 
-static Menu_t Options3Menu = {88, 30, DrawOptions3Menu, 6, Options3Items, 0, MENU_OPTIONS};
+static Menu_t Options3Menu = {88, 30, DrawOptions3Menu, 6, Options3Items, 0, MENU_OPTIONS, MENU_OPTIONS3};
 
 static Menu_t* Menus[] = {
 	&MainMenu, &EpisodeMenu, &SkillMenu, &OptionsMenu, &Options2Menu, &Options3Menu, &FilesMenu, &LoadMenu, &SaveMenu};
@@ -714,7 +716,10 @@ static boolean SCSaveGame(int option) {
 
 	if (!FileMenuKeySteal) {
 		FileMenuKeySteal = true;
-		strncpy(oldSlotText, SlotText[option], sizeof(oldSlotText) / sizeof(char));
+		memset(SlotText[option], 0, sizeof(SlotText[option]) / sizeof(char));
+		auto datetime = QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss");
+		strncpy(SlotText[option], datetime.toStdString().c_str(), datetime.size());
+
 		ptr = SlotText[option];
 		while (*ptr) {
 			ptr++;
@@ -1331,6 +1336,7 @@ void MN_DrawInfo(void) {
 */
 static void SetMenu(MenuType_t menu) {
 	CurrentMenu->oldItPos = CurrentItPos;
+	CurrentMenu->type = menu;
 	CurrentMenu = Menus[menu];
 	CurrentItPos = CurrentMenu->oldItPos;
 }

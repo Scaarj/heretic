@@ -19,6 +19,7 @@ extern int curpos;
 extern int inv_ptr;
 extern bool inventory;
 extern boolean gamekeydown[NUMKEYS];
+extern boolean FileMenuKeySteal;
 
 extern long key_right, key_left, key_up, key_down;
 extern long key_strafeleft, key_straferight;
@@ -186,16 +187,18 @@ void ScreenController::doubleClick(int x, int y) {
 
 	if (askforquit) {
 		if (yesButtonPressed(x, y)) {
-			D_PostEvent(yKeyPressed);
-			D_PostEvent(yKeyReleased);
+			keyPressedAndReleased(yKeyPressed);
 		}
 		if (noButtonPressed(x, y)) {
-			D_PostEvent(nKeyPressed);
-			D_PostEvent(nKeyReleased);
+			keyPressedAndReleased(nKeyPressed);
 		}
 	} else {
 		if (MenuActive) {
-			checkMenuInteraction(x, y);
+			if (!FileMenuKeySteal) {
+				checkMenuInteraction(x, y);
+			} else {
+				checkMenuStealKeyInteraction(x, y);
+			}
 		}
 		if (!MenuActive && !gameStateActive()) {
 			checkNoneGameMenuInteraction(x, y);
@@ -227,6 +230,23 @@ QVector<ScreenController::MenuItems> ScreenController::menuItems() const {
 	return menuItems;
 }
 
+QVector<ScreenController::MenuItems> ScreenController::savesItems() const {
+	QVector<MenuItems> menuItems;
+	auto slot = static_cast<patch_t*>(W_CacheLumpName("M_FSLOT", PU_CACHE));
+
+	if (MenuActive && CurrentMenu) {
+		for (int i = 0; i < CurrentMenu->itemCount; ++i) {
+			auto width = slot->width;
+			auto coordX = CurrentMenu->x;
+			auto coordY = CurrentMenu->y + i * ITEM_HEIGHT;
+			auto rect = QRect(coordX, coordY, width, ITEM_HEIGHT);
+			menuItems.push_back({i, scenePainter->fromGameCoord(rect, baseScreen)});
+		}
+	}
+
+	return menuItems;
+}
+
 int ScreenController::itemWidth(int x, const char* text) const {
 	char c;
 	patch_t* p = nullptr;
@@ -245,7 +265,12 @@ int ScreenController::itemWidth(int x, const char* text) const {
 }
 
 int ScreenController::clickOnMenuPosition(int x, int y) {
-	auto items = menuItems();
+	QVector<ScreenController::MenuItems> items;
+	if (CurrentMenu && (CurrentMenu->type == MENU_SAVE || CurrentMenu->type == MENU_LOAD)) {
+		items = savesItems();
+	} else {
+		items = menuItems();
+	}
 
 	for (const auto it : items) {
 		if (it.rect.contains({x, y})) {
@@ -265,30 +290,31 @@ bool ScreenController::noButtonPressed(int x, int y) {
 }
 
 void ScreenController::menuMissClicked() {
-	D_PostEvent(backspaceKeyPressed);
+	keyPressedAndReleased(backspaceKeyPressed);
+}
+
+void ScreenController::menuStealKeyMissClicked() {
+	keyPressedAndReleased(escapeKeyPressed);
+}
+
+void ScreenController::menuStealKeyClicked() {
+	keyPressedAndReleased(enterKeyPressed);
 }
 
 void ScreenController::menuItemClicked() {
-	D_PostEvent(enterKeyPressed);
-	D_PostEvent(enterKeyReleased);
+	keyPressedAndReleased(enterKeyPressed);
 }
 
 void ScreenController::menuPressed() {
-	D_PostEvent(escapeKeyPressed);
+	keyPressedAndReleased(escapeKeyPressed);
 }
 
 void ScreenController::leftSwipe() {
-	if (MenuActive) {
-		D_PostEvent(leftKeyPressed);
-		D_PostEvent(leftKeyReleased);
-	}
+	keyPressedAndReleased(leftKeyPressed, 10);
 }
 
 void ScreenController::rightSwipe() {
-	if (MenuActive) {
-		D_PostEvent(rightKeyPressed);
-		D_PostEvent(rightKeyReleased);
-	}
+	keyPressedAndReleased(rightKeyPressed, 10);
 }
 
 void ScreenController::checkNoneGameMenuInteraction(int x, int y) {
@@ -309,8 +335,34 @@ void ScreenController::checkMenuInteraction(int x, int y) {
 	}
 }
 
+void ScreenController::checkMenuStealKeyInteraction(int x, int y) {
+	auto pos = clickOnMenuPosition(x, y);
+
+	if (pos == -1) {
+		menuStealKeyMissClicked();
+	} else {
+		menuStealKeyClicked();
+	}
+}
+
 void ScreenController::safeLastMousePosition(int mouseX, int mouseY) {
 	mouseLastPosition = QPoint(mouseX, mouseY);
+}
+
+void ScreenController::keyPressedAndReleased(event_t pressedKey, int timeup) {
+	constexpr int maxKeys = 255;
+	static bool pressed[maxKeys] = {false};
+	auto key = pressedKey.data1;
+	if (pressed[key]) {
+		return;
+	}
+	pressed[key] = true;
+	D_PostEvent(pressedKey);
+	QTimer::singleShot(timeup, [&, key]() {
+		event_t releasedKey{ev_keyup, pressedKey.data1, pressedKey.data2, pressedKey.data3};
+		D_PostEvent(releasedKey);
+		pressed[key] = false;
+	});
 }
 
 void ScreenController::mouseMoved(int offsetX, int offsetY) {
@@ -332,8 +384,7 @@ void ScreenController::mouseMoved(int offsetX, int offsetY) {
 }
 
 void ScreenController::useArtifact() {
-	D_PostEvent(enterKeyPressed);
-	QTimer::singleShot(100, [&]() { D_PostEvent(enterKeyReleased); });
+	keyPressedAndReleased(enterKeyPressed);
 }
 
 void ScreenController::nextWeapon() {
@@ -345,13 +396,11 @@ void ScreenController::selectArtifact(int index) {
 
 	if (offset < 0) {
 		for (int i = 0; i < abs(offset); ++i) {
-			inventoryLeftPressed(true);
-			inventoryLeftPressed(false);
+			inventoryLeftPressed();
 		}
 	} else {
 		for (int i = 0; i < abs(offset); ++i) {
-			inventoryRightPressed(true);
-			inventoryRightPressed(false);
+			inventoryRightPressed();
 		}
 	}
 
@@ -361,18 +410,12 @@ void ScreenController::selectArtifact(int index) {
 	}
 }
 
-void ScreenController::inventoryLeftPressed(bool pressed) {
-	if (pressed) {
-		D_PostEvent(invLeftKeyPressed);
-	} else {
-		D_PostEvent(invLeftKeyReleased);
-	}
+void ScreenController::inventoryLeftPressed() {
+	D_PostEvent(invLeftKeyPressed);
+	D_PostEvent(invLeftKeyReleased);
 }
 
-void ScreenController::inventoryRightPressed(bool pressed) {
-	if (pressed) {
-		D_PostEvent(invRightKeyPressed);
-	} else {
-		D_PostEvent(invRightKeyReleased);
-	}
+void ScreenController::inventoryRightPressed() {
+	D_PostEvent(invRightKeyPressed);
+	D_PostEvent(invRightKeyReleased);
 }
