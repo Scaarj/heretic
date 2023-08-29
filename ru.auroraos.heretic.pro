@@ -150,7 +150,7 @@ HEADERS += \
 	src/sound/soundst.h \
 
 DISTFILES += \
-    rpm/ru.auroraos.heretic.spec \
+        rpm/ru.auroraos.heretic.spec \
 	AUTHORS.md \
 	CODE_OF_CONDUCT.md \
 	CONTRIBUTING.md \
@@ -169,7 +169,7 @@ INSTALLS += wad_file
 
 MAJOR_VERSION=1
 MINOR_VERSION=0
-BUILD_NUMBER=56
+BUILD_NUMBER=77
 
 APP_VERSION = "$${MAJOR_VERSION}.$${MINOR_VERSION}.$${BUILD_NUMBER}"
 
@@ -177,7 +177,6 @@ DEFINES += \
         __32BIT__ \
 	sailfishapp \
 	APP_VERSION='\\"$$APP_VERSION\\"' \
-	ENDLESS_WEAPON \
 
 TRANSLATIONS += \
     translations/ru.auroraos.heretic.ts \
