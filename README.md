@@ -4,7 +4,7 @@
 
 <p align="center">
    <img src="https://img.shields.io/badge/Sdk%20Version-4.0.2.89-green" alt="SDK Version">
-   <img src="https://img.shields.io/badge/Game%20Version-1.0.56-blue" alt="Game Version">
+   <img src="https://img.shields.io/badge/Game%20Version-1.0.77-blue" alt="Game Version">
    <img src="https://img.shields.io/badge/License-Apache%20License-yellow" alt="License">
 </p>
 
@@ -43,9 +43,7 @@ In this repository, the port of the game to the mobile operating system Aurora O
 
 ## Todo list
 
-- Select and use artifacts
 - Sound player
-- Save/load games
 - Flight controll
 - Map viewing
 - Game controllers - ps4, bt-keyboard, etc
@@ -54,8 +52,8 @@ In this repository, the port of the game to the mobile operating system Aurora O
 
 ## Download
 
-- Devices - [armv7hl](https://disk.yandex.ru/d/SRlvKJRETS8lWg)
-- Emulator - [i486](https://disk.yandex.ru/d/LOEW0_0kcjBiUg)
+- Devices - [armv7hl](https://disk.yandex.ru/d/WtclhRIuZ58yrg)
+- Emulator - [i486](https://disk.yandex.ru/d/BlcEpgYJrYxOoA)
 
 ## Developers
 
