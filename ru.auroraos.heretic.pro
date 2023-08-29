@@ -38,14 +38,14 @@
 TARGET = ru.auroraos.heretic
 
 contains(QMAKE_HOST.arch, armv7l) {
-    TARGET_BUILD_ARCH = armv7hl
+	TARGET_BUILD_ARCH = armv7hl
 	DEFINES += ARCH_ARMV7HL
 } else {
-    TARGET_BUILD_ARCH = i486
+	TARGET_BUILD_ARCH = i486
 	DEFINES += ARCH_I486
 }
 
-CONFIG += sailfishapp warn_on exceptions
+CONFIG += auroraapp warn_on exceptions
 
 PKGCONFIG += \
 
@@ -55,20 +55,20 @@ INCLUDEPATH += \
 	src/application \
 
 SOURCES += \
-        src/am_map.cpp \
+	src/am_map.cpp \
 	src/application/application.cpp \
-        src/application/items/artifacts/artifactmodel.cpp \
-        src/application/items/artifacts/artifactproxy.cpp \
+	src/application/items/artifacts/artifactmodel.cpp \
+	src/application/items/artifacts/artifactproxy.cpp \
 	src/application/context.cpp \
 	src/application/gamescreen.cpp \
 	src/application/introscreen.cpp \
-        src/application/item.cpp \
-        src/application/items/itemmodel.cpp \
-        src/application/items/itemsproxy.cpp \
+	src/application/item.cpp \
+	src/application/items/itemmodel.cpp \
+	src/application/items/itemsproxy.cpp \
 	src/application/scenepainter.cpp \
 	src/application/screencontroller.cpp \
-        src/application/items/weapons/weaponmodel.cpp \
-        src/application/items/weapons/weaponproxy.cpp \
+	src/application/items/weapons/weaponmodel.cpp \
+	src/application/items/weapons/weaponproxy.cpp \
 	src/ct_chat.cpp \
 	src/d_main.cpp \
 	src/d_net.cpp \
@@ -117,21 +117,21 @@ SOURCES += \
 	src/z_zone.cpp \
 
 HEADERS += \
-        src/am_data.h \
+	src/am_data.h \
 	src/am_map.h \
 	src/application/application.h \
-        src/application/items/artifacts/artifactmodel.h \
-        src/application/items/artifacts/artifactproxy.h \
+	src/application/items/artifacts/artifactmodel.h \
+	src/application/items/artifacts/artifactproxy.h \
 	src/application/context.h \
 	src/application/gamescreen.h \
 	src/application/introscreen.h \
-        src/application/item.h \
-        src/application/items/itemmodel.h \
-        src/application/items/itemsproxy.h \
+	src/application/item.h \
+	src/application/items/itemmodel.h \
+	src/application/items/itemsproxy.h \
 	src/application/scenepainter.h \
 	src/application/screencontroller.h \
-        src/application/items/weapons/weaponmodel.h \
-        src/application/items/weapons/weaponproxy.h \
+	src/application/items/weapons/weaponmodel.h \
+	src/application/items/weapons/weaponproxy.h \
 	src/ct_chat.h \
 	src/doomdata.h \
 	src/doomdef.h \
@@ -150,16 +150,16 @@ HEADERS += \
 	src/sound/soundst.h \
 
 DISTFILES += \
-        rpm/ru.auroraos.heretic.spec \
+	rpm/ru.auroraos.heretic.spec \
 	AUTHORS.md \
 	CODE_OF_CONDUCT.md \
 	CONTRIBUTING.md \
 	LICENSE.BSD-3-CLAUSE.md \
 	README.md \
 
-SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
+AURORAAPP_ICONS = 86x86 108x108 128x128 172x172
 
-CONFIG += sailfishapp_i18n
+CONFIG += auroraapp_i18n
 
 RESOURCES += res.qrc
 
@@ -174,10 +174,10 @@ BUILD_NUMBER=77
 APP_VERSION = "$${MAJOR_VERSION}.$${MINOR_VERSION}.$${BUILD_NUMBER}"
 
 DEFINES += \
-        __32BIT__ \
-	sailfishapp \
-	APP_VERSION='\\"$$APP_VERSION\\"' \
+		__32BIT__ \
+		auroraapp \
+		APP_VERSION='\\"$$APP_VERSION\\"' \
 
 TRANSLATIONS += \
-    translations/ru.auroraos.heretic.ts \
+	translations/ru.auroraos.heretic.ts \
 	translations/ru.auroraos.heretic-ru.ts \

@@ -11,6 +11,14 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include <QGuiApplication>
+
+#ifdef sailfishapp
+	#include <sailfishapp.h>
+#elif auroraapp
+	#include <auroraapp.h>
+#endif
+
 #include "doomdef.h"
 #include "i_sound.h"
 
@@ -80,19 +88,10 @@ int I_GetTime(void) {
 /* sets and/or gets your private Heretic-homedirectory */
 
 void I_GetHomeDirectory(void) {
-	char* dummy;
-	[[maybe_unused]] int rcode;
-
-	if ((dummy = getenv("HOME")) != NULL) {
-		homedir = (char*) malloc(strlen(dummy) + strlen("/.heretic/") + 1);
-		assert(homedir);
-		sprintf(homedir, "%s/.heretic/", dummy);
-	} else {
-		homedir = strdup("./");
-	}
-
-	/* mode: drwxr-xr-x (16877dec) */
-	rcode = mkdir(homedir, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+	auto fullPath = Aurora::Application::cacheDir().absolutePath().toStdString() + "/";
+	homedir = (char*) malloc(fullPath.length() + 1);
+	assert(homedir);
+	sprintf(homedir, "%s", fullPath.c_str());
 
 	basedefault = (char*) malloc(strlen(homedir) + strlen("heretic.cfg") + 1);
 	assert(basedefault);
@@ -153,7 +152,7 @@ void I_Quit(void) {
 
 	free(homedir);
 	free(basedefault);
-	exit(0);
+	QGuiApplication::quit();
 }
 
 void I_WaitVBL(int count) {
