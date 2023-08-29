@@ -19,7 +19,7 @@ In this repository, the port of the game to the mobile operating system Aurora O
 <img src="https://github.com/Scaarj/heretic/assets/25565781/2a85ca27-1b28-4473-bff9-31e302265c3b" width="320">
 <img src="https://github.com/Scaarj/heretic/assets/25565781/f827329e-8837-43a1-9118-ea2939d54798" width="320">
 
-https://github.com/Scaarj/heretic/assets/25565781/4bd0bf82-6ac4-445b-8393-8f407b0e56ef
+https://github.com/Scaarj/heretic/assets/25565781/df9ca86f-ccfe-4fa5-a3c2-03105008ee52
 
 ## Control
 
