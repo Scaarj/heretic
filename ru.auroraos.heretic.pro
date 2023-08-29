@@ -177,7 +177,6 @@ DEFINES += \
         __32BIT__ \
 	sailfishapp \
 	APP_VERSION='\\"$$APP_VERSION\\"' \
-	ENDLESS_WEAPON \
 
 TRANSLATIONS += \
     translations/ru.auroraos.heretic.ts \

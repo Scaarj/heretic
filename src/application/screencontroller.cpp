@@ -351,16 +351,16 @@ void ScreenController::safeLastMousePosition(int mouseX, int mouseY) {
 }
 
 void ScreenController::keyPressedAndReleased(event_t pressedKey, int timeup) {
-	auto key = pressedKey.data1;
-	if (pressed[key]) {
+	if (pressed[pressedKey.data1]) {
 		return;
 	}
-	pressed[key] = true;
+	pressed[pressedKey.data1] = true;
 	D_PostEvent(pressedKey);
-	QTimer::singleShot(timeup, [&, key]() {
+
+	QTimer::singleShot(timeup, [&, pressedKey]() {
 		event_t releasedKey{ev_keyup, pressedKey.data1, pressedKey.data2, pressedKey.data3};
 		D_PostEvent(releasedKey);
-		pressed[key] = false;
+		pressed[releasedKey.data1] = false;
 	});
 }
 
