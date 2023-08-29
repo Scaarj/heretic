@@ -52,8 +52,8 @@ https://github.com/Scaarj/heretic/assets/25565781/4bd0bf82-6ac4-445b-8393-8f407b
 
 ## Download
 
-- Devices - [armv7hl](https://disk.yandex.ru/d/WtclhRIuZ58yrg)
-- Emulator - [i486](https://disk.yandex.ru/d/BlcEpgYJrYxOoA)
+- Devices - [armv7hl](https://disk.yandex.ru/d/DBm6j8Tl2tph5w)
+- Emulator - [i486](https://disk.yandex.ru/d/3e97avGr7JWJGQ)
 
 ## Developers
 
