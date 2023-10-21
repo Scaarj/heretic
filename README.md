@@ -4,7 +4,7 @@
 
 <p align="center">
    <img src="https://img.shields.io/badge/Sdk%20Version-4.0.2.89-green" alt="SDK Version">
-   <img src="https://img.shields.io/badge/Game%20Version-1.0.56-blue" alt="Game Version">
+   <img src="https://img.shields.io/badge/Game%20Version-1.0.77-blue" alt="Game Version">
    <img src="https://img.shields.io/badge/License-Apache%20License-yellow" alt="License">
 </p>
 
@@ -19,7 +19,7 @@ In this repository, the port of the game to the mobile operating system Aurora O
 <img src="https://github.com/Scaarj/heretic/assets/25565781/2a85ca27-1b28-4473-bff9-31e302265c3b" width="320">
 <img src="https://github.com/Scaarj/heretic/assets/25565781/f827329e-8837-43a1-9118-ea2939d54798" width="320">
 
-<img src="https://github.com/Scaarj/heretic/assets/25565781/f99bf87f-c5e3-48cf-8c5f-ddc616773349" width="320">
+https://github.com/Scaarj/heretic/assets/25565781/cde94a42-ecc1-4ad5-a010-eee508b36c0c
 
 ## Control
 
@@ -43,9 +43,7 @@ In this repository, the port of the game to the mobile operating system Aurora O
 
 ## Todo list
 
-- Select and use artifacts
 - Sound player
-- Save/load games
 - Flight controll
 - Map viewing
 - Game controllers - ps4, bt-keyboard, etc
@@ -54,8 +52,8 @@ In this repository, the port of the game to the mobile operating system Aurora O
 
 ## Download
 
-- Devices - [armv7hl](https://disk.yandex.ru/d/SRlvKJRETS8lWg)
-- Emulator - [i486](https://disk.yandex.ru/d/LOEW0_0kcjBiUg)
+- Devices - [armv7hl](https://disk.yandex.ru/d/DBm6j8Tl2tph5w)
+- Emulator - [i486](https://disk.yandex.ru/d/3e97avGr7JWJGQ)
 
 ## Developers
 
