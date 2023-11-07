@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resource/image/menu-dots-circle.svg</file>
+        <file>resource/image/action_attack.svg</file>
+        <file>resource/image/action_jump.svg</file>
+        <file>resource/image/action_run.svg</file>
+        <file>resource/image/action_use.svg</file>
+        <file>resource/image/switch-weapon.svg</file>
+        <file>resource/image/weapons/WBLSA0.png</file>
+        <file>resource/image/weapons/WBOWA0.png</file>
+        <file>resource/image/weapons/WGNTA0.png</file>
+        <file>resource/image/weapons/WMCEA0.png</file>
+        <file>resource/image/weapons/WPHXA0.png</file>
+        <file>resource/image/weapons/WSKLA0.png</file>
+        <file>resource/image/weapons/WELVA0.png</file>
+        <file>resource/image/weapons/WSTFA0.png</file>
+        <file>resource/image/artifacts/ARTIEGGC.png</file>
+        <file>resource/image/artifacts/ARTIFBMB.png</file>
+        <file>resource/image/artifacts/ARTIINVS.png</file>
+        <file>resource/image/artifacts/ARTIINVU.png</file>
+        <file>resource/image/artifacts/ARTIPTN2.png</file>
+        <file>resource/image/artifacts/ARTIPWBK.png</file>
+        <file>resource/image/artifacts/ARTISOAR.png</file>
+        <file>resource/image/artifacts/ARTISPHL.png</file>
+        <file>resource/image/artifacts/ARTITRCH.png</file>
+        <file>resource/image/artifacts/ARTIATLP.png</file>
+        <file>resource/image/backgrounds/choiceBackground.png</file>
+    </qresource>
+</RCC>
