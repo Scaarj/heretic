@@ -7,7 +7,7 @@ Name=Heretic
 Name[ru]=Heretic
 
 [X-Application]
-Permissions=Documents
+Permissions=Documents;Downloads
 OrganizationName=ru.auroraos
 ApplicationName=heretic
 ExecDBus=/usr/bin/ru.auroraos.heretic
